@@ -7,14 +7,15 @@ import {
     TextInput,
     TouchableHighlight,
     Text,
+    Platform
 }
     from 'react-native';
 import StatusBarComponent from '../components/StatusBarComponent';
 
 
 
-export default function Login() {
-  
+export default function Login({ navigation }) {
+
     const [id, setId] = useState('');
     const [authCode, setAuthCode] = useState();
 
@@ -41,25 +42,63 @@ export default function Login() {
                     value={id}
                     keyboardType='decimal-pad'
                     placeholder='휴대폰 번호를 입력해주세요( - 제외)'
-                    style={styles.inputIdText}
+                    style={styles.inputPlaceHolderText}
                 />
             </View>
 
-            <TouchableHighlight
-                underlayColor='none'
-                onPress={() => requestAuthNumber()}
-                style={styles.getAuthNumberTouch}
-            >
-                <View style={getAuthBtn(id)}>
+            <View style={getAuthBtn(id)}>
+                <TouchableHighlight
+                    underlayColor='none'
+                    onPress={() => requestAuthNumber()}
+                    
+                >
                     <Text style={styles.getAuthBtnText}>
                         {btnText}
                     </Text>
+                </TouchableHighlight>
+            </View>
+
+            <View style={styles.userAboutAccount}>
+                <View style={styles.eachAbout}>
+                    <Text>
+                        믿음으로 이용이 처음이신가요?
+                    </Text>
+                    <TouchableHighlight
+                        underlayColor='none'
+                        style={styles.eachAboutTouch}
+                        onPress={() => navigation.push('joinPage')}
+                    >
+                        <Text style={styles.eachAboutText}>
+                            가입하기
+                        </Text>
+                    </TouchableHighlight>
                 </View>
-            </TouchableHighlight>
-
-            <View style={{ flex: 7 }}>
-
-
+                <View style={styles.eachAbout}>
+                    <Text>
+                        휴대폰 번호가 변경되었나요?
+                    </Text>
+                    <TouchableHighlight
+                        underlayColor='none'
+                        style={styles.eachAboutTouch}
+                    >
+                        <Text style={styles.eachAboutText}>
+                            재설정 하기
+                        </Text>
+                    </TouchableHighlight>
+                </View>
+                <View style={styles.eachAbout}>
+                    <Text>
+                        비밀번호를 잊어버리셨나요?
+                    </Text>
+                    <TouchableHighlight
+                        underlayColor='none'
+                        style={styles.eachAboutTouch}
+                    >
+                        <Text style={styles.eachAboutText}>
+                            찾으러 가기
+                        </Text>
+                    </TouchableHighlight>
+                </View>
             </View>
         </SafeAreaView>
     );
@@ -73,11 +112,12 @@ const styles = StyleSheet.create({
         alignContent: 'center',
         backgroundColor: 'white',
     },
+    
     infoText: {
         marginTop: 10,
         marginLeft: 22,
         color: '#94c6ad',
-        fontSize: 16,
+        fontSize: Platform.OS === 'ios' ? 13 : 16,
         fontWeight: 'bold'
     },
 
@@ -88,36 +128,51 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
 
-    inputIdText: {
+    inputPlaceHolderText: {
         paddingLeft: 10,
-        paddingVertical: 9,
+        paddingVertical: 10,
         borderRadius: 5,
         color: 'green',
-        fontSize: 15,
+        fontSize: Platform.OS === 'ios' ? 12 : 15,
         borderWidth: 2,
         borderColor: '#c5d6b9',
         width: '90%',
         alignSelf: 'center',
     },
 
-    getAuthNumberTouch: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'flex-start'
-    },
-
     getAuthBtnText: {
         color: 'white',
-        fontSize: 16,
+        fontSize: Platform.OS === 'ios' ? 13 : 16,
         textAlign: 'center',
-        paddingBottom: 12,
-        paddingTop: 12
+        paddingBottom: 15,
+        paddingTop: 15
+    },
+
+    userAboutAccount: {
+        marginTop: 30,
+        flex: 7,
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+
+    eachAbout: {
+        flexDirection: 'row',
+        paddingBottom: 15
+    },
+
+    eachAboutTouch: {
+        marginLeft: 5,
+    },
+
+    eachAboutText: {
+        color: 'green',
     }
 });
 
 const getAuthBtn = (id) => StyleSheet.create({
-    width: '90%',
+    marginLeft: 20,
+    marginRight: 20,
     backgroundColor: id.length == 10 || id.length == 11 ? '#c5d6b9' : '#e7efe3',
     borderRadius: 5
 })

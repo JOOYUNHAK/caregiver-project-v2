@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
-import { TouchableHighlight } from "react-native";
-import Icon from "../components/Icon";
+import { Platform} from "react-native";
+import CloseBtn from '../components/Btn/CloseBtn';
+import Join from "../screens/Join";
 import Login from "../screens/Login";
 import Search from "../screens/Search";
 import { MyTabs } from "./TabNavigator";
@@ -14,8 +15,8 @@ export function StackNavigation() {
                 headerShown: false
             }}
         >
-            <Stack.Screen name="tabNavigator" component={MyTabs} />
-            <Stack.Screen name="searchPage" component={Search} />
+            <Stack.Screen name = "tabNavigator" component = {MyTabs} />
+            <Stack.Screen name = "searchPage" component = {Search} />
             <Stack.Screen
                 name="loginPage"
                 component={Login}
@@ -26,15 +27,28 @@ export function StackNavigation() {
                         left: 10
                     },
                     headerLeft: () => (
-                        <TouchableHighlight
-                            underlayColor = 'none'
-                            onPress = {() => navigation.pop()}
-                        >
-                            <Icon props={['materail', 'close', 30, '#94c6ad']} />
-                        </TouchableHighlight>
+                        <CloseBtn navigation = {navigation} />
                     )
                 })}
             />
+            <Stack.Screen 
+                name = 'joinPage' 
+                component = {Join} 
+                options = {({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '회원가입',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 13 :16,
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                       <CloseBtn navigation = {navigation} />
+                    )
+                })}
+                />
         </Stack.Navigator>
     );
 }
