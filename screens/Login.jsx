@@ -49,6 +49,7 @@ export default function Login({ navigation }) {
             <View style={getAuthBtn(id)}>
                 <TouchableHighlight
                     underlayColor='none'
+                    disabled = {id.length == 10 || id.length == 11 ? false : true}
                     onPress={() => requestAuthNumber()}
                     
                 >
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
         color: 'green',
         fontSize: Platform.OS === 'ios' ? 12 : 15,
         borderWidth: 2,
-        borderColor: '#c5d6b9',
+        borderColor: '#d3e8c6',
         width: '90%',
         alignSelf: 'center',
     },
