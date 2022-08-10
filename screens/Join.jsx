@@ -79,15 +79,14 @@ export default function Join() {
         setBtnText('인증하기')
         axios({
             method: 'GET',
-            url: `http://172.30.1.30:8080/auth/${id}`,
+            url: `http://172.30.1.30:8080/auth/register/${id}`,
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
             }
         }).then((res) => {
             console.log(res.data)
         }).catch((error) => {
-            console.log(error.response)
+            console.log(error)
         })
     }
 
