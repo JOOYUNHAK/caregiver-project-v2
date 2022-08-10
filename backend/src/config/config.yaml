@@ -1,0 +1,8 @@
+#노출되면 안되는 값들
+
+naver:
+  sms:
+    accessKey: 'BkOkvBwLJ3sVgqjEsQMt'
+    secretKey: 'ijAEJjCaEVw7ZLkFU9YUnFDtbEFzNbNj8h4KNkgk'
+    serviceId: 'ncp:sms:kr:286213012587:helperproject'
+    myPhoneNumber: '01024893797'
