@@ -2,13 +2,16 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { StackNavigation } from './navigations/StackNavigation';
-import './firebase/config';
+import { Provider } from 'react-redux';
+import store from './redux/store';
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <StackNavigation />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <StackNavigation />
+      </NavigationContainer>
+    </Provider>
   );
 }
 

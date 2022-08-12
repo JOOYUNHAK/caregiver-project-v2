@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { Platform} from "react-native";
 import CloseBtn from '../components/Btn/CloseBtn';
-import Join from "../screens/Join";
+import FirstRegister from "../screens/FirstRegister";
 import Login from "../screens/Login";
 import Search from "../screens/Search";
 import { MyTabs } from "./TabNavigator";
@@ -32,8 +32,8 @@ export function StackNavigation() {
                 })}
             />
             <Stack.Screen 
-                name = 'joinPage' 
-                component = {Join} 
+                name = 'firstRegisterPage' 
+                component = {FirstRegister} 
                 options = {({ navigation }) => ({
                     headerShown: 'true',
                     title: '회원가입',

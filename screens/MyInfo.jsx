@@ -35,7 +35,7 @@ export default function MyInfo( { navigation} ) {
 
                 <TouchableHighlight
                 underlayColor = 'none'
-                onPress = {() => console.log('mypoin')}
+                onPress = {() => console.log('mypoint')}
                 style = {{flex:1}}>
                 <View style={styles.myPoint}>
                     <Text style={styles.myLoginBoxText}>

@@ -67,7 +67,7 @@ export default function Login({ navigation }) {
                     <TouchableHighlight
                         underlayColor='none'
                         style={styles.eachAboutTouch}
-                        onPress={() => navigation.push('joinPage')}
+                        onPress={() => navigation.push('firstRegisterPage')}
                     >
                         <Text style={styles.eachAboutText}>
                             가입하기
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     infoText: {
         marginTop: 10,
         marginLeft: 22,
-        color: '#94c6ad',
+        color: '#4dbd91',
         fontSize: Platform.OS === 'ios' ? 13 : 16,
         fontWeight: 'bold'
     },
@@ -131,12 +131,11 @@ const styles = StyleSheet.create({
 
     inputPlaceHolderText: {
         paddingLeft: 10,
-        paddingVertical: 10,
+        paddingVertical: 11,
         borderRadius: 5,
-        color: 'green',
         fontSize: Platform.OS === 'ios' ? 12 : 15,
-        borderWidth: 2,
-        borderColor: '#d3e8c6',
+        borderWidth: 0.5,
+        borderColor: 'silver',
         width: '90%',
         alignSelf: 'center',
     },
@@ -167,13 +166,14 @@ const styles = StyleSheet.create({
     },
 
     eachAboutText: {
-        color: 'green',
+        color: '#4dbd91',
+        fontWeight: '500'
     }
 });
 
 const getAuthBtn = (id) => StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
-    backgroundColor: id.length == 10 || id.length == 11 ? '#c5d6b9' : '#e7efe3',
-    borderRadius: 5
+    backgroundColor: id.length == 10 || id.length == 11 ? '#78e7b9' : '#c0f3dc',
+    borderRadius: 10
 })
