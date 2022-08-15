@@ -1,18 +1,21 @@
 /*데이터베이스 연결위한 providers */
 
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { DataSource } from "typeorm";
 
 export const databaseProviders = [
     {
         provide: 'DATA_SOURCE',
-        useFactory: async () => {
+        import: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: async (configService: ConfigService) => {
             const dataSource = new DataSource({
                 type: 'mysql',
-                host: 'localhost',
-                port: 3306,
-                username: 'root',
-                password: '1234',
-                database: 'helperproject',
+                host: configService.get('db.mysql.host'),
+                port: configService.get('db.mysql.port'),
+                username: configService.get('db.mysql.username'),
+                password: configService.get('db.mysql.password'),
+                database: configService.get('db.mysql.database'),
                 entities: [
                     __dirname + '/../**/*.entity{.ts,.js}',
                 ],

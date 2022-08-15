@@ -2,7 +2,8 @@ import { CacheModule, Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import * as redisStore from 'cache-manager-ioredis';
-import configurationYaml from './config/configuration.yaml';
+import configurationYaml from '../config/configuration.yaml';
+
 
 @Module({
   imports: [
@@ -22,3 +23,4 @@ import configurationYaml from './config/configuration.yaml';
   providers: [],
 })
 export class AppModule {}
+
