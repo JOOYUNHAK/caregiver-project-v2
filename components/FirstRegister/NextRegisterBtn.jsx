@@ -1,5 +1,5 @@
 /* 회원가입 다음으로 이동하는 페이지*/
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
     StyleSheet,
     View,

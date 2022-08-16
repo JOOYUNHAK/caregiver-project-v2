@@ -43,7 +43,7 @@ export default function SelectSexPurpose() {
         if (title.length != 1) {
             const toggleData = [...selectPurpose];
             toggleData.map((data) => {
-                if (data.title == title) {
+                if (data.title === title) {
                     data.checked = true;
                 }
                 else
