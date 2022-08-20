@@ -3,14 +3,14 @@ import { StyleSheet, Text, TextInput,  View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
 import { saveFirstPay, saveSecondPay, saveStartDate } from "../../../redux/action/register/secondRegisterAction";
-import inputStyle from "./styles/inputStyle";
+import inputStyle from "../../../styles/Register/inputStyle";
 
 export default function PayAndStartDate() {
     const dispatch = useDispatch();
     return (
         <View style={styles.payAndStartDate}>
             <View style={styles.pay}>
-                <Text style={{ fontWeight: '500' }}>
+                <Text>
                     일일급여
                 </Text>
                 <View style={styles.inputPay}>
@@ -39,7 +39,7 @@ export default function PayAndStartDate() {
             </View>
 
             <View style={styles.startDate}>
-                <Text style={{ fontWeight: '500' }}>
+                <Text>
                     시작 가능 날짜
                 </Text>
                 <TextInput
@@ -59,7 +59,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         height: hp('12%'),
-        paddingTop: 8
+        paddingTop: 8,
+        paddingLeft: 20,
+        paddingRight: 10
     },
 
     pay: {
@@ -80,5 +82,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'flex-start',
+        flex: 1
     },
 })

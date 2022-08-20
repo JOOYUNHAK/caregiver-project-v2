@@ -7,7 +7,7 @@ export default function CloseBtn({ navigation, type }) {
     const dispatch = useDispatch();
 
     const onPressCloseBtn = () => {
-        if(type == 'firstRegisterReset') {
+        if(type === 'firstRegisterReset') {
             dispatch(firstRegisterReset());
             navigation.pop();
         } 

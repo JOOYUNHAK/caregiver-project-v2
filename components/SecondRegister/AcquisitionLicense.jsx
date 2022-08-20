@@ -1,15 +1,22 @@
 /* 간병인용 취득 자격증 */
+import { useEffect } from "react";
 import { useState } from "react";
 import { Text, TouchableHighlight, View } from "react-native";
 import { useDispatch } from "react-redux";
-import { deleteLicense, saveLicense } from "../../../redux/action/register/secondRegisterAction";
-import licenseData from './data/license.data';
-import selectStyle from "./styles/selectStyle";
+import ResetArrayData from "../../functions/ResetArrayData";
+import { deleteLicense, saveLicense } from "../../redux/action/register/secondRegisterAction";
+import licenseData from "../../data/Register/license.data";
+import selectStyle from "../../styles/Register/selectStyle";
 
 export default function AcquisitionLicense() {
+    
     const [license, setLicense] = useState(licenseData);
     const dispatch = useDispatch();
     
+    useEffect(() => {
+        setLicense(ResetArrayData(license));
+    }, [])
+
     const selectLicense = (title) => {
         const toggleData = [...license];
 
@@ -30,7 +37,7 @@ export default function AcquisitionLicense() {
 
     return (
         <View style={selectStyle.select}>
-            <Text style={{ fontWeight: '500' }}>
+            <Text>
                 취득 자격증
             </Text>
             <View style={selectStyle.content}>

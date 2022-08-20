@@ -1,16 +1,15 @@
 /* 간병인용 다음 병원 질문 입력 */
-import { useState } from "react"
 import { StyleSheet, Text, TextInput,  View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
 import { saveNextHospital } from "../../../redux/action/register/secondRegisterAction";
-import inputStyle from "./styles/inputStyle";
+import inputStyle from "../../../styles/Register/inputStyle";
 
 export default function NextHospital() {
     const dispatch = useDispatch();
     return (
         <View style={styles.nextHospital}>
-            <Text style={{ fontWeight: '500' }}>
+            <Text>
                 환자에게 다음 병원이 예정된 경우
             </Text>
             <TextInput
@@ -28,6 +27,8 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         height: hp('12%'),
-        paddingTop: 5
+        paddingTop: 5,
+        paddingLeft: 20,
+        paddingRight: 10
     },
 })

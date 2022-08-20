@@ -4,7 +4,7 @@ const inputStyle = (content) => StyleSheet.create({
     width: content === 'startDate' || content === 'nextHospital' ? '100%' : '20%',
     marginLeft: content === 'weight' || content === 'career' ? 15 : 0,
     paddingVertical: 1,
-    fontSize: 16,
+    fontSize: 14,
     marginRight: content === 'pay' ? 3 : 5,
     paddingLeft: content === 'pay' ? 1 : 3,
     borderBottomColor: 'silver',

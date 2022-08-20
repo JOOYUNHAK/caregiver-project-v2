@@ -1,0 +1,20 @@
+/* 회원가입 완료 버튼 테두리 스타일 */
+import { StyleSheet } from "react-native"
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+
+const completeBtnStyle = (isFill) => StyleSheet.create({
+    marginTop: hp('5%'),
+    alignSelf: 'center',
+    borderRadius: 5,
+    width: wp('90%'),
+    backgroundColor: isFill ? '#78e7b9' : '#c0f3dc'
+});
+
+const completeBtnTextStyle = (isFill) => StyleSheet.create({
+    paddingHorizontal: wp('15%'), 
+    paddingVertical: 17, 
+    textAlign: 'center',
+    color: 'white'
+});
+
+export { completeBtnStyle,  completeBtnTextStyle} ;

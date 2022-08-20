@@ -1,18 +1,21 @@
 /* 각 페이지 별 뒤로가기 버튼 */
 import React from 'react';
 import {TouchableHighlight} from 'react-native';
-import { useDispatch } from 'react-redux';
 import Icon from '../Icon';
+import { useDispatch } from 'react-redux';
+import { secondRegisterReset } from '../../redux/action/register/secondRegisterAction';
+import { lastRegisterReset } from '../../redux/action/register/lastRegisterAction';
 
-export default function ({ navigation, type }) {
+export default function BackBtn ({ navigation, type }) {
     const dispatch = useDispatch();
     const onPressBackBtn = () => {
-        if(type === 'secondRegisterReset') {
-           /*  dispatch(secondRegisterReset()); */
-            navigation.pop();
+        switch(type) {
+            case 'secondRegisterReset' :        //2번째 페이지에서 뒤로가기 버튼( 2번째 작성 전부 리셋 )
+                dispatch(secondRegisterReset());
+            case 'lastRegisterReset' :
+                dispatch(lastRegisterReset());
+            navigation.goBack();
         }
-        else
-            navigation.pop();
     }
 
     return (

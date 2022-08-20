@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { saveId, saveIsAuthed } from "../../redux/action/register/firstRegisterAction";
+import { widthPercentageToDP as wp} from "react-native-responsive-screen";
 
 export default function AuthId() {
 
@@ -166,8 +167,8 @@ const inputPlaceHolderText = (type) => StyleSheet.create({
 
 const getAuthBtn = (id, isSend, authCode, isAuthed) => StyleSheet.create({
     borderRadius: 10,
-    marginRight: 20,
-    marginLeft: 20,
+    width: wp('90%'),
+    alignSelf: 'center',
     //전화번호가 입력되고 인증버튼 눌렸을 경우와 인증코드가 6자리가 되었을경우
     backgroundColor:
         ((id.length == 11 || id.length == 10) && !isSend) ||

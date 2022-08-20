@@ -1,21 +1,21 @@
 /* 간병인용 몸무게, 경력 입력 */
 
-import { useState } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import inputStyle from "./styles/inputStyle";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
-import { saveCareer, saveWeight } from "../../../redux/action/register/secondRegisterAction";
+import { saveCareer, saveWeight } from "../../redux/action/register/secondRegisterAction";
+import inputStyle from "../../styles/Register/inputStyle";
 
 export default function WeightAndCareer() {
     const dispatch = useDispatch();
     return (
         <View style={styles.weightAndCareer}>
             <View style={styles.weight}>
-                <Text style={{ fontWeight: '500' }}>
+                <Text>
                     몸무게는
                 </Text>
                 <TextInput
+                    maxLength={3}
                     onChangeText={(text) => dispatch(saveWeight(text))}
                     style={inputStyle('weight')}
                     keyboardType='decimal-pad'
@@ -26,7 +26,7 @@ export default function WeightAndCareer() {
             </View>
 
             <View style={styles.career}>
-                <Text style={{ fontWeight: '500' }}>
+                <Text>
                     경력은
                 </Text>
                 <TextInput
@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
         paddingTop: 10,
         height: hp('8%'),
+        paddingLeft: 20
     },
 
     weight: {

@@ -23,6 +23,7 @@ export default function InputBirth() {
 
                 <TextInput
                     onChangeText={(text) => {dispatch(saveName(text)); setName(text)}}
+                    maxLength = {4}
                     placeholder='이름을 입력해주세요'
                     style={styles('normal').inputPlaceHolderText}
                 />
@@ -46,7 +47,7 @@ export default function InputBirth() {
 
 const styles = (type) => StyleSheet.create({
     eachInputText: {
-        marginLeft: 20,
+        paddingLeft: 20,
         fontSize: Platform.OS === 'ios' ? 10 : 13,
         marginBottom: 8
     },

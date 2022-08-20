@@ -1,16 +1,21 @@
 /* 간병인용 가능 지역 */
-
+import { useEffect } from "react";
 import { useState } from "react";
 import { Text, TouchableHighlight, View } from "react-native";
 import { useDispatch } from "react-redux";
-import { deletePossibleArea, savePossibleArea } from "../../../redux/action/register/secondRegisterAction";
-import areaData from './data/area.data';
-import selectStyle from './styles/selectStyle';
+import ResetArrayData from "../../functions/ResetArrayData";
+import { deletePossibleArea, savePossibleArea } from "../../redux/action/register/secondRegisterAction";
+import areaData from "../../data/Register/area.data";
+import selectStyle from "../../styles/Register/selectStyle";
 
 export default function PossibleArea() {
 
     const [area, setArea] = useState(areaData);
     const dispatch = useDispatch();
+    
+    useEffect(() => {
+        setArea(ResetArrayData(area));
+    }, []);
 
     const selectArea = (title) => {
         const toggleData = [...area];
@@ -31,7 +36,7 @@ export default function PossibleArea() {
     }
     return (
         <View style={selectStyle.select}>
-            <Text style={{ fontWeight: '500' }}>
+            <Text>
                 가능 지역
             </Text>
             <View style={selectStyle.content}>

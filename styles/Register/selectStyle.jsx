@@ -7,6 +7,7 @@ const selectStyle = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         height: hp('25%'),
+        paddingLeft: 20,
     },
 
     content: {

@@ -3,6 +3,7 @@ import { Platform } from "react-native";
 import BackBtn from "../components/Btn/BackBtn";
 import CloseBtn from '../components/Btn/CloseBtn';
 import FirstRegister from "../screens/FirstRegister";
+import LastRegister from "../screens/LastRegister";
 import Login from "../screens/Login";
 import Search from "../screens/Search";
 import SecondRegister from "../screens/SecondRegister";
@@ -38,7 +39,7 @@ export function StackNavigation() {
                 component={FirstRegister}
                 options={({ navigation }) => ({
                     headerShown: 'true',
-                    title: '회원가입',
+                    title: '회원가입(1/3)',
                     headerTitleAlign: 'center',
                     headerTitleStyle: {
                         fontSize: Platform.OS === 'ios' ? 13 : 16,
@@ -56,7 +57,7 @@ export function StackNavigation() {
                 component={SecondRegister}
                 options={({ navigation }) => ({
                     headerShown: 'true',
-                    title: '회원가입 (2/3)',
+                    title: '회원가입(2/3)',
                     headerTitleAlign: 'center',
                     headerTitleStyle: {
                         fontSize: Platform.OS === 'ios' ? 13 : 16,
@@ -65,11 +66,27 @@ export function StackNavigation() {
                         left: 10
                     },
                     headerLeft: () => (
-                        <BackBtn navigation={navigation} type= 'secondRegisterReset'/>
+                        <BackBtn navigation={navigation} type = 'secondRegisterReset' />
+                    ),
+                })}
+            />
+            <Stack.Screen
+                name="lastRegisterPage"
+                component={LastRegister}
+                options = {({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '회원가입(3/3)',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 13 :16
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <BackBtn navigation={navigation} type = 'lastRegisterReset'/>
                     )
                 })}
-
-
             />
         </Stack.Navigator>
     );
