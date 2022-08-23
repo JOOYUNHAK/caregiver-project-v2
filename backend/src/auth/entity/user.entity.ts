@@ -1,14 +1,14 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 
 @Entity('user')
 export class User {
-    @PrimaryColumn({ type: 'varchar', length: 11})
+    @Column({ type: 'varchar', length: 11})
     id: string
 
     @Column()
     name: string
 
-    @Column()
+    @PrimaryColumn()
     birth: string
 
     @Column({type: 'varchar', length: 7})
@@ -19,4 +19,7 @@ export class User {
 
     @Column({default: false})
     isCertified: boolean
+
+    @CreateDateColumn()
+    createDate: Date
 }

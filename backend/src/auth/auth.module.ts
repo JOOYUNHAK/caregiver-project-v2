@@ -5,6 +5,7 @@ import { userRepository } from './user.repository';
 import { AuthService } from './auth.service';
 import { UserService } from './user.service';
 import { SendService } from './send.service';
+import { careGiverRepository, protectorRepository } from './register.repository';
 
 @Module({
   imports: [
@@ -13,6 +14,8 @@ import { SendService } from './send.service';
   controllers: [AuthController],
   providers: [
     ...userRepository,
+    ...protectorRepository,
+    ...careGiverRepository,
     AuthService,
     UserService,
     SendService

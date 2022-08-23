@@ -10,7 +10,7 @@ export class SendService {
         private configService: ConfigService,
         @Inject(CACHE_MANAGER)
         private cacheManager: Cache
-    ) {}
+    ) { }
 
     async sms(id: string): Promise<string> {
         const accessKey = this.configService.get<string>('naver.sms.accessKey');
@@ -72,5 +72,5 @@ export class SendService {
         hmac.update(accessKey);
         return hmac.digest('base64')
     };
-    
+
 }
