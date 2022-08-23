@@ -5,7 +5,7 @@ import { useState } from "react";
 import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
-import ResetArrayData from "../../../functions/ResetArrayData";
+import resetArrayData from "../../../functions/resetArrayData";
 import { savePatientSex } from "../../../redux/action/register/secondRegisterAction";
 import sexData from "../../../data/Register/sex.data";
 
@@ -14,7 +14,7 @@ export default function PatientSex() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setPatientSex(ResetArrayData(patientSex));
+        setPatientSex(resetArrayData(patientSex));
     }, [])
 
     const selectBox = (title) => {

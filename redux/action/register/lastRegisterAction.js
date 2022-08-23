@@ -12,6 +12,7 @@ export const saveStrength2 = createAction('lastRegister/saveStrength2'); //  강
 export const saveKeyWord1 = createAction('lastRegister/saveKeyWord1'); // 키워드 부분
 export const saveKeyWord2 = createAction('lastRegister/saveKeyWord2'); // 키워드 부분
 export const saveKeyWord3 = createAction('lastRegister/saveKeyWord3'); // 키워드 부분
+export const saveNotice = createAction('lastRegister/saveNotice'); // 한마디 부분
 
 //보호자용 전용 질문
 export const saveBathChair = createAction('lastRegister/saveBathChair'); // 휠체어 부분
@@ -22,3 +23,4 @@ export const saveWithPatient = createAction('lastRegister/saveWithPatient'); // 
 
 export const lastRegisterReset = createAction('lastRegister/lastRegisterReset'); //마지막 페이지 리셋 
 
+export const confirmRegisterInfoReset = createAction('lastRegister/confirmRegisterInfoReset') //회원가입 확인 페이지 리셋

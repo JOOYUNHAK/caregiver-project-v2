@@ -12,6 +12,7 @@ export default function PatientState() {
                 환자분의 현재 몸상태를 작성해주세요.
             </Text>
             <TextInput
+                maxLength={100}
                 onChangeText={(text) => dispatch(savePatientState(text))}
                 multiline={true}
                 autoCorrect={false}

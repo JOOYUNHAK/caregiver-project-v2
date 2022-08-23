@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Text, TouchableHighlight, View } from "react-native";
 import { useDispatch } from "react-redux";
-import ResetArrayData from "../../functions/ResetArrayData";
+import resetArrayData from "../../functions/resetArrayData";
 import { deletePossibleArea, savePossibleArea } from "../../redux/action/register/secondRegisterAction";
 import areaData from "../../data/Register/area.data";
 import selectStyle from "../../styles/Register/selectStyle";
@@ -14,7 +14,7 @@ export default function PossibleArea() {
     const dispatch = useDispatch();
     
     useEffect(() => {
-        setArea(ResetArrayData(area));
+        setArea(resetArrayData(area));
     }, []);
 
     const selectArea = (title) => {

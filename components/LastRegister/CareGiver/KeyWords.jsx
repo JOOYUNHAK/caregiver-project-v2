@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start', 
         alignItems: 'flex-start', 
         height: hp('8%'),
-        width: wp('100%')
+        width: wp('100%'),
     },
     eachKeyWords:{ 
         flexDirection: 'row', 

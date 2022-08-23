@@ -8,14 +8,14 @@ import { saveTraining } from "../../../redux/action/register/secondRegisterActio
 import { heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import trainingData from "../../../data/Register/SecondRegister/training.data";
 import { useEffect } from "react";
-import ResetArrayData from "../../../functions/ResetArrayData";
+import resetArrayData from "../../../functions/resetArrayData";
 
 export default function Training() {
     const dispatch = useDispatch();
     const [complete, setComplete] = useState(trainingData);
     
     useEffect(() => {
-        setComplete(ResetArrayData(complete));
+        setComplete(resetArrayData(complete));
     }, []);
 
     const onPressHandler = (title) => {

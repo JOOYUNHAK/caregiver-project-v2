@@ -31,7 +31,7 @@ export default function CompleteRegisterBtn({ navigation }) {
             <TouchableHighlight
                 disabled={isFill ? false : true}
                 underlayColor='none'
-                onPress={() => console.log()}
+                onPress={() => navigation.push('confirmRegisterInfoPage')}
             >
                 <Text style={completeBtnTextStyle(isFill)}>
                     가입할게요

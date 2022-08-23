@@ -5,7 +5,7 @@ import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
-import ResetArrayData from "../../../functions/ResetArrayData";
+import resetArrayData from "../../../functions/resetArrayData";
 import { saveIsNext, savePlace } from "../../../redux/action/register/secondRegisterAction";
 import isNextData from "../../../data/Register/SecondRegister/isNext.data";
 import inputStyle from "../../../styles/Register/inputStyle";
@@ -15,7 +15,7 @@ export default function PatientPlaceAndNext() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        setIsNextHospital(ResetArrayData(isNextHospital));
+        setIsNextHospital(resetArrayData(isNextHospital));
     }, []);
 
     const selectBox = (title) => {

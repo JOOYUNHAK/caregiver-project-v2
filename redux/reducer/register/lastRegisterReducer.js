@@ -1,5 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { 
+    confirmRegisterInfoReset,
     lastRegisterReset,
     saveBathChair, 
     saveBedSore, 
@@ -7,6 +8,7 @@ import {
     saveKeyWord2, 
     saveKeyWord3, 
     saveMeal, 
+    saveNotice, 
     saveStrength1, 
     saveStrength2, 
     saveSuction, 
@@ -26,7 +28,8 @@ const initialState = {
     careGiver: {
         keyWord1: '',
         keyWord2: '',
-        keyWord3: ''
+        keyWord3: '',
+        notice: ''
     },
     assistant: {
         withPatient: ''
@@ -77,6 +80,12 @@ const lastRegisterReducer = createReducer(initialState, (builder) => {
         })
         .addCase(lastRegisterReset, (state) => {
             Object.assign(state, initialState )
+        })
+        .addCase(saveNotice, (state, action) => {
+            state.careGiver.notice = action.payload
+        })
+        .addCase(confirmRegisterInfoReset, (state) => {
+            state.careGiver.notice = '';
         })
 });
 

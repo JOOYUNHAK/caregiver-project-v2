@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { saveId, saveIsAuthed } from "../../redux/action/register/firstRegisterAction";
-import { widthPercentageToDP as wp} from "react-native-responsive-screen";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 export default function AuthId() {
 
@@ -31,9 +31,14 @@ export default function AuthId() {
                 'Content-Type': 'application/json',
             }
         }).then((res) => {
-            setInfoMessage(res.data)
-            setBtnText('인증하기') //인증번호 받기 버튼 => 인증하기
-            setIsSend(true); //인증이 보내짐
+            if (res.data == false) {
+                setInfoMessage('이미 가입된 휴대폰 번호입니다.');
+            }
+            else {
+                setInfoMessage(res.data)
+                setBtnText('인증하기') //인증번호 받기 버튼 => 인증하기
+                setIsSend(true); //인증이 보내짐
+            }
         }).catch((error) => {
             setInfoMessage('네트워크 오류로 전송에 실패했습니다.');
         })
@@ -43,7 +48,7 @@ export default function AuthId() {
     const checkAuthCode = () => {
         axios({
             method: 'POST',
-            url: 'http://172.30.1.30:8080/auth/check',
+            url: 'http://172.30.1.30:8080/auth/code',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -100,7 +105,7 @@ export default function AuthId() {
             </View>
             <View style={getAuthBtn(id, isSend, authCode, isAuthed)}>
                 <TouchableHighlight
-                    disabled={ //인증번호를 보내기전, 인증번호를 보내고, 인증이 완료되었을 때 버튼 비활성
+                    disabled={ //인증번호를 보내기전, 인증번호를 보낸 후, 인증이 완료되었을 때 버튼 비활성
                         (id.length == 10 || id.length == 11 && !isSend) ||
                             (authCode.length == 6 && isSend && !isAuthed) ? false : true}
                     underlayColor='none'

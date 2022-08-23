@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { Text, TouchableHighlight, View } from "react-native";
 import { useDispatch } from "react-redux";
-import ResetArrayData from "../../functions/ResetArrayData";
+import resetArrayData from "../../functions/resetArrayData";
 import { deleteLicense, saveLicense } from "../../redux/action/register/secondRegisterAction";
 import licenseData from "../../data/Register/license.data";
 import selectStyle from "../../styles/Register/selectStyle";
@@ -14,7 +14,7 @@ export default function AcquisitionLicense() {
     const dispatch = useDispatch();
     
     useEffect(() => {
-        setLicense(ResetArrayData(license));
+        setLicense(resetArrayData(license));
     }, [])
 
     const selectLicense = (title) => {

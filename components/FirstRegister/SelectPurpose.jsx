@@ -8,7 +8,7 @@ import {
     TouchableHighlight,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import ResetArrayData from "../../functions/ResetArrayData";
+import resetArrayData from "../../functions/resetArrayData";
 import { savePurpose } from "../../redux/action/register/firstRegisterAction";
 import purposeData from "../../data/Register/FirstRegister/purpose.data";
 
@@ -16,7 +16,7 @@ export default function SelectPurpose() {
     const dispatch = useDispatch();
     const [selectPurpose, setSelectPurpose] = useState(purposeData);
     useEffect(() => {
-        setSelectPurpose(ResetArrayData(selectPurpose));
+        setSelectPurpose(resetArrayData(selectPurpose));
     }, []);
 
     const selectBox = (title) => {

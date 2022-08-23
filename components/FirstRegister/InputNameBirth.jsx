@@ -35,6 +35,7 @@ export default function InputBirth() {
                 </Text>
 
                 <TextInput
+                    maxLength={8}
                     onChangeText={(text) => {dispatch(saveBirth(text)); setBirth(text)}}
                     keyboardType='decimal-pad'
                     placeholder='생년월일을 입력해주세요(Ex: 19980202)'

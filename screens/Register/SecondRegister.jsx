@@ -1,34 +1,31 @@
-/* 회원가입 마지막 페이지 */
+/* 회원가입 두번째 페이지 */
 
-import {  StyleSheet,} from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import StatusBarComponent from "../components/StatusBarComponent";
+import { BackHandler, StyleSheet } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { useSelector } from "react-redux";
-import CareGiver from "./LastRegister/CareGiver";
-import Protector from "./LastRegister/Protector";
-import Assistant from "./LastRegister/Assistant";
-import { lastRegisterReset } from "../redux/action/register/lastRegisterAction";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useSelector } from "react-redux"
+import StatusBarComponent from "../../components/StatusBarComponent";
+import Assistatnt from "./SecondRegister/Assistant";
+import CareGiver from "./SecondRegister/CareGiver";
+import Protector from "./SecondRegister/Protector";
 import { useEffect } from "react";
-import { BackHandler } from "react-native";
 import { useDispatch } from "react-redux";
+import { secondRegisterReset } from "../../redux/action/register/secondRegisterAction";
 
-export default function LastRegister({ navigation }) {
-    const purpose = useSelector((state) => state.firstRegister.user.purpose);
+export default function SecondRegister({ navigation }) {
+    
+    const purpose = useSelector((state) => state.firstRegister.user.purpose); //가입목적
     const dispatch = useDispatch();
-
     const backAction = () => {
-        dispatch(lastRegisterReset());
+        dispatch(secondRegisterReset());
         navigation.goBack();
         return true;
-    };
-
+    }
     useEffect(() => {
         BackHandler.addEventListener('hardwareBackPress', backAction);
-        return () =>
+        return () => 
             BackHandler.removeEventListener('hardwareBackPress', backAction);
-    }, []);
-
+    }, [])
     return (
         <SafeAreaView style={styles.container}>
             <StatusBarComponent />
@@ -40,9 +37,9 @@ export default function LastRegister({ navigation }) {
                 scrollEnabled={true}
                 enableAutomaticScroll={true}
                 showsVerticalScrollIndicator={false} >
-            {purpose === '간병인' ? 
+                {purpose === '간병인' ? 
                     <CareGiver navigation={navigation}/> : 
-                        (purpose === '활동보조사' ? <Assistant navigation={navigation}/> : <Protector navigation={navigation}/>)}
+                        (purpose === '활동보조사' ? <Assistatnt navigation={navigation}/> : <Protector navigation={navigation}/>)}
             </KeyboardAwareScrollView>
         </SafeAreaView>
     )
@@ -54,6 +51,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        alignItems: 'flex-start',
+        alignItems: 'center',
     },
 })

@@ -4,7 +4,7 @@ import {TouchableHighlight} from 'react-native';
 import Icon from '../Icon';
 import { useDispatch } from 'react-redux';
 import { secondRegisterReset } from '../../redux/action/register/secondRegisterAction';
-import { lastRegisterReset } from '../../redux/action/register/lastRegisterAction';
+import { confirmRegisterInfoReset, lastRegisterReset } from '../../redux/action/register/lastRegisterAction';
 
 export default function BackBtn ({ navigation, type }) {
     const dispatch = useDispatch();
@@ -14,7 +14,10 @@ export default function BackBtn ({ navigation, type }) {
                 dispatch(secondRegisterReset());
             case 'lastRegisterReset' :
                 dispatch(lastRegisterReset());
-            navigation.goBack();
+            case 'confirmRegisterInfoReset' :
+                dispatch(confirmRegisterInfoReset());
+
+            navigation.pop();
         }
     }
 

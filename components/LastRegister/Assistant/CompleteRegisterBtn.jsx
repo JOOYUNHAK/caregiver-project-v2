@@ -15,16 +15,16 @@ export default function CompleteRegisterBtn({ navigation }) {
 
     return (
         <View style={completeBtnStyle(isFill)}>
+            
             <TouchableHighlight
                 disabled={isFill ? false : true}
                 underlayColor='none'
-                onPress={() => console.log()}
-            >
+                onPress={() => console.log()} >
                 <Text style={completeBtnTextStyle(isFill)}>
                     가입할게요
                 </Text>
 
             </TouchableHighlight>
         </View>
-    )
+    );
 }

@@ -5,15 +5,15 @@ import {
     BackHandler,
     StyleSheet,
 } from "react-native";
-import StatusBarComponent from '../components/StatusBarComponent';
+import StatusBarComponent from '../../components/StatusBarComponent';
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import AuthId from "../components/FirstRegister/AuthId";
-import InputNameBirth from "../components/FirstRegister/InputNameBirth";
-import NextRegisterBtn from "../components/FirstRegister/NextRegisterBtn";
+import AuthId from "../../components/FirstRegister/AuthId";
+import InputNameBirth from "../../components/FirstRegister/InputNameBirth";
+import NextRegisterBtn from "../../components/FirstRegister/NextRegisterBtn";
 import { useDispatch } from "react-redux";
-import { firstRegisterReset } from "../redux/action/register/firstRegisterAction";
-import SelectSex from "../components/FirstRegister/SelectSex";
-import SelectPurpose from "../components/FirstRegister/SelectPurpose";
+import { firstRegisterReset } from "../../redux/action/register/firstRegisterAction";
+import SelectSex from "../../components/FirstRegister/SelectSex";
+import SelectPurpose from "../../components/FirstRegister/SelectPurpose";
 
 export default function FirstRegister({ navigation }) {
     const dispatch = useDispatch();

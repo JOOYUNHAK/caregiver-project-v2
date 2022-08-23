@@ -1,13 +1,14 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import { Platform } from "react-native";
+import { MyTabs } from "./TabNavigator";
 import BackBtn from "../components/Btn/BackBtn";
 import CloseBtn from '../components/Btn/CloseBtn';
-import FirstRegister from "../screens/FirstRegister";
-import LastRegister from "../screens/LastRegister";
+import FirstRegister from "../screens/Register/FirstRegister";
+import LastRegister from "../screens/Register/LastRegister";
 import Login from "../screens/Login";
 import Search from "../screens/Search";
-import SecondRegister from "../screens/SecondRegister";
-import { MyTabs } from "./TabNavigator";
+import SecondRegister from "../screens/Register/SecondRegister";
+import ConfirmRegisterInfo from "../screens/Register/ConfirmRegisterInfo";
 
 const Stack = createStackNavigator();
 
@@ -85,6 +86,20 @@ export function StackNavigation() {
                     },
                     headerLeft: () => (
                         <BackBtn navigation={navigation} type = 'lastRegisterReset'/>
+                    )
+                })}
+            />
+            <Stack.Screen
+                name="confirmRegisterInfoPage"
+                component={ConfirmRegisterInfo}
+                options = {({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '',
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <BackBtn navigation={navigation} type = 'confirmRegisterInfoReset'/>
                     )
                 })}
             />

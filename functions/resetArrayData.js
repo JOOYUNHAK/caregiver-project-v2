@@ -1,4 +1,4 @@
-export default function ResetArrayData ( array ) {
+export default function resetArrayData ( array ) {
     const resetData = [...array];
     resetData.map((data) => {
         data.checked = false;

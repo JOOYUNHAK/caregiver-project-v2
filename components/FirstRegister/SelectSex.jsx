@@ -9,7 +9,7 @@ import {
     TouchableHighlight,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import ResetArrayData from "../../functions/ResetArrayData";
+import resetArrayData from "../../functions/resetArrayData";
 import { saveSex} from "../../redux/action/register/firstRegisterAction";
 import sexData from "../../data/Register/sex.data";
 
@@ -18,7 +18,7 @@ export default function SelectSex() {
     const [selectSex, setSelectSex] = useState(sexData);
 
     useEffect(() => {
-        setSelectSex(ResetArrayData(selectSex));
+        setSelectSex(resetArrayData(selectSex));
     }, []);
 
     const selectBox = (title) => {
