@@ -1,11 +1,10 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
 
-@Entity('caregiver')
-export class CareGvier {
-
+@Entity('assistant')
+export class Assistant {
     @PrimaryGeneratedColumn('uuid')
-    id: number;
+    id: number
 
     @Column({ type: 'smallint' })
     weight: number;
@@ -13,14 +12,14 @@ export class CareGvier {
     @Column({ type: 'smallint' })
     career: number;
 
-    @Column({ type: 'varchar', length: 15 })
-    pay: string;
+    @Column({ type: 'varchar', length: 20 })
+    time: string;
 
-    @Column({ type: 'varchar', length: 15 })
-    startDate: string
+    @Column({ type: 'varchar', length: 20 })
+    startDate: string;
 
-    @Column({ type: 'varchar', length: 25 })
-    nextHospital: string;
+    @Column({ type: 'char', length: 2 })
+    training: string;
 
     @Column({ type: 'varchar', length: 50 })
     possibleArea: string;
@@ -28,28 +27,13 @@ export class CareGvier {
     @Column({ type: 'varchar', length: 50, nullable: true })
     license: string;
 
-    @Column({ type: 'varchar', length: 30 })
-    suction: string;
-
-    @Column({ type: 'varchar', length: 30 })
-    toilet: string;
-
-    @Column({ type: 'varchar', length: 30 })
-    bedsore: string;
-
-    @Column({ type: 'varchar', length: 30 })
-    washing: string;
-
     @Column({ type: 'simple-json', nullable: true })
     strength: { strength1: string, strength2: string }
 
-    @Column({ type: 'varchar', length: 15 })
-    keywords: string;
-
     @Column({ type: 'varchar', length: 30 })
-    notice: string
+    withPatient: string;
 
-    @OneToOne(() => User, (user) => user.birth, {
+    @OneToOne(() => User, ( user ) => user.birth, {
         cascade: ['insert']
     })
     @JoinColumn({

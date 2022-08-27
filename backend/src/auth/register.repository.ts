@@ -1,12 +1,21 @@
 import { DataSource } from "typeorm";
-import { CareGvier } from "./entity/caregiver.entity";
-import { Protector } from "./entity/protector.entity";
+import { Assistant, CareGvier, Protector } from "./entity/register.entity";
+
 
 //간병인 테이블
 export const careGiverRepository = [
     {
         provide: 'CAREGIVER_REPOSITORY',
         useFactory: (dataSource: DataSource) => dataSource.getRepository(CareGvier),
+        inject: ['DATA_SOURCE']
+    }
+];
+
+//활동보조사 테이블
+export const assistantRepository = [
+    {
+        provide: 'ASSISTANT_REPOSITORY',
+        useFactory: (dataSource: DataSource) => dataSource.getRepository(Assistant),
         inject: ['DATA_SOURCE']
     }
 ];
@@ -19,5 +28,3 @@ export const protectorRepository = [
         inject: ['DATA_SOURCE']
     }
 ];
-
-//활동보조사 테이블

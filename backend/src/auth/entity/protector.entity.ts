@@ -47,6 +47,8 @@ export class Protector {
         cascade: ['insert']
     } )
     @JoinColumn({
+        //name: 'user_id'
+        //referencedColumnName: 'id'
         name: 'birth_id',
         referencedColumnName: 'birth'
     })

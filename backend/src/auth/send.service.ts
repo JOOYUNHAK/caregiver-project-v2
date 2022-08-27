@@ -1,18 +1,20 @@
-import { CACHE_MANAGER, HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import * as Crypto from 'crypto';
 import axios from "axios";
-import { Cache } from "cache-manager";
+import { RedisClientType } from "redis";
 
 @Injectable()
 export class SendService {
     constructor(
         private configService: ConfigService,
-        @Inject(CACHE_MANAGER)
-        private cacheManager: Cache
+        @Inject('REDIS_CLIENT')
+        private redis: RedisClientType
     ) { }
 
+    //문자발송 서비스
     async sms(id: string): Promise<string> {
+
         const accessKey = this.configService.get<string>('naver.sms.accessKey');
         const secretKey = this.configService.get<string>('naver.sms.secretKey');
         const serviceId = this.configService.get<string>('naver.sms.serviceId');
@@ -43,6 +45,10 @@ export class SendService {
                 ]
             },
         }).then(async (res) => {
+            //문자 발송에 성공했으면 인증번호 저장
+            await this.redis.set(`${id}`, `${authCode}`, {
+                'EX': 180
+            })
         })
             .catch((err) => {
                 console.log(err.response)
@@ -51,7 +57,7 @@ export class SendService {
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             })
-        await this.cacheManager.set(`${id}`, `${authCode}`, { ttl: 180 })
+            
         return '인증번호를 3분안에 입력해주시기 바랍니다.';
     }
 
@@ -72,5 +78,26 @@ export class SendService {
         hmac.update(accessKey);
         return hmac.digest('base64')
     };
+    
+    //일일 최대 문자 인증 횟수 체크
+    async checkDayCount(id: string): Promise<boolean> {
 
+        const key: string = id + 'smscount'; //아이디 일일 횟수 key
+        const dayCount: string = await this.redis.get(`${key}`); 
+        //처음으로 보내는거면
+        if (dayCount === null) {
+            await this.redis.set(`${key}`, 1, {
+                EX: 86400,
+            })
+            return true;
+        }
+        //보낸 횟수가 4번 이하인경우
+        else if( parseInt(dayCount) <= 4) {
+            await this.redis.incr(`${key}`);
+            return true;
+        }
+        //이미 보낸횟수가 5번인 경우 
+        else 
+            return false;
+    }
 }
