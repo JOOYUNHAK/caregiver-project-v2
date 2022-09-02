@@ -17,7 +17,7 @@ export default function TimeAndStartDate() {
                     onChangeText={(text) => dispatch(saveTime(text))}
                     style={[inputStyle('startDate'), {width: '90%'}]}
                     placeholder = 'Ex) 월,수,금 11시~16시'
-                    maxLength={20}
+                    maxLength={15}
                 />
             </View>
 
@@ -29,7 +29,7 @@ export default function TimeAndStartDate() {
                     onChangeText={(text) => dispatch(saveStartDate(text))}
                     style={[inputStyle('startDate'), {width: '90%'}]}      
                     placeholder='Ex) 2주뒤부터, 8월 9일부터'
-                    maxLength={20}
+                    maxLength={8}
                 />
             </View>
         </View>

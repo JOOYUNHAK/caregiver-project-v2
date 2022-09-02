@@ -46,7 +46,7 @@ export default function PayAndStartDate() {
                     onChangeText={(text) => dispatch(saveStartDate(text))}
                     style={inputStyle('startDate')}
                     placeholder='Ex) 2주뒤부터, 8월 9일부터'
-                    maxLength={15}
+                    maxLength={8}
                 />
             </View>
         </View>

@@ -12,8 +12,9 @@ import {
 import * as Board from '../../functions/Search.js';
 import * as Font from 'expo-font';
 import Icon from '../Icon.jsx';
+import CustomSpanText from '../CustomSpanText.jsx';
 
-export default function ShowMatchingWord({ filterData, recentWords, autoStore }) {
+export default function ShowMatchingWord({ filterData,  recentWords, autoStore }) {
 
     const [fontReady, setFontReady] = useState(false);
 
@@ -42,13 +43,14 @@ export default function ShowMatchingWord({ filterData, recentWords, autoStore })
                 {fontReady === true ?
                     <TouchableHighlight
                         underlayColor='none'
-                        onPress={() => { searchWord(value) }}
+                        onPress={() => { searchWord(value).word }}
                     >
                         <View style={ styles.eachMatchWord}>
                             <Icon props={['antdesign', 'search1', 16, 'red']} />
+                           
                             <Text style={styles.eachMatchWordText}>
-                                {value}
-                            </Text>
+                                {value.word}
+                            </Text> 
                         </View>
                     </TouchableHighlight>
                     : null}

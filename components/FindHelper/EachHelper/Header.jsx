@@ -17,7 +17,7 @@ export default function Header(props) {
 
             <View style={styles.name}>
                     <Text style={styles.nameText}>
-                        김진수님
+                        주윤학님
                     </Text>
                     
             </View>

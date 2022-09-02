@@ -139,13 +139,14 @@ export function getFilterWord(eachLanguageData, searchValue, setFilterData) {
     }
     else if (numberReg.test(searchValue)) {
         setFilterData(eachLanguageData.filter(eachData => {
-            return (valueReg.test(eachData));
+            console.log(eachData.word)
+            return (valueReg.test(eachData.word));
         }))
 
     } //한글
     else {
         const filterData = eachLanguageData.filter(eachData => {
-            return getKoreaData(searchValue, eachData);
+            return getKoreaData(searchValue, eachData.word);
         })
         setFilterData(filterData);
     }

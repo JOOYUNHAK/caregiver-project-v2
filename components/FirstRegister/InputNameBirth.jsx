@@ -7,11 +7,18 @@ import {
     TextInput,
     Platform,
 } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector, shallowEqual } from "react-redux";
 import { saveName, saveBirth } from "../../redux/action/register/firstRegisterAction";
 
 export default function InputBirth() {
     const dispatch = useDispatch();
+    /* const { name2, birth2 } = useSelector(
+        state => ({
+            name2: state.firstRegister.user.name,
+            birth2: state.firstRegister.user.birth
+        }),
+        shallowEqual
+    ); */
     const [name, setName] = useState('');
     const [birth, setBirth] = useState('');
     return (

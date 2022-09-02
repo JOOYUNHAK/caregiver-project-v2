@@ -2,17 +2,17 @@
 
 import axios from "axios";
 
-export default function requestCreateUser(protectorRegisterData) {
+export default function requestCreateUser(RegisterData) {
     axios({
         method: 'POST',
-        url: 'http://172.30.1.30:8080/auth/register',
+        url: 'http://172.30.1.39:8080/auth/register',
         headers: {
             'Content-Type': 'application/json'
         },
         data: {
-            firstRegister: protectorRegisterData.firstRegister,
-            secondRegister: protectorRegisterData.secondRegister,
-            lastRegister: protectorRegisterData.lastRegister
+            firstRegister: RegisterData.firstRegister,
+            secondRegister: RegisterData.secondRegister,
+            lastRegister: RegisterData.lastRegister
         }
     })
         .then((res) => {

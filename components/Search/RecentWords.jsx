@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-    FlatList,
     StyleSheet,
     Text,
     View,
@@ -34,7 +33,6 @@ function RecentWords({ props }) {
                         Board.storeSearchValue(data, item.word);
                     }}>
                     <View style={styles.eachWord}>
-                        <Icon props={['antdesign', 'tagso', 20, 'orange']} />
                         <Text style={styles.eachWordText}>
                             {item.word}
                         </Text>
@@ -92,7 +90,7 @@ const styles = StyleSheet.create({
     },
 
     eachWordText: {
-        fontSize: Platform.OS === 'ios' ? 11 : 13,
+        fontSize: Platform.OS === 'ios' ? 11 : 14,
         fontWeight: 'bold',
         color: 'orange',
     },

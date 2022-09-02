@@ -1,22 +1,16 @@
 /* 회원가입 완료 버튼 */
 
-import {  StyleSheet, Text, TouchableHighlight, View } from "react-native";
+import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen"
-import { useSelector, shallowEqual} from "react-redux";
+import { useSelector, shallowEqual } from "react-redux";
 import requestCreateUser from "../../../functions/Register/requestCreateUser";
 
 export default function CompleteRegisterBtn({ navigation }) {
-    const { firstRegister, patientWeight, protectorSecondRegister, suction, toilet, bedsore, meal, washing, bathChair} = useSelector(
+    const { firstRegister, secondRegister, lastRegister } = useSelector(
         state => ({
             firstRegister: state.firstRegister.user,
-            patientWeight: state.secondRegister.weight,
-            protectorSecondRegister: state.secondRegister.protector,
-            suction: state.lastRegister.suction,
-            toilet: state.lastRegister.toilet,
-            bedsore: state.lastRegister.bedsore,
-            washing: state.lastRegister.washing,
-            meal: state.lastRegister.protector.meal,
-            bathChair: state.lastRegister.protector.bathChair,
+            secondRegister: state.secondRegister,
+            lastRegister: state.lastRegister
         }),
         shallowEqual
     )
@@ -25,45 +19,35 @@ export default function CompleteRegisterBtn({ navigation }) {
         <View style={styles.completeBtn}>
             <TouchableHighlight
                 underlayColor='none'
-                onPress={() => 
+                onPress={() =>
                     requestCreateUser(
                         {
-                            firstRegister, 
-                            secondRegister: {
-                                patientWeight,
-                                protectorSecondRegister
-                            },
-                            lastRegister: {
-                                suction,
-                                toilet,
-                                bedsore, 
-                                washing,
-                                meal,
-                                bathChair
-                            }
+                            firstRegister,
+                            secondRegister,
+                            lastRegister
                         }
                     )}>
-                <Text style= {styles.completeBtnText}>
-                    가입할래요
-                </Text>
-            </TouchableHighlight>
-        </View>
+            <Text style={styles.completeBtnText}>
+                가입할래요
+            </Text>
+        </TouchableHighlight>
+        </View >
     )
 }
 
 const styles = StyleSheet.create({
     completeBtn: {
-        marginTop: hp('5%'), 
-        alignSelf: 'center', 
-        borderRadius: 5, 
-        width: wp('90%'), 
-        marginLeft: wp('5%'),
-        backgroundColor:  '#78e7b9'
+        marginTop: hp('5%'),
+        alignSelf: 'center',
+        borderRadius: 5,
+        width: wp('90%'),
+        backgroundColor: '#78e7b9'
     },
     completeBtnText: {
-        paddingHorizontal: wp('15%'), 
-        paddingVertical: 17, 
+        paddingHorizontal: wp('15%'),
+        paddingVertical: 15,
         textAlign: 'center',
-        color:'white'
+        color: 'white',
+        fontSize: Platform.OS === 'ios' ? 13 : 16
     }
 })

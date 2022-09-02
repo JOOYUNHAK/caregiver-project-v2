@@ -25,6 +25,7 @@ export default function Header({ navigation, recentWords, autoStore, lengthCheck
     useEffect(() => {
         lengthCheck(searchValue.length)
         setValue(searchValue);
+        console.log(searchValue)
     }, [searchValue])
 
     //최근검색어 저장
@@ -37,8 +38,6 @@ export default function Header({ navigation, recentWords, autoStore, lengthCheck
             else
                 MyPhoneStorage.storeSearchValue(recentWords, data); //검색 단어 저장
             
-          
-            
         } else {
             //차단 페이지
         }
@@ -49,14 +48,14 @@ export default function Header({ navigation, recentWords, autoStore, lengthCheck
                 <TouchableOpacity
                     onPress={() => navigation.pop()}
                     style={{ flex: 1 }}>
-                    <Icon props={['antdesign', 'arrowleft', 24, 'red']} />
+                    <Icon props={['antdesign', 'arrowleft', 24, '#94c6ad']} />
                 </TouchableOpacity>
 
                 <View style={styles.searchPageBox}>
                     <TextInput
                         ref={inputRef}
                         underlineColorAndroid="transparent"
-                        placeholder='자신의 취향을 검색해보세요(Ex: ENFT, 활발함, 여행, 운동)'
+                        placeholder='어떤 보조사분들을 찾고 계신가요? (Ex:경험많은, 청결)'
                         onChangeText={text => setSearchValue(text)}
                         value={searchValue}
                         returnKeyType='search'

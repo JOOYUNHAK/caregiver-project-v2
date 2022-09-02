@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
         borderColor: 'whitesmoke',
         borderWidth: 2,
         borderRadius: 150,
-        left: 10,
+        right: 15,
         backgroundColor: 'white',
         flexDirection: 'row',
         justifyContent: 'center',

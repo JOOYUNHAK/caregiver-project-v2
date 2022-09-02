@@ -1,6 +1,7 @@
 /* 특정 글자만 색깔 칠하기 두 단어 결합, 각 단어 분리 case 나누기*/
 /* 결합일 경우 글자별로 색깔을 입히면 앞, 뒤로 똑같은 글자가 나왔을 때 같이 칠해지므로 두 case를 나눈다 */
 
+import { StyleSheet } from "react-native";
 import { Text, View } from "react-native";
 
 export default function CustomSpanText({ fullText, spanText, type }) {
@@ -16,7 +17,7 @@ export default function CustomSpanText({ fullText, spanText, type }) {
             return(
                 <Text
                     key={text.text} 
-                    style ={{color: 'silver', fontWeight: text.isSpan ? '900' : 'normal', textDecorationLine: text.isSpan ? 'underline' : 'none', fontSize: 13}}>
+                    style ={styles(text.isSpan).text}>
                     {text.text}
                 </Text>
             )
@@ -48,5 +49,14 @@ function colorCombinationText(fullText, spanText) {
 }
 
 function colorSeparateText(fullText, spanText) {
-
 }
+
+
+const styles = (isSpan) => StyleSheet.create({
+    text: {
+        color: 'silver', 
+        fontWeight: isSpan ? '900' : 'normal', 
+        textDecorationLine: isSpan ? 'underline' : 'none', 
+        fontSize: 13
+    }
+})

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSelector, shallowEqual} from "react-redux";
-import { Text, TouchableHighlight, View } from "react-native";
+import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import requestCreateUser from "../../functions/Register/requestCreateUser";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen"
 
@@ -35,18 +35,22 @@ export default function ConfirmRegisterBtn() {
                         lastRegister
                     }
                 )}>
-                <Text style={{
-                    textAlign: 'center',
-                    marginHorizontal: 15,
-                    paddingVertical: 15,
-                    borderRadius: 5,
-                    color: 'white',
-                    backgroundColor: isFill ? '#78e7b9' : '#c0f3dc',
-                    fontSize: 15
-                }}>
+                <Text style={styles(isFill).btnText}>
                     확인했어요
                 </Text>
             </TouchableHighlight>
         </View>
     )
 }
+
+const styles = (isFill) => StyleSheet.create({
+    btnText: {
+        textAlign: 'center',
+        marginHorizontal: 15,
+        paddingVertical: 15,
+        borderRadius: 5,
+        color: 'white',
+        backgroundColor: isFill ? '#78e7b9' : '#c0f3dc',
+        fontSize: 15
+    }
+})

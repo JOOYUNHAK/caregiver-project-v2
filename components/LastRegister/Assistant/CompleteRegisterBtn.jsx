@@ -1,14 +1,23 @@
 /* 활동보조사 회원가입 완료 버튼 */
-import { Text, TouchableHighlight, View } from "react-native";
-import { completeBtnStyle, completeBtnTextStyle } from "../../../styles/Register/LastRegister/CompleteBtn";
-import { useSelector } from "react-redux";
+import { StyleSheet, Text, TouchableHighlight, View, Platform } from "react-native";
+import { shallowEqual, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import requestCreateUser from "../../../functions/Register/requestCreateUser";
+
 
 export default function CompleteRegisterBtn({ navigation }) {
 
     const [isFill, setIsFill] = useState(false);
-    const withPatient = useSelector((state) => state.lastRegister.assistant.withPatient);
-
+    const { firstRegister, secondRegister, lastRegister } = useSelector(
+        state => ({
+            firstRegister: state.firstRegister.user,
+            secondRegister: state.secondRegister,
+            lastRegister: state.lastRegister
+        }),
+        shallowEqual
+    );
+    const withPatient = lastRegister.assistant['withPatient'];
     useEffect(() => {
         withPatient ? setIsFill(true) : setIsFill(false)
     }, [withPatient])
@@ -19,7 +28,13 @@ export default function CompleteRegisterBtn({ navigation }) {
             <TouchableHighlight
                 disabled={isFill ? false : true}
                 underlayColor='none'
-                onPress={() => console.log()} >
+                onPress={() => requestCreateUser(
+                    {
+                        firstRegister,
+                        secondRegister,
+                        lastRegister
+                    }
+                )} > 
                 <Text style={completeBtnTextStyle(isFill)}>
                     가입할게요
                 </Text>
@@ -28,3 +43,18 @@ export default function CompleteRegisterBtn({ navigation }) {
         </View>
     );
 }
+
+const completeBtnStyle = (isFill) => StyleSheet.create({
+    alignSelf: 'center',
+    borderRadius: 5,
+    width: wp('90%'),
+    backgroundColor: isFill ? '#78e7b9' : '#c0f3dc'
+});
+
+const completeBtnTextStyle = (isFill) => StyleSheet.create({
+    paddingHorizontal: wp('15%'), 
+    paddingVertical: 15, 
+    textAlign: 'center',
+    color: 'white',
+    fontSize: Platform.OS === 'ios' ? 13 : 16
+});

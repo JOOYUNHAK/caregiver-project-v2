@@ -30,12 +30,10 @@ export default function Info(props) {
                 <Text style={topTextStyle('weight')} >
                     {helperProfile.weight}kg
                 </Text>
-                <View style={styles.profileHelperGrade}>
-                    <Icon props={['material-community', 'star', 16, 'gold']} />
-                    <Text style = {styles.profileHelperGradeText}>
-                        {helperProfile.grade}
-                    </Text>
-                </View>
+                <Text style={topTextStyle('area')} >
+                    {helperProfile.area}
+                </Text>
+                
             </View>
 
             <View style={styles.profileHelperBottom}>
@@ -48,9 +46,12 @@ export default function Info(props) {
                 <Text style={bottomTextStyle('startWork')} >
                     {helperProfile.startWork}
                 </Text>
-                <Text style={bottomTextStyle('view')} >
-                    조회수: {helperProfile.view}
-                </Text>
+                <View style={styles.profileHelperGrade}>
+                    <Icon props={['material-community', 'star', 16, 'gold']} />
+                    <Text style = {styles.profileHelperGradeText}>
+                        {helperProfile.grade}
+                    </Text>
+                </View>
             </View>
         </View>
     );
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     profileHelperTop: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-around',
         marginLeft: 20,
         marginRight: 20,
         flex: 1,
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
         paddingTop: 4,
         borderRadius: 10,
         backgroundColor: 'hsla(307, 20%, 95%, 0.5)',
-        marginLeft: 25,
+        marginLeft: 15,
         overflow: 'hidden'
     },
 
@@ -108,7 +109,7 @@ const styles = StyleSheet.create({
     profileHelperBottom: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
         flex: 1,
     },
 });
@@ -121,7 +122,7 @@ const topTextStyle = (info) => StyleSheet.create({
     paddingBottom: 4,
     paddingTop: 4,
     borderRadius: 10,
-    marginLeft: info === 'sex' ? 20 : 25,
+    marginLeft: info === 'sex' ? 15 : 20,
     backgroundColor: 'hsla(307, 20%, 95%, 0.5)',
     overflow: 'hidden'
 })
@@ -134,7 +135,7 @@ const bottomTextStyle = (info) => StyleSheet.create({
     paddingBottom: 4,
     paddingTop: 4,
     borderRadius: 10,
-    marginLeft: info === 'carrer' ? 0 : 20,
+    marginLeft: info === 'carrer' ? 0 : 10,
     marginRight: info === 'view' ? 15 : 0,
     backgroundColor: 'hsla(307, 20%, 95%, 0.5)',
     overflow: 'hidden'

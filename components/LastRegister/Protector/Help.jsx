@@ -1,9 +1,10 @@
 /* 보호자용 환자분께서 도움이 필요한 부분 */
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import helpContentData from "../../../data/Register/LastRegister/helpContent.data";
 import { useDispatch } from "react-redux";
 import { saveBathChair, saveBedSore, saveMeal, saveSuction, saveToilet, saveWashing } from '../../../redux/action/register/lastRegisterAction'; 
+import helpContentData from "../../../data/Register/LastRegister/helpContent.data";
+import RegisterHelpText from "../../RegisterHelpText";
 
 export default function Help() {
     const dispatch = useDispatch();
@@ -32,9 +33,10 @@ export default function Help() {
     
     return (
         <View style={styles.helpToPatient}>
-            <Text style={{ paddingLeft: 20 }}>
-                환자분께서 도움이 필요한 부분 (해당사항 없을 시 입력 X)
+            <Text>
+                환자분께서 도움이 필요한 부분
             </Text>
+            <RegisterHelpText helpText={'해당사항이 없으신 경우 작성하지 않으셔도 돼요.'} />
             {helpContentData.map((content) => {
                 return (
                     <View key={content.id} style={styles.eachContent}>
@@ -59,18 +61,17 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        marginTop: 20,
-        width: wp('95%'),
+        width: wp('100%'),
+        padding: 20
     },
     eachContent: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        margin: 10,
         marginTop: 20,
-        paddingLeft: 20,
         overflow: 'hidden',
-        paddingBottom: 5
+        paddingBottom: 5,
+        width: wp('90%'),
     },
     eachContentTitle: {
         paddingVertical: 10,

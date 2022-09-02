@@ -76,7 +76,7 @@ const styles = (isSelected) => StyleSheet.create({
         paddingLeft: 15,
         paddingRight: 15,
         paddingTop: Platform.OS === 'ios' ? 7 : 5,
-        color: isSelected ? 'darkred' : 'silver',
+        color: isSelected ? 'orange' : 'silver',
         fontWeight: isSelected ? 'bold' : '500',
         fontSize: Platform.OS === 'ios' ? 11 : 13
     }

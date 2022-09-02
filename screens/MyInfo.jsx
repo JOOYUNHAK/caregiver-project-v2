@@ -10,47 +10,24 @@ import {
     TouchableHighlight
 }
     from 'react-native';
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { useSelector } from 'react-redux';
 import Icon from '../components/Icon';
+import LoginBox from '../components/MyInfo/LoginBox';
 import StatusBarComponent from '../components/StatusBarComponent';
 
-export default function MyInfo( { navigation} ) {
-    
+export default function MyInfo({ navigation }) {
+
+    const { name, purpose } = useSelector(state => ({
+        name: state.user.name,
+        purpose: state.user.purpose
+    }));
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBarComponent />
-            <View style={styles.myLoginBox}>
-                <TouchableHighlight
-                    underlayColor='none'
-                    onPress={() => navigation.push('loginPage')}
-                    style={{ flex: 1.5 }}>
-                    <View style={styles.myLoginState}>
-                        <Text style={styles.myLoginBoxText}>
-                            로그인 및 회원가입하기
-                        </Text>
-                        <View style={{ position: 'absolute', right: 15 }}>
-                            <Icon props={['material', 'navigate-next', 30, '#94c6ad']} />
-                        </View>
-                    </View>
-                </TouchableHighlight>
-
-                <TouchableHighlight
-                underlayColor = 'none'
-                onPress = {() => console.log('mypoint')}
-                style = {{flex:1}}>
-                <View style={styles.myPoint}>
-                    <Text style={styles.myLoginBoxText}>
-                        포인트
-                    </Text>
-                    <View style={{ position: 'absolute', right: 15 }}>
-                        <Icon props={['material', 'navigate-next', 30, '#94c6ad']} />
-                    </View>
-                </View>
-                </TouchableHighlight>
-            </View>
-
-
-            <View style={{ flex: 8 }}>
-
+            <LoginBox navigation = {navigation}/>
+            <View style={{ flex: 7 }}>
             </View>
         </SafeAreaView>
 
@@ -67,7 +44,7 @@ const styles = StyleSheet.create({
     },
 
     myLoginBox: {
-        flex: 2,
+        height: hp('20%'),
         flexDirection: 'column',
         justifyContent: 'center',
         alignSelf: 'stretch',
@@ -94,8 +71,8 @@ const styles = StyleSheet.create({
     },
 
     myLoginState: {
-        alignSelf: 'stretch',
-        flex: 9,
+        width: wp('100%'),
+        height: '100%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -105,18 +82,17 @@ const styles = StyleSheet.create({
     },
 
     myLoginBoxText: {
-        paddingLeft: 15,
-        fontSize: Platform.OS === 'ios' ? 17 : 19,
+        paddingLeft: 10,
+        fontSize: Platform.OS === 'ios' ? 17 : 17,
         color: '#94c6ad',
+        fontWeight: '600'
     },
 
     myPoint: {
-        flex: 1, 
-        paddingLeft: 20, 
-        flexDirection: 'row', 
-        justifyContent: 'flex-start', 
+        flex: 1,
+        paddingLeft: 20,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
         alignItems: 'center'
     },
-
-
 })

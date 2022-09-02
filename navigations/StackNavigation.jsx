@@ -13,12 +13,12 @@ import ConfirmRegisterInfo from "../screens/Register/ConfirmRegisterInfo";
 const Stack = createStackNavigator();
 
 export function StackNavigation() {
+
     return (
         <Stack.Navigator
             screenOptions={{
                 headerShown: false
-            }}
-        >
+            }} >
             <Stack.Screen name="tabNavigator" component={MyTabs} />
             <Stack.Screen name="searchPage" component={Search} />
             <Stack.Screen
@@ -102,7 +102,7 @@ export function StackNavigation() {
                         <BackBtn navigation={navigation} type = 'confirmRegisterInfoReset'/>
                     )
                 })}
-            />
+            /> 
         </Stack.Navigator>
     );
 }

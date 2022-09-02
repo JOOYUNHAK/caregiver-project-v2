@@ -20,12 +20,12 @@ export default function Main({data, autoStore}) {
     const [allDelete, setAllDelete] = useState(false);
 
     const recommendTags = [
-        { tag: "MBTI" },
-        { tag: "코로나" },
-        { tag: "여행" },
-        { tag: "사랑꾼" },
-        { tag: "야근돌이" },
-        { tag: "직장인" },
+        { tag: "경험많은" },
+        { tag: "청결" },
+        { tag: "신뢰" },
+        { tag: "단기" },
+        { tag: "연장가능" },
+        { tag: "깔끔한" },
     ];
 
     useEffect(() => {
@@ -68,7 +68,6 @@ export default function Main({data, autoStore}) {
                     borderColor: 'white'
                 }}
             >
-                <Icon props={['antdesign', 'tagso', 20, 'orange']} />
                 {item.tag}
             </Button>
         );
@@ -78,7 +77,7 @@ export default function Main({data, autoStore}) {
         <View style={styles.searchPageMain}>
             <View style={styles.recommend}>
                 <Text style={styles.recommendText}>
-                    현재 이 매력의 소유자를 가장 많이 찾고 있어요!
+                    현재 이런 보조사 분들을 많이 찾고 있어요!
                 </Text>
                 <View style={styles.recommendTag}>
                     <FlatList
@@ -93,7 +92,7 @@ export default function Main({data, autoStore}) {
             <View style={styles.recentSearch}>
                 <View style={styles.recentSearchText}>
                     <Text style={styles.mainText}>
-                        최근 내가 찾은 유형
+                        최근 검색한 키워드
                     </Text>
                     <View style={styles.subText}>
                         {isAutoStore === true ?

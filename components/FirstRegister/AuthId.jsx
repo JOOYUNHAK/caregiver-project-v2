@@ -8,73 +8,98 @@ import {
     Platform,
     TouchableHighlight
 } from "react-native";
-import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveId, saveIsAuthed } from "../../redux/action/register/firstRegisterAction";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import api from "../../config/CustomAxios";
 
 export default function AuthId() {
 
+    const auth = useSelector(state => state.firstRegister.isAuthed);
     const [id, setId] = useState('');
-    const [btnText, setBtnText] = useState('인증번호 받기');
+    const [isExceed, setIsExceed] = useState(false);
+    const [btnText, setBtnText] = useState(
+            auth ? '인증에 성공했습니다.' : '인증번호 받기');
     const [infoMessage, setInfoMessage] = useState('');
-    const [isAuthed, setIsAuthed] = useState(false); //인증 여부
+    const [isAuthed, setIsAuthed] = useState(auth); //인증 여부
     const [isSend, setIsSend] = useState(false); //인증번호를 보냈는지
     const [authCode, setAuthCode] = useState(''); //인증번호
     const dispatch = useDispatch();
+    
     //인증번호 얻기
-    const requestAuthNumber = () => {
-        axios({
-            method: 'GET',
-            url: `http://172.30.1.30:8080/auth/register/${id}`,
-            headers: {
-                'Content-Type': 'application/json',
+    const requestAuthNumber = async () => {
+        setAuthCode('');
+        try {
+            const res = await api.get(`/auth/register/${id}`);
+            const status = res.data['status'];
+            const message = res.data['message'];
+            switch (status) {
+                case 'duplicate':
+                    setInfoMessage(message);
+                    break;
+                case 'newuser':
+                    setInfoMessage(message);
+                    setBtnText('인증하기');
+                    setIsSend(true);
+                    break;
             }
-        }).then((res) => {
-            if (res.data == false) {
-                setInfoMessage('이미 가입된 휴대폰 번호입니다.');
+        }
+        catch (err) {
+            const statusCode = err.response.data.statusCode;
+            const message = err.response.data.message;
+            switch(statusCode) {
+                //네이버와 통신 불가
+                case 500:
+                    setInfoMessage(message);
+                    break;
+                //하루 인증횟수 초과
+                case 403:
+                    setInfoMessage(message);
+                    setIsSend(false);
+                    setIsExceed(true);
+                    break;
             }
-            else {
-                setInfoMessage(res.data)
-                setBtnText('인증하기') //인증번호 받기 버튼 => 인증하기
-                setIsSend(true); //인증이 보내짐
-            }
-        }).catch((error) => {
-            setInfoMessage('네트워크 오류로 전송에 실패했습니다.');
-        })
+        }
     }
 
     //인증번호검사
-    const checkAuthCode = () => {
-        axios({
-            method: 'POST',
-            url: 'http://172.30.1.30:8080/auth/code',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            data: {
-                "id": id,
-                "userInputCode": authCode
+    const checkAuthCode = async () => {
+        try {
+            const res = await api.post('/auth/sms', {
+                id: id,
+                userInputCode: authCode,
+                path: 'register'
+            });
+            const status = res.data.status;
+            
+            switch (status) {
+                case 'success':
+                    setBtnText('인증에 성공하였습니다.');
+                    setInfoMessage('');
+                    setIsAuthed(true);
+                    dispatch(saveIsAuthed(true));
+                    break;
             }
-        })
-            .then((res) => {
-                switch (res.data) {
-                    case true:
-                        setBtnText('인증에 성공하였습니다.');
-                        setInfoMessage('');
-                        setIsAuthed(true);
-                        dispatch(saveIsAuthed(true));
-                        break;
-                    case false:
-                        setInfoMessage('인증번호가 일치하지 않습니다.');
-                        break;
-                    default:
-                        setInfoMessage(res.data)
-                }
-            })
-            .catch((error) => {
-                console.log(error.response);
-            })
+        }
+        catch (err) {
+            const statusCode = err.response.data.statusCode;
+            const message = err.response.data.message;
+            switch(statusCode) {
+                //인증번호 불일치(로그인 실패)
+                case 401:
+                    setInfoMessage(message);
+                    setAuthCode('');
+                    break;
+                case 403:
+                case 404:
+                    setIsSend(false);
+                    setAuthCode('');
+                    setIsExceed(false);
+                    setBtnText('인증번호 다시 받기');
+                    setInfoMessage(message);
+                    break;
+            }
+        }
     }
     return (
         <>
@@ -84,7 +109,6 @@ export default function AuthId() {
                         <Text style={styles.eachInputText}>
                             휴대폰 번호
                         </Text>
-
                         <TextInput
                             onChangeText={(text) => { dispatch(saveId(text)); setId(text) }}
                             keyboardType='decimal-pad'
@@ -93,16 +117,30 @@ export default function AuthId() {
                         />
                     </> : null}
                 {(isSend && !isAuthed) ? //인증번호를 요청했거나, 요청했는데 번호가 맞지않을 경우
-                    <TextInput
-                        onChangeText={(text) => setAuthCode(text)}
-                        value={authCode}
-                        placeholder='인증번호 6자리를 입력해주세요'
-                        keyboardType='decimal-pad'
-                        style={inputPlaceHolderText('auth')}
-                    />
+                    <View style={{ flexDirection: 'row' }}>
+                        <TextInput
+                            onChangeText={(text) => setAuthCode(text)}
+                            value={authCode}
+                            placeholder='인증번호 6자리를 입력해주세요'
+                            keyboardType='decimal-pad'
+                            style={inputPlaceHolderText('auth')}
+                        />
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                            <TouchableHighlight
+                                underlayColor='none'
+                                onPress={() => requestAuthNumber()}
+                            >
+                                <Text style={styles.reSendText}>
+                                    인증번호 재전송
+                                </Text>
+                            </TouchableHighlight>
+                        </View>
+                    </View>
                     : null}
                 {infoMessage ? <Text style={styles.infoText}>{infoMessage}</Text> : null}
             </View>
+
+            {!isExceed ?
             <View style={getAuthBtn(id, isSend, authCode, isAuthed)}>
                 <TouchableHighlight
                     disabled={ //인증번호를 보내기전, 인증번호를 보낸 후, 인증이 완료되었을 때 버튼 비활성
@@ -117,7 +155,7 @@ export default function AuthId() {
                         {btnText}
                     </Text>
                 </TouchableHighlight>
-            </View>
+            </View> : null }
         </>
     )
 }
@@ -131,7 +169,7 @@ const styles = StyleSheet.create({
     },
 
     eachInput: {
-        width: '100%',
+        width: wp('100%'),
         marginTop: 30,
         flexDirection: 'column',
         justifyContent: 'center'
@@ -146,11 +184,22 @@ const styles = StyleSheet.create({
     },
 
     infoText: {
-        marginLeft: 20,
+        marginLeft: 25,
         marginTop: 10,
-        fontWeight: 'bold',
         color: 'red',
         fontSize: Platform.OS === 'ios' ? 10 : 12
+    },
+
+    reSendText: {
+        paddingHorizontal: 30,
+        marginTop: 10,
+        marginLeft: 10,
+        paddingVertical: 15,
+        color: '#78e7b9',
+        textAlign: 'center',
+        borderColor: 'silver',
+        borderWidth: 0.5,
+        borderRadius: 5
     }
 });
 
@@ -165,7 +214,7 @@ const inputPlaceHolderText = (type) => StyleSheet.create({
     ,
     borderWidth: 0.5,
     borderColor: 'silver',
-    width: type === 'auth' ? '50%' : '90%',
+    width: type === 'auth' ? wp('50%') : wp('90%'),
     alignSelf: type === 'auth' ? 'flex-start' : 'center',
     marginLeft: type === 'auth' ? 20 : 0
 });

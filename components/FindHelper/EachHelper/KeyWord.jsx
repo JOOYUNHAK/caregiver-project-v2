@@ -18,7 +18,7 @@ export default function KeyWord(props) {
                 return (
                     <View key={index} style={styles.keyWordStyle}>
                         <Text style={styles.keyWordTextStyle}>
-                            #{keywords}
+                            {keywords}
                         </Text>
                     </View>
                 )
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
         marginRight: 15,
         justifyContent: 'center',
         borderRadius: 15,
-        backgroundColor: 'hsla(307, 20%, 95%, 0.3)',  
+        backgroundColor: '#fff7f2',  
         alignItems: 'center'
     },
 

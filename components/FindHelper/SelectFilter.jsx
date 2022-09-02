@@ -41,13 +41,13 @@ export default function SelectFilter(props) {
                 <Filter props={[selectGrade, setSelectGrade, setSort, 'highGrade', '평점 높은 순', 
                     [setSelectAgeHigh, setSelectAgeLow, setSelectNormal, setSelectView],scrollRef]} />
                 
-                <Filter props={[selectView, setSelectView, setSort, 'viewHigh', '조회수 높은 순', 
+                <Filter props={[selectView, setSelectView, setSort, 'viewHigh', '리뷰 많은 순', 
                     [setSelectGrade, setSelectAgeHigh, setSelectAgeLow, setSelectNormal], scrollRef]} />
                 
                 <Filter props={[selectAgeLow, setSelectAgeLow, setSort, 'ageLow', '나이 적은 순', 
                     [setSelectAgeHigh, setSelectGrade, setSelectNormal, setSelectView], scrollRef]} />
                 
-                <Filter props={[selectAgeHigh, setSelectAgeHigh, setSort, 'ageHigh', '나이 많은 순', 
+                <Filter props={[selectAgeHigh, setSelectAgeHigh, setSort, 'ageHigh', '지역', 
                     [setSelectGrade, setSelectAgeLow, setSelectNormal, setSelectView], scrollRef]} />
             </View>
         </ScrollView>

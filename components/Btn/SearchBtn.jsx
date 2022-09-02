@@ -30,7 +30,7 @@ export default function SearchBtn() {
         <>
             <View>
                 <TouchableOpacity onPress={() => toSearch()}>
-                    <Icon props={['antdesign', 'search1', 20, 'red']} />
+                    <Icon props={['antdesign', 'search1', 20, '#94c6ad']} />
                 </TouchableOpacity>
             </View>
         </>
