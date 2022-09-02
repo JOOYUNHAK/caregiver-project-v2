@@ -1,14 +1,18 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import { Token } from "./token.entity";
 
 @Entity('user')
 export class User {
-    @Column({ type: 'varchar', length: 11})
+    @PrimaryColumn({ type: 'varchar', length: 11})
     id: string
 
-    @Column()
+    @Column({ type: 'varchar', length: 30, nullable: true})
+    email: string
+
+    @Column({ type: 'varchar', length: 5})
     name: string
 
-    @PrimaryColumn()
+    @Column({ type: 'char', length: 8})
     birth: string
 
     @Column({type: 'varchar', length: 7})
@@ -17,9 +21,24 @@ export class User {
     @Column({type: 'varchar', length: 6})
     purpose: string
 
-    @Column({default: false})
+    @Column({ default: false })
     isCertified: boolean
+
+    @Column({ type: 'int', default: 0 })
+    warning: number
 
     @CreateDateColumn()
     createDate: Date
+
+    @Column({type: 'int'})
+    token_index: number
+
+    @OneToOne(() => Token, (token) => token.index, {
+        cascade: ['insert', 'update', 'remove'],
+    })
+    @JoinColumn({
+        name: 'token_index',
+        referencedColumnName: 'index'
+    })
+    token: Token
 }

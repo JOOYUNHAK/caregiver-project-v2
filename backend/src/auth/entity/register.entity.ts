@@ -1,30 +1,15 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
 
-export abstract class Common {
+@Entity('caregiver')
+export class CareGvier {
     @PrimaryGeneratedColumn('uuid')
     id: number
 
-    @Column({ type: 'varchar', length: 30 })
-    suction: string;
-
-    @Column({ type: 'varchar', length: 30 })
-    toilet: string;
-
-    @Column({ type: 'varchar', length: 30 })
-    bedsore: string;
-
-    @Column({ type: 'varchar', length: 30 })
-    washing: string;
-}
-
-@Entity('caregiver')
-export class CareGvier extends Common {
-
-    @Column({ type: 'smallint' })
+    @Column({ type: 'int' })
     weight: number;
 
-    @Column({ type: 'smallint' })
+    @Column({ type: 'int' })
     career: number;
 
     @Column({ type: 'varchar', length: 15 })
@@ -42,6 +27,18 @@ export class CareGvier extends Common {
     @Column({ type: 'varchar', length: 50, nullable: true })
     license: string;
 
+    @Column({ type: 'varchar', length: 30 })
+    suction: string;
+
+    @Column({ type: 'varchar', length: 30 })
+    toilet: string;
+
+    @Column({ type: 'varchar', length: 30 })
+    bedsore: string;
+
+    @Column({ type: 'varchar', length: 30 })
+    washing: string;
+
     @Column({ type: 'simple-json', nullable: true })
     strength: { strength1: string, strength2: string }
 
@@ -51,25 +48,25 @@ export class CareGvier extends Common {
     @Column({ type: 'varchar', length: 30 })
     notice: string
 
-    @OneToOne(() => User, (user) => user.birth, {
+    @OneToOne(() => User, (user) => user.id, {
         cascade: ['insert']
     })
     @JoinColumn({
-        //name: 'user_id'
-        //referencedColumnName: 'id'
-        name: 'birth_id',
-        referencedColumnName: 'birth'
+        name: 'user_id',
+        referencedColumnName: 'id'
     })
     user: User
 }
 
 @Entity('protector')
-export class Protector extends Common {
+export class Protector {
+    @PrimaryGeneratedColumn('uuid')
+    id: number
 
-    @Column()
+    @Column({ type: 'int' })
     patientWeight: number
 
-    @Column()
+    @Column( { type: 'char', length: 2 })
     patientSex: string
 
     @Column({type: 'varchar', length: 25})
@@ -78,11 +75,23 @@ export class Protector extends Common {
     @Column({type: 'varchar', length: 12})
     place: string
 
-    @Column()
+    @Column({ type: 'char', length: 2 })
     isNext: string
 
     @Column({type: 'varchar', length: 100})
     patientState: string
+
+    @Column({type: 'varchar', length: 30, nullable: true})
+    suction: string;
+
+    @Column({type: 'varchar', length: 30, nullable: true})
+    toilet: string;
+
+    @Column({type: 'varchar', length: 30, nullable: true})
+    bedsore: string;
+
+    @Column({type: 'varchar', length: 30, nullable: true})
+    washing: string;
     
     @Column({type: 'varchar', length: 30, nullable: true})
     meal: string
@@ -91,14 +100,12 @@ export class Protector extends Common {
     bathChair: string
 
     //단방향 OneToOne
-    @OneToOne( () => User, ( user ) => user.birth, {
+    @OneToOne( () => User, ( user ) => user.id, {
         cascade: ['insert']
     } )
     @JoinColumn({
-        //name: 'user_id'
-        //referencedColumnName: 'id'
-        name: 'birth_id',
-        referencedColumnName: 'birth'
+        name: 'user_id',
+        referencedColumnName: 'id'
     })
     user: User
 }
@@ -108,16 +115,16 @@ export class Assistant {
     @PrimaryGeneratedColumn('uuid')
     id: number
 
-    @Column({ type: 'smallint' })
+    @Column({ type: 'int' })
     weight: number;
 
-    @Column({ type: 'smallint' })
+    @Column({ type: 'int' })
     career: number;
 
-    @Column({ type: 'varchar', length: 20 })
+    @Column({ type: 'varchar', length: 15 })
     time: string;
 
-    @Column({ type: 'varchar', length: 20 })
+    @Column({ type: 'varchar', length: 8 })
     startDate: string;
 
     @Column({ type: 'char', length: 2 })
@@ -135,14 +142,12 @@ export class Assistant {
     @Column({ type: 'varchar', length: 30 })
     withPatient: string;
 
-    @OneToOne(() => User, ( user ) => user.birth, {
+    @OneToOne(() => User, ( user ) => user.id, {
         cascade: ['insert']
     })
     @JoinColumn({
-        //name: 'user_id'
-        //referencedColumnName: 'id'
-        name: 'birth_id',
-        referencedColumnName: 'birth'
+        name: 'user_id',
+        referencedColumnName: 'id'
     })
     user: User
 }

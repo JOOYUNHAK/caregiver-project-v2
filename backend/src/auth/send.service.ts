@@ -13,7 +13,7 @@ export class SendService {
     ) { }
 
     //문자발송 서비스
-    async sms(id: string): Promise<string> {
+    async sms(id: string, state: string): Promise<{ status: string, message: string }> {
 
         const accessKey = this.configService.get<string>('naver.sms.accessKey');
         const secretKey = this.configService.get<string>('naver.sms.secretKey');
@@ -47,18 +47,22 @@ export class SendService {
         }).then(async (res) => {
             //문자 발송에 성공했으면 인증번호 저장
             await this.redis.set(`${id}`, `${authCode}`, {
-                'EX': 180
-            })
+                'EX': 90
+            });
+            const tryBlockKey:string = id + 'tryblock'; //인증번호 일치 시도 횟수 초과여부
+            const tryCountKey: string = id + 'trycount'; //인증번호 일치 시도 횟수
+
+            await this.redis.del(`${tryBlockKey}`); //그 전 기록 삭제
+            await this.redis.del(`${tryCountKey}`);
         })
             .catch((err) => {
-                console.log(err.response)
                 throw new HttpException(
                     '네트워크 오류로 문자 발송에 실패했습니다',
                     HttpStatus.INTERNAL_SERVER_ERROR
                 );
             })
-            
-        return '인증번호를 3분안에 입력해주시기 바랍니다.';
+        
+        return { status: state, message: '인증번호를 1분 30초안에 입력해주세요.'};
     }
 
     makeSignature(
@@ -80,7 +84,7 @@ export class SendService {
     };
     
     //일일 최대 문자 인증 횟수 체크
-    async checkDayCount(id: string): Promise<boolean> {
+    async checkDayCount(id: string): Promise<{status: string}> {
 
         const key: string = id + 'smscount'; //아이디 일일 횟수 key
         const dayCount: string = await this.redis.get(`${key}`); 
@@ -89,15 +93,47 @@ export class SendService {
             await this.redis.set(`${key}`, 1, {
                 EX: 86400,
             })
-            return true;
+            return {status: 'remain'};
         }
         //보낸 횟수가 4번 이하인경우
-        else if( parseInt(dayCount) <= 4) {
+        else if( parseInt(dayCount) <= 2) {
             await this.redis.incr(`${key}`);
-            return true;
-        }
+            return {status: 'remain'};
+        } 
         //이미 보낸횟수가 5번인 경우 
-        else 
-            return false;
+        else {
+            const key: string = id + 'blocktime';
+            const blocktime: string = await this.redis.get(`${key}`);
+            //5번째에서 시도한 경우
+            if( blocktime === null) {
+                const today:Date = new Date();
+                today.setSeconds(today.getSeconds() + 86400);
+                const newBlockTime = getNewBlockTime(today);
+                await this.redis.set(`${key}`, `${newBlockTime}`, {
+                    'EX': 86400
+                });
+                throw new HttpException(
+                    `횟수 초과, ${newBlockTime}이후에 다시 시도해 주세요`,
+                    HttpStatus.FORBIDDEN
+                );
+            }
+            throw new HttpException(
+                `횟수 초과, ${blocktime}이후에 다시 시도해 주세요`,
+                HttpStatus.FORBIDDEN
+            ) ;
+        }
     }
+}
+
+function getNewBlockTime( today: Date): string {
+    const year: number= today.getFullYear();
+    const month:number = today.getMonth() + 1;
+    const date:number = today.getDate();
+    const hours:number = today.getHours();
+    const minute:number = today.getMinutes();
+    const second: number = today.getSeconds();
+    const newString:string = 
+        year + '년' + month + '월' + date + '일 ' + 
+            hours + '시' + minute + '분' + second + '초 ';
+    return newString;
 }

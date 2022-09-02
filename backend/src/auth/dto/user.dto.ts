@@ -1,5 +1,9 @@
 export class UserDto {
     id: string;
+    email: string;
     name: string;
-    birth: string
+    purpose: string;
+    isCertified: boolean;
+    warning: number;
+    token_index: number;
 }

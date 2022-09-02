@@ -19,7 +19,8 @@ export const databaseProviders = [
                 entities: [
                     __dirname + '/../**/*.entity{.ts,.js}',
                 ],
-                synchronize: true, //개발 끝나고 배포시 false로 필히 변경
+                synchronize: true, //개발 끝나고 배포시 false로 필히 변경,
+                logging:true
             });
             return dataSource.initialize();
         },

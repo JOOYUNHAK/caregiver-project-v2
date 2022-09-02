@@ -7,11 +7,20 @@ import { UserService } from './user.service';
 import { SendService } from './send.service';
 import { assistantRepository, careGiverRepository, protectorRepository } from './register.repository';
 import { RedisModule } from 'src/redis/redis.module';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { ConfigModule } from '@nestjs/config';
+import { JwtStrategy } from './security/strategy/jwt.strategy';
+import { tokenRepository } from './token.repository';
 
 @Module({
   imports: [
+    ConfigModule,
     DatabaseModule,
-    RedisModule
+    RedisModule,
+    //PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule,
+    JwtModule
   ],
   controllers: [AuthController],
   providers: [
@@ -19,9 +28,12 @@ import { RedisModule } from 'src/redis/redis.module';
     ...protectorRepository,
     ...careGiverRepository,
     ...assistantRepository,
+    ...tokenRepository,
     AuthService,
     UserService,
-    SendService
+    SendService,
+    JwtStrategy
   ],
+  exports: [JwtStrategy, PassportModule]
 })
 export class AuthModule {}

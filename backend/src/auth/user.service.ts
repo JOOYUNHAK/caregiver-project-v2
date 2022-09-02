@@ -1,9 +1,12 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { JwtService } from "@nestjs/jwt";
 import { DataSource, Repository } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UserDto } from "./dto/user.dto";
 import { Assistant, CareGvier, Protector } from "./entity/register.entity";
 import { User } from "./entity/user.entity";
+import { Token } from "./entity/token.entity";
 
 @Injectable()
 export class UserService {
@@ -18,7 +21,16 @@ export class UserService {
         private careGiverRepository: Repository<CareGvier>,
 
         @Inject('ASSISTANT_REPOSITORY')
-        private assistantRepository: Repository<Assistant>
+        private assistantRepository: Repository<Assistant>,
+
+        @Inject('TOKEN_REPOSITORY')
+        private tokenRepository: Repository<Token>,
+
+        @Inject('DATA_SOURCE')
+        private dataSoucre: DataSource,
+
+        private configService: ConfigService,
+        private jwtService: JwtService
     ) { }
 
     //아이디 찾기
@@ -30,8 +42,61 @@ export class UserService {
         });
     }
 
+    //accessToken 발행
+    async setAccessToken(id: string): Promise<string> {
+        const accessPayload = { userid: id, date: new Date()};
+
+        const accessToken = this.jwtService.sign(accessPayload, {
+        secret: this.configService.get('jwt.accessToken.secretKey'),
+        expiresIn: this.configService.get('jwt.accessToken.expireTime')
+        });
+
+        return accessToken;
+    }
+
+    //refreshToken 발행
+    async setRefreshToken(id: string) {
+        const refreshPayload = { userid: id, date: new Date()};
+        const refreshToken: string = this.jwtService.sign(refreshPayload, {
+            secret: this.configService.get('jwt.refreshToken.secretKey'),
+            expiresIn: this.configService.get('jwt.refreshToken.expireTime')
+        });
+
+        //로그인에 성공하면 refreshToken 발급하고 유저정보를 넘겨준다.
+        await this.dataSoucre.query(
+            `UPDATE token TOKEN INNER JOIN user USER 
+             ON TOKEN.index = USER.token_index 
+             SET TOKEN.refreshToken = ?
+             WHERE USER.id = ?`, [refreshToken, id]
+        ) 
+        const user = await this.userRepository.findOne({ 
+            select: ['id', 'email', 'name', 'purpose', 'isCertified', 'warning', 'token_index'],
+            where: {
+                id: id
+            }
+         });
+
+         return user;
+    };
+
+    //해당 아이디의 refreshTokenIndex return
+    /* async getRefreshTokenIndex(id: string): Promise<UserDto> {
+        const user = await this.userRepository
+            .createQueryBuilder('user')
+            .innerJoinAndSelect(
+                'user.token',
+                'token'
+            )
+            .where('user.id = :id', {id: id})
+            .getOne()
+        
+            return user;
+    } */
+
     //회원가입
     async createUser(createUserDto: CreateUserDto) {
+
+        const token = new Token();
 
         //사용자 기본 정보 객체 생성
         const user = new User();
@@ -40,6 +105,7 @@ export class UserService {
         user.birth = createUserDto.firstRegister['birth'];
         user.sex = createUserDto.firstRegister['sex'];
         user.purpose = createUserDto.firstRegister['purpose'];
+        user.token = token;
 
         const purpose = createUserDto.firstRegister['purpose']; //가입 목적
         let eachPurposeObj: object = getPurposeObj(); //각 가입 목적별 객체 생성
@@ -62,10 +128,9 @@ export class UserService {
         //목적별 테이블에 저장
         purpose === '간병인' ?
             await this.careGiverRepository.save(eachPurposeObj) :
-            purpose === '활동보조사' ?
-                await this.assistantRepository.save(eachPurposeObj) :
-                await this.protectorRepository.save(eachPurposeObj)
-
+                purpose === '활동보조사' ?
+                    await this.assistantRepository.save(eachPurposeObj) :
+                        await this.protectorRepository.save(eachPurposeObj)
     }
 }
 
