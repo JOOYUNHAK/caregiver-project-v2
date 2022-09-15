@@ -72,7 +72,7 @@ export class Protector {
     @Column({type: 'varchar', length: 25})
     diagnosis: string
 
-    @Column({type: 'varchar', length: 12})
+    @Column({type: 'varchar', length: 40})
     place: string
 
     @Column({ type: 'char', length: 2 })
@@ -141,6 +141,12 @@ export class Assistant {
 
     @Column({ type: 'varchar', length: 30 })
     withPatient: string;
+
+    @Column({ type: 'varchar', length: 15, nullable: true })
+    keywords: string;
+
+    @Column({ type: 'varchar', length: 30, nullable: true })
+    notice: string
 
     @OneToOne(() => User, ( user ) => user.id, {
         cascade: ['insert']

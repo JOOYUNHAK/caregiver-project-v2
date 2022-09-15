@@ -1,4 +1,4 @@
-import { Inject, Injectable } from "@nestjs/common";
+import { Inject, Injectable, HttpException, HttpStatus } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { DataSource, Repository } from "typeorm";
@@ -7,6 +7,9 @@ import { UserDto } from "./dto/user.dto";
 import { Assistant, CareGvier, Protector } from "./entity/register.entity";
 import { User } from "./entity/user.entity";
 import { Token } from "./entity/token.entity";
+import { ProfileUpdateDto } from "src/user/dto/profile-update.dto";
+import { CareGiverProfileDto,  } from "src/user/dto/caregiver-profile.dto";
+import { AssistantProfileDto } from "src/user/dto/assistant-profile.dto";
 
 @Injectable()
 export class UserService {
@@ -33,8 +36,18 @@ export class UserService {
         private jwtService: JwtService
     ) { }
 
-    //아이디 찾기
+    /**
+     * 아이디나 이메일로 검색하여 해당 유저가 존재하는지 검사하는 함수
+     * @param id 아이디 변경시: 이메일, 이외엔 아이디
+     * @returns user
+     */
     async findId(id: string): Promise<UserDto | null> {
+        if (id.includes('@'))
+            return await this.userRepository.findOne({
+                where: {
+                    email: id
+                }
+            });
         return await this.userRepository.findOne({
             where: {
                 id: id
@@ -42,21 +55,137 @@ export class UserService {
         });
     }
 
-    //accessToken 발행
+    /**
+     * 해당 사용자의 이메일을 등록해주는 함수
+     * @param id 등록하는 사용자의 아이디
+     * @param email 등록할 이메일
+     */
+    async registerEmail(id: string, email: string) {
+        await this.userRepository.update({ id: id }, { email: email });
+    }
+
+    /**
+     * 해당 사용자의 프로필을 업데이트하는 함수
+     * @param profileUpdateDto 필수 param 아이디와 업데이트 항목 넘겨받기
+     */
+    async updateProfile(profileUpdateDto: ProfileUpdateDto) {
+        const { id } = profileUpdateDto;
+        const range = profileUpdateDto?.private
+
+        await this.userRepository.update({ id: id }, { profile_off: range })
+    }
+
+    /**
+     * 보조사들의 자격증 반환
+     * @param id 조회할 아이디
+     * @returns 해당 보조사의 자격증
+     */
+    async getCertificate(id: string): Promise<{ certificate: string }> {
+        const { purpose } = await this.userRepository
+            .createQueryBuilder('user')
+            .select('user.purpose', 'purpose')
+            .where("user.id = :id", { id: id })
+            .getRawOne();
+
+        if (purpose === '간병인') {
+            return await this.careGiverRepository
+                .createQueryBuilder('cg')
+                .select('cg.license', 'certificate')
+                .getRawOne();
+        } else {
+            return await this.assistantRepository
+                .createQueryBuilder('at')
+                .select('at.license', 'certificate')
+                .getRawOne();
+        }
+    }
+
+    /**
+     * 해당 가입목적의 사용자들 프로필 list 전체 return
+     * @param purpose 가입목적
+     * @returns 해당 가입 사용자 프로필 list
+     */
+    async getProfileList(purpose: string): Promise<CareGiverProfileDto[]> {
+        if (purpose === 'careGiver') {
+            return await this.careGiverRepository
+                .createQueryBuilder('cg')
+                .innerJoin('cg.user', 'user')
+                .where('user.profile_off = :profile_off', {profile_off: false})
+                .addSelect([
+                    'user.name',
+                    'user.birth',
+                    'user.sex',
+                    'user.purpose',
+                    'user.isCertified',
+                    'user.warning'
+                ])
+                .getMany();
+        }
+        /* else {
+            return await this.assistantRepository
+                .createQueryBuilder('at')
+                .innerJoin('at.user', 'user')
+                .addSelect([
+                    'user.name',
+                    'user.birth',
+                    'user.sex',
+                    'user.isCertified',
+                    'user.warning',
+                ])
+                .getMany();
+        } */
+    }
+
+    /**
+     * 특정 사용자의 프로필 return
+     * @param purpose 가입목적
+     * @param profileId 해당 목적 테이블의 id
+     * @returns 특정 사용자 profile
+     */
+    async getProfileOne(purpose:string , profileId: string): Promise<CareGiverProfileDto> {
+        if(purpose === 'careGiver') {
+            const profile = await this.careGiverRepository
+                .createQueryBuilder('cg')
+                .innerJoin('cg.user', 'user')
+                .where('cg.id = :profileId', {profileId: profileId})
+                .andWhere('user.profile_off = :profile_off', {profile_off: false})
+                .addSelect([
+                    'user.name',
+                    'user.birth',
+                    'user.sex',
+                    'user.purpose',
+                    'user.isCertified',
+                    'user.warning'
+                ])
+                .getOne();
+            if(profile === null)
+                throw new HttpException(
+                    '해당 프로필을 현재 찾을 수 없습니다.',
+                    HttpStatus.NOT_FOUND
+                )
+            return profile;
+        }
+    }
+
+    /**
+     * 로그인에 성공한 사용자에게 accessToken 발급해주는 함수
+     * @param id 로그인 시도한 아이디
+     * @returns accessToken
+     */
     async setAccessToken(id: string): Promise<string> {
-        const accessPayload = { userid: id, date: new Date()};
+        const accessPayload = { userid: id, date: new Date() };
 
         const accessToken = this.jwtService.sign(accessPayload, {
-        secret: this.configService.get('jwt.accessToken.secretKey'),
-        expiresIn: this.configService.get('jwt.accessToken.expireTime')
+            secret: this.configService.get('jwt.accessToken.secretKey'),
+            expiresIn: this.configService.get('jwt.accessToken.expireTime')
         });
-
         return accessToken;
     }
 
     //refreshToken 발행
-    async setRefreshToken(id: string) {
-        const refreshPayload = { userid: id, date: new Date()};
+    async setRefreshToken(id: string, refresh?: boolean) {
+
+        const refreshPayload = { userid: id, date: new Date() };
         const refreshToken: string = this.jwtService.sign(refreshPayload, {
             secret: this.configService.get('jwt.refreshToken.secretKey'),
             expiresIn: this.configService.get('jwt.refreshToken.expireTime')
@@ -68,33 +197,85 @@ export class UserService {
              ON TOKEN.index = USER.token_index 
              SET TOKEN.refreshToken = ?
              WHERE USER.id = ?`, [refreshToken, id]
-        ) 
-        const user = await this.userRepository.findOne({ 
-            select: ['id', 'email', 'name', 'purpose', 'isCertified', 'warning', 'token_index'],
-            where: {
-                id: id
-            }
-         });
+        )
 
-         return user;
+        //로그인에 성공시에만 유저 정보 넘겨주고, refreshToken 재발급시에는 업데이트만 해준다.
+        if (refresh === undefined) {
+            const user = await this.userRepository.findOne({
+                select: ['id', 'email', 'name', 'purpose', 'isCertified', 'warning', 'token_index'],
+                where: {
+                    id: id
+                }
+            });
+            return user;
+        }
     };
 
-    //해당 아이디의 refreshTokenIndex return
-    /* async getRefreshTokenIndex(id: string): Promise<UserDto> {
+    //토큰 만료됐을 경우 refreshToken으로 새로운 토큰 발급
+    async requestRefreshToken(jwt: string, index: number): Promise<{ accessToken: string, user: UserDto }> {
+        const payload = this.jwtService.decode(jwt);
+
+        const userid = payload['userid']; //만료된 accessToken의 userid
         const user = await this.userRepository
             .createQueryBuilder('user')
             .innerJoinAndSelect(
                 'user.token',
                 'token'
             )
-            .where('user.id = :id', {id: id})
-            .getOne()
-        
-            return user;
-    } */
+            .where('user.id = :id', { id: userid })
+            .getOne();
+
+        //token index값이 해당 유저의 refreshtoken index값하고 일치하면 
+        //해당 아이디의 refreshToken 유효성 검사
+        if (user.token_index == index) {
+            const refreshToken = user.token.refreshToken;
+
+            //refreshToken이 db에 없는경우
+            if (refreshToken === null)
+                throw new HttpException(
+                    'refreshToken 없음',
+                    HttpStatus.NOT_FOUND
+                )
+            //refreshToken이 db에 있는 경우
+            try {
+                const verifyResult = await this.jwtService.verify(
+                    refreshToken, { secret: this.configService.get('jwt.refreshToken.secretKey') });
+
+                const refreshTokenExp = verifyResult['exp']; //refreshToken의 남은 시간
+                this.checkRefreshTokenExp(userid, refreshTokenExp);
+                const accessToken = await this.setAccessToken(userid); //새로 발급 받은 accessToken
+                const user = await this.findId(userid); //해당 유저
+                return { accessToken: accessToken, user: user }
+            }
+            catch (err) {
+                //signature가 잘못된 경우, 만료기간 지난경우 
+                await this.dataSoucre.query(
+                    `UPDATE token TOKEN INNER JOIN user USER 
+                    ON TOKEN.index = USER.token_index 
+                    SET TOKEN.refreshToken = null
+                    WHERE USER.id = ?`, [userid]
+                )
+                throw new HttpException(
+                    'refreshToken 권한 문제',
+                    HttpStatus.UNAUTHORIZED
+                )
+            }
+        }
+    }
+
+    //refreshToken의 유효 기간이 1주일 밑으로 남았을 경우 자동 갱신
+    checkRefreshTokenExp(userid: string, refreshTokenExp: number) {
+        const today = Date.now();
+        const todaySecond = Math.floor(today / 1000);
+        const refreshDay = 86400 * 7;
+        //refreshToken 만료기간이 1주일 이하면 새로 발급
+        if ((refreshTokenExp - todaySecond) < refreshDay)
+            this.setRefreshToken(userid, true);
+        return;
+    }
 
     //회원가입
-    async createUser(createUserDto: CreateUserDto) {
+    async createUser(createUserDto: CreateUserDto): Promise<{ status: string, accessToken: string, user: UserDto }> {
 
         const token = new Token();
 
@@ -128,9 +309,13 @@ export class UserService {
         //목적별 테이블에 저장
         purpose === '간병인' ?
             await this.careGiverRepository.save(eachPurposeObj) :
-                purpose === '활동보조사' ?
-                    await this.assistantRepository.save(eachPurposeObj) :
-                        await this.protectorRepository.save(eachPurposeObj)
+            purpose === '활동보조사' ?
+                await this.assistantRepository.save(eachPurposeObj) :
+                await this.protectorRepository.save(eachPurposeObj)
+
+        const accessToken = await this.setAccessToken(user.id); //회원가입과 동시에 로그인처리 위해
+        const registerUser = await this.setRefreshToken(user.id); // accessToken과 refreshToken 발급하고 return
+        return { status: 'success', accessToken: accessToken, user: registerUser }
     }
 }
 

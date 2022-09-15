@@ -27,6 +27,9 @@ export class User {
     @Column({ type: 'int', default: 0 })
     warning: number
 
+    @Column({ default: false })
+    profile_off: boolean
+
     @CreateDateColumn()
     createDate: Date
 

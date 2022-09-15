@@ -18,7 +18,6 @@ import { tokenRepository } from './token.repository';
     ConfigModule,
     DatabaseModule,
     RedisModule,
-    //PassportModule.register({ defaultStrategy: 'jwt' }),
     PassportModule,
     JwtModule
   ],
@@ -34,6 +33,6 @@ import { tokenRepository } from './token.repository';
     SendService,
     JwtStrategy
   ],
-  exports: [JwtStrategy, PassportModule]
+  exports: [JwtStrategy, PassportModule, JwtModule, UserService]
 })
 export class AuthModule {}
