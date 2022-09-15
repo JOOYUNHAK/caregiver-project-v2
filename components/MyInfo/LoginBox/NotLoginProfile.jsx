@@ -1,4 +1,5 @@
 /* 로그인 박스 프로필 부분 로그인 되어 있지 않은 상태 */
+import { CommonActions } from '@react-navigation/native';
 import React from 'react';
 import {
     View,
@@ -16,7 +17,11 @@ export default function LoginProfile({ navigation }) {
     return (
         <TouchableHighlight
             underlayColor='none'
-            onPress={() => navigation.push('loginPage')}
+            onPress={() => navigation.dispatch(
+                CommonActions.navigate({
+                    name: 'loginPage'
+                })
+            )}
             style={{ height: '49%' }}>
             <View style={styles.myLoginState}>
                 <Text style={styles.myLoginBoxText}>

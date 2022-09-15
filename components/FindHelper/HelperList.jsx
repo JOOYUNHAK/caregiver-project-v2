@@ -10,10 +10,32 @@ import HelperProfile from './EachHelper/Profile';
 import NoListPage from '../../screens/NoList';
 import Icon from '../Icon';
 import SelectFilter from './SelectFilter';
+import { useSelector } from 'react-redux';
+import requestProfileList from '../../api/Profile/requestProfileList';
+import { useLayoutEffect } from 'react';
+import { useIsFocused } from '@react-navigation/native';
+import Loading from '../../screens/Loading';
 
-export default function HelperList({ navigation, data }) {
+
+/**
+ * @todo 밑으로 스크롤시 일정개수 요청
+ * @param 
+ * @returns 
+ */
+export default function HelperList({ purpose }) {
+    useLayoutEffect(() => {
+        async function getProfileList() {
+            await requestProfileList(purpose)
+        };
+        getProfileList();
+    }, [])
+
     let listViewRef;
-    const [UserProfile, setUserProfile] = useState(data);
+
+    const { profile } = useSelector(state => ({
+        profile: state.profile.careGiver
+    }));
+
     const [showTopBtn, setShowTopBtn] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
 
@@ -32,18 +54,14 @@ export default function HelperList({ navigation, data }) {
             setShowTopBtn(false);
         }
     }
-    const getRefreshData = async () => {
+
+    const refreshData = async () => {
         setRefreshing(true);
-        setUserProfile([]);
+        await requestProfileList(purpose);
         setRefreshing(false);
     }
 
-    const onRefresh = () => {
-        if (!refreshing)
-            getRefreshData();
-    }
-
-    useEffect(() => {
+    /* useEffect(() => {
         if (sortStandard === 'normal')
             setUserProfile(UserProfile.sort((a, b) => a.listNo - b.listNo));
         else if (sortStandard === 'highGrade')
@@ -55,28 +73,32 @@ export default function HelperList({ navigation, data }) {
         else if (sortStandard === 'ageHigh')
             setUserProfile(UserProfile.sort((a, b) => b.age - a.age));
         setReRender(!reRender);
-    }, [sortStandard])
+    }, [sortStandard]) */
 
     return (
         <>
-        <SelectFilter props={setSortStandard} />
-            <FlatList
-                ListEmptyComponent={
-                    <NoListPage code={'noBoardList'} />
-                }
-                data={UserProfile}
-                renderItem={({ item }) => <HelperProfile list={item} />}
-                keyExtractor={(profile) => profile.listNo}
-                windowSize={1}
-                extraData = {reRender}
-                onScrollEndDrag={showButton}
-                onRefresh={onRefresh}
-                refreshing={refreshing}
-                showsVerticalScrollIndicator={false}
-                ref={(ref) => {
-                    listViewRef = ref;
-                }}
-            />
+            <SelectFilter props={setSortStandard} />
+            {refreshing ?
+                <Loading /> :
+                <FlatList
+                    ListEmptyComponent={
+                        <NoListPage code={'noBoardList'} />
+                    }
+                    data={profile}
+                    renderItem={({ item }) => <HelperProfile item={item} key={item.id} />}
+                    windowSize={1}
+                    style={{ height: '100%', paddingTop: 10, backgroundColor: 'white' }} //수정
+                    extraData={reRender}
+                    onScrollEndDrag={showButton}
+                    onRefresh={refreshData}
+                    refreshing={refreshing}
+                    showsVerticalScrollIndicator={false}
+                    ref={(ref) => {
+                        listViewRef = ref;
+                    }}
+                />
+            }
+            
             {showTopBtn ?
                 <TouchableHighlight
                     style={styles.TopBtn}
@@ -85,6 +107,7 @@ export default function HelperList({ navigation, data }) {
                     <Icon props={['antdesign', 'arrowup', 25, 'dimgray']} />
                 </TouchableHighlight> : null}
         </>
+
     );
 }
 

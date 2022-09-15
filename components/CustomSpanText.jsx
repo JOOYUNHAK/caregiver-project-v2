@@ -54,9 +54,9 @@ function colorSeparateText(fullText, spanText) {
 
 const styles = (isSpan) => StyleSheet.create({
     text: {
-        color: 'silver', 
-        fontWeight: isSpan ? '900' : 'normal', 
-        textDecorationLine: isSpan ? 'underline' : 'none', 
+        color: '#4d4d4d', 
+        fontWeight: isSpan ? '500' : '300', 
+        //textDecorationLine: isSpan ? 'underline' : 'none', 
         fontSize: 13
     }
 })

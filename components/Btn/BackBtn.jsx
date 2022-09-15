@@ -5,6 +5,7 @@ import Icon from '../Icon';
 import { useDispatch } from 'react-redux';
 import { secondRegisterReset } from '../../redux/action/register/secondRegisterAction';
 import { confirmRegisterInfoReset, lastRegisterReset } from '../../redux/action/register/lastRegisterAction';
+import { CommonActions, StackActions } from '@react-navigation/native';
 
 export default function BackBtn ({ navigation, type }) {
     const dispatch = useDispatch();
@@ -16,8 +17,19 @@ export default function BackBtn ({ navigation, type }) {
                 dispatch(lastRegisterReset());
             case 'confirmRegisterInfoReset' :
                 dispatch(confirmRegisterInfoReset());
-
-            navigation.pop();
+                navigation.pop()
+                break;
+            case 'findAddress':
+                navigation.dispatch(
+                    StackActions.pop()
+                )
+                break;
+            case 'default':
+                navigation.dispatch(
+                    CommonActions.goBack()
+                )
+                break;
+            
         }
     }
 
@@ -25,8 +37,8 @@ export default function BackBtn ({ navigation, type }) {
         <TouchableHighlight
             underlayColor='none'
             onPress={() => onPressBackBtn()}
-            style={{ marginLeft: 10 }}>
-            <Icon props={['antdesign', 'arrowleft', 24, '#94c6ad']} />
+            style={{ marginLeft: 10, marginTop: 1 }}>
+            <Icon props={['antdesign', 'arrowleft', 24, 'black']} />
         </TouchableHighlight>
     )
 }

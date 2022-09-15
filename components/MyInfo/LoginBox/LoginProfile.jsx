@@ -1,4 +1,5 @@
 /* 로그인 박스 프로필 부분 로그인 되어 있는 상태 */
+import { CommonActions, StackActions } from '@react-navigation/native';
 import React from 'react';
 import {
     View,
@@ -8,12 +9,11 @@ import {
     TouchableHighlight
 }
     from 'react-native';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import { useSelector } from 'react-redux';
 import Icon from '../../Icon';
 
 export default function LoginProfile({ navigation }) {
-
     const { name, purpose } = useSelector(state => ({
         name: state.user.name,
         purpose: state.user.purpose
@@ -22,7 +22,9 @@ export default function LoginProfile({ navigation }) {
     return (
         <TouchableHighlight
             underlayColor='none'
-            onPress={() => navigation.push('myProfilePage')}
+            onPress={() => navigation.dispatch(
+                StackActions.push('myProfilePage')
+            )}
             style={{ height: '49%' }}>
             <View style={styles.myLoginState}>
 
@@ -33,12 +35,9 @@ export default function LoginProfile({ navigation }) {
                 <View style={styles.userNameAndPurpose}>
                     
                     <Text style={styles.myLoginBoxText}>
-                        믿음의 {name}님
+                        {name}님, 반갑습니다
                     </Text>
-                    
-                    <Text style={{ paddingLeft: 10, color: '#94c6ad', fontSize: 14 }}>
-                        {purpose}
-                    </Text>
+            
                 
                 </View>
                 

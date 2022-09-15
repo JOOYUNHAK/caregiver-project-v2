@@ -2,6 +2,8 @@ import Icon from "../Icon";
 import { TouchableHighlight } from "react-native";
 import { useDispatch } from "react-redux";
 import { firstRegisterReset } from "../../redux/action/register/firstRegisterAction";
+import { reset } from "../../redux/action/login/loginAction";
+import { StackActions } from "@react-navigation/native";
 
 export default function CloseBtn({ navigation, type }) {
     const dispatch = useDispatch();
@@ -11,6 +13,10 @@ export default function CloseBtn({ navigation, type }) {
             dispatch(firstRegisterReset());
             navigation.pop();
         } 
+        else if(type === 'authEmail') {
+            dispatch(reset());
+            navigation.pop();
+        }
         else
             navigation.pop();
     }
@@ -20,7 +26,7 @@ export default function CloseBtn({ navigation, type }) {
             underlayColor='none'
             onPress={() => onPressCloseBtn()}
         >
-            <Icon props={['materail', 'close', 30, '#94c6ad']} />
+            <Icon props={['materail', 'close', 30, 'black']} />
         </TouchableHighlight>
     );
 }

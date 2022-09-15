@@ -16,7 +16,7 @@ import searchData from '../data/search.data';
 export default function SearchPage(props) {
     const data = props.route.params.data[0];
     const navigation = props.navigation;
-    const [recentWords, setRecentWords] = useState([data]);
+    const [recentWords, setRecentWords] = useState(data);
     const [searchValue, setSearchValue] = useState('');
     const [length, setLength] = useState(0);
 

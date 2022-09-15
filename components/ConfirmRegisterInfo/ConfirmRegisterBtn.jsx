@@ -7,7 +7,7 @@ import requestCreateUser from "../../functions/Register/requestCreateUser";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen"
 
 
-export default function ConfirmRegisterBtn() {
+export default function ConfirmRegisterBtn({ navigation }) {
     const [isFill, setIsFill] = useState(false);
     const { firstRegister, secondRegister, lastRegister} = useSelector(
         state => ({
@@ -28,13 +28,14 @@ export default function ConfirmRegisterBtn() {
             <TouchableHighlight
                 disabled={isFill ? false : true}
                 underlayColor='none'
-                onPress={() => requestCreateUser(
+                onPress={async () => { await requestCreateUser(
                     {
                         firstRegister,
                         secondRegister,
                         lastRegister
-                    }
-                )}>
+                    },
+                    navigation
+                )}}>
                 <Text style={styles(isFill).btnText}>
                     확인했어요
                 </Text>

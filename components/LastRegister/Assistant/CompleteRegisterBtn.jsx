@@ -28,12 +28,13 @@ export default function CompleteRegisterBtn({ navigation }) {
             <TouchableHighlight
                 disabled={isFill ? false : true}
                 underlayColor='none'
-                onPress={() => requestCreateUser(
+                onPress={async () => await requestCreateUser(
                     {
                         firstRegister,
                         secondRegister,
                         lastRegister
-                    }
+                    },
+                    navigation
                 )} > 
                 <Text style={completeBtnTextStyle(isFill)}>
                     가입할게요

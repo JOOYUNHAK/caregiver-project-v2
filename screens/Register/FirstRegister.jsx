@@ -14,12 +14,15 @@ import { useDispatch } from "react-redux";
 import { firstRegisterReset } from "../../redux/action/register/firstRegisterAction";
 import SelectSex from "../../components/FirstRegister/SelectSex";
 import SelectPurpose from "../../components/FirstRegister/SelectPurpose";
+import { CommonActions } from "@react-navigation/native";
 
 export default function FirstRegister({ navigation }) {
     const dispatch = useDispatch();
     const backAction = () => {
         dispatch(firstRegisterReset());
-        navigation.pop();
+        navigation.dispatch(
+            CommonActions.goBack()
+        );
         return true;
     };
 

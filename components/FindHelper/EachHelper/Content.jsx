@@ -1,4 +1,4 @@
-/* 각 가게 홍보 프로필의 내용 */
+/* 각 사용자 프로필의 내용 */
 import React from "react";
 import {
     StyleSheet,
@@ -8,16 +8,17 @@ import {
 import Header from "./Header";
 import KeyWord from "./KeyWord";
 import Info from "./Info";
+import Notice from "./Notice";
 
-export default function ProfileContent( props ) {
-    const helperProfile = props.list;
+export default function ProfileContent({ profile }) {
 
     return (
         <>
             <View style={styles.profileContent}>
-                <Header props = {helperProfile}/>
-                <Info props = {helperProfile} />
-                <KeyWord props = {helperProfile} />
+                <Header profile = {profile}/>
+                <Info profile = {profile} />
+                <KeyWord profile = {profile} />
+                <Notice profile = {profile} />
             </View>
         </>
     )

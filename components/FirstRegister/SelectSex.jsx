@@ -56,7 +56,7 @@ export default function SelectSex() {
                             onPress={() => { selectBox(select.title) }}
                         >
                             <Text style={{
-                                color: select.checked ? 'whitesmoke' : '#81c300',
+                                color: select.checked ? 'white' : '#81c300',
                                 textAlign: 'center',
                                 paddingVertical: 13
                             }}>

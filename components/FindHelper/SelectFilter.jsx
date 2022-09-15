@@ -31,6 +31,7 @@ export default function SelectFilter(props) {
     return (
         <ScrollView
             horizontal={true}
+            style = {{backgroundColor: 'white'}} //수정
             showsHorizontalScrollIndicator={false}
             ref = {scrollRef}
         >

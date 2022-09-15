@@ -39,7 +39,7 @@ export default function ConfirmRegisterInfo({ navigation }) {
                 showsVerticalScrollIndicator={false}>
                 <InputNotice />
                 <Info />
-                <ConfirmRegisterBtn />
+                <ConfirmRegisterBtn navigation={navigation} />
             </KeyboardAwareScrollView>
         </SafeAreaView>
     )

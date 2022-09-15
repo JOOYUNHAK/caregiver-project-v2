@@ -19,14 +19,16 @@ export default function CompleteRegisterBtn({ navigation }) {
         <View style={styles.completeBtn}>
             <TouchableHighlight
                 underlayColor='none'
-                onPress={() =>
-                    requestCreateUser(
+                onPress={async () =>
+                    await requestCreateUser(
                         {
                             firstRegister,
                             secondRegister,
                             lastRegister
-                        }
-                    )}>
+                        },
+                        navigation
+                    )
+                   }>
             <Text style={styles.completeBtnText}>
                 가입할래요
             </Text>

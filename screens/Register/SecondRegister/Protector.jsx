@@ -7,7 +7,6 @@ import PatientState from "../../../components/SecondRegister/Protector/PatientSt
 import PatientWeight from "../../../components/SecondRegister/Protector/PatientWeight";
 
 export default function Protector({ navigation }) {
-
     return (
         <>
             <PatientWeight />

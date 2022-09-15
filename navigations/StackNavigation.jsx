@@ -9,6 +9,14 @@ import Login from "../screens/Login";
 import Search from "../screens/Search";
 import SecondRegister from "../screens/Register/SecondRegister";
 import ConfirmRegisterInfo from "../screens/Register/ConfirmRegisterInfo";
+import MyProfile from "../screens/MyProfile";
+import { Text } from "react-native";
+import Email from "../screens/MyProfile/Account/Email";
+import Certificate from "../screens/MyProfile/Profile/Certificate";
+import RegisterCompletePage from "../screens/Register/RegisterComplete";
+import FindAddress from "../components/SecondRegister/Protector/FindAddress";
+import UserProfile from "../components/MyProfile/UserProfile";
+import HelperProfile from "../screens/UserProfile";
 
 const Stack = createStackNavigator();
 
@@ -67,42 +75,134 @@ export function StackNavigation() {
                         left: 10
                     },
                     headerLeft: () => (
-                        <BackBtn navigation={navigation} type = 'secondRegisterReset' />
+                        <BackBtn navigation={navigation} type='secondRegisterReset' />
                     ),
                 })}
             />
             <Stack.Screen
                 name="lastRegisterPage"
                 component={LastRegister}
-                options = {({ navigation }) => ({
+                options={({ navigation }) => ({
                     headerShown: 'true',
                     title: '회원가입(3/3)',
                     headerTitleAlign: 'center',
                     headerTitleStyle: {
-                        fontSize: Platform.OS === 'ios' ? 13 :16
+                        fontSize: Platform.OS === 'ios' ? 13 : 16
                     },
                     headerLeftContainerStyle: {
                         left: 10
                     },
                     headerLeft: () => (
-                        <BackBtn navigation={navigation} type = 'lastRegisterReset'/>
+                        <BackBtn navigation={navigation} type='lastRegisterReset' />
+                    )
+                })}
+            />
+
+            <Stack.Screen
+                name = 'findAddressPage'
+                component = {FindAddress}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '주소검색',
+                    headerTitleAlign: 'left',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 16 : 19,
+                        marginLeft: 15
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <BackBtn navigation={navigation} type='findAddress' />
                     )
                 })}
             />
             <Stack.Screen
                 name="confirmRegisterInfoPage"
                 component={ConfirmRegisterInfo}
-                options = {({ navigation }) => ({
+                options={({ navigation }) => ({
                     headerShown: 'true',
                     title: '',
                     headerLeftContainerStyle: {
                         left: 10
                     },
                     headerLeft: () => (
-                        <BackBtn navigation={navigation} type = 'confirmRegisterInfoReset'/>
+                        <BackBtn navigation={navigation} type='confirmRegisterInfoReset' />
                     )
                 })}
-            /> 
+            />
+            <Stack.Screen
+                name="myProfilePage"
+                component={MyProfile}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '내 계정 관리',
+                    headerTitleAlign: 'left',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 16 : 19,
+                        marginLeft: 15
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <BackBtn navigation={navigation} type='default' />
+                    ),
+                })}
+            />
+
+            <Stack.Screen
+                name="emailPage"
+                component={Email}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                })}
+            />
+
+            <Stack.Screen
+                name="certificatePage"
+                component={Certificate}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '자격증',
+                    headerTitleAlign: 'left',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 16 : 19,
+                        marginLeft: 15
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <BackBtn navigation={navigation} type='default' />
+                    )
+                })}
+                />
+
+            <Stack.Screen
+                name = 'registerCompletePage'
+                component = {RegisterCompletePage}
+            />
+
+            <Stack.Screen
+                name="helperProfilePage"
+                component={HelperProfile}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '',
+                    headerTitleAlign: 'left',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 13 : 17,
+                        marginLeft: 15
+                    },
+                    headerLeftContainerStyle: { 
+                        left: 10,
+                    },
+                    headerLeft: () => (
+                        <BackBtn navigation={navigation} type = 'default' />
+                    )
+                })}
+            />
         </Stack.Navigator>
     );
 }

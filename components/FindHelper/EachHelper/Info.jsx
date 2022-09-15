@@ -1,4 +1,4 @@
-/* 가게 현재 글 정보 */
+/* 사용자 현재 글 정보 */
 import React from "react";
 import {
     StyleSheet,
@@ -6,53 +6,75 @@ import {
     Text,
     Platform,
 } from 'react-native';
-import Icon from "../../Icon";
+import { getCareer, isEqualPay, possibleAreaRange } from "../../../functions/Profile/profileFunctions";
 
-export default function Info(props) {
-    const helperProfile = props.props;
-    
+export default function Info({ profile }) {
+    let career = profile.career;
+    if (career >= 12)
+        career = getCareer(career);
+    const equalPay = isEqualPay(profile.pay);
+    const exceedArea = possibleAreaRange(profile.possibleArea)
+
     return (
         <View style={styles.profileHelperContainer}>
-            <View style = {styles.profileHelperAppeal}>
-                <Icon props ={['material', 'campaign', 20, 'silver']} />
-                <Text style = {styles.profileHelperAppealText}>
-                    믿고 연락주세요. 친절하게 모시겠습니다.
-                </Text>
-            </View>
-                
-            <View style={styles.profileHelperTop}>
-                <Text style={topTextStyle('sex')}>
-                    성별: {helperProfile.sex}
-                </Text>
-                <Text style={topTextStyle('age')} >
-                    나이: {helperProfile.age}세
-                </Text>
-                <Text style={topTextStyle('weight')} >
-                    {helperProfile.weight}kg
-                </Text>
-                <Text style={topTextStyle('area')} >
-                    {helperProfile.area}
-                </Text>
-                
-            </View>
+            <View style={styles.leftPart}>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.title}>
+                        경력
+                    </Text>
+                    <View style={styles.verticalLine} />
+                    <Text style={styles.userValue}>
+                        {career}
+                    </Text>
+                </View>
 
-            <View style={styles.profileHelperBottom}>
-                <Text style={bottomTextStyle('career')}>
-                    경력: {helperProfile.career}
-                </Text>
-                <Text style={bottomTextStyle('pay')} >
-                    {helperProfile.pay}만원
-                </Text>
-                <Text style={bottomTextStyle('startWork')} >
-                    {helperProfile.startWork}
-                </Text>
-                <View style={styles.profileHelperGrade}>
-                    <Icon props={['material-community', 'star', 16, 'gold']} />
-                    <Text style = {styles.profileHelperGradeText}>
-                        {helperProfile.grade}
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.title}>
+                        일당
+                    </Text>
+                    <View style={styles.verticalLine} />
+                    <Text style={styles.userValue}>
+                        {equalPay ?
+                            `${equalPay}만원` :
+                            (profile.pay)
+                        }
                     </Text>
                 </View>
             </View>
+
+            <View style={styles.rightPart}>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.title}>
+                        지역
+                    </Text>
+                    <View style={styles.verticalLine} />
+                    <Text style={styles.userValue}>
+                        { exceedArea ?
+                            `상세 프로필 참고` :
+                            (profile.possibleArea)
+                        }
+                    </Text>
+                </View>
+
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.title}>
+                        시작 가능 날짜
+                    </Text>
+                    <View style={styles.verticalLine} />
+                    <Text style={styles.userValue}>
+                        {profile.startDate}
+                    </Text>
+                </View>
+            </View>
+
+
+
+            {/*  <View style={styles.profileHelperGrade}>
+                    <Icon props={['material-community', 'star', 16, 'gold']} />
+                    <Text style = {styles.profileHelperGradeText}>
+                        {profile.grade}
+                    </Text>
+                </View> */}
         </View>
     );
 }
@@ -60,21 +82,42 @@ export default function Info(props) {
 const styles = StyleSheet.create({
 
     profileHelperContainer: {
-        flexDirection: 'column',
-        justifyContent: 'center',
-        flex: 6,
-    },
-
-    profileHelperAppeal: {
         flexDirection: 'row',
-        alignItems: 'center',
-        marginLeft: 28
+        justifyContent: 'flex-start',
+        flex: 1,
+        paddingLeft: 30,
+        paddingRight: 20
     },
 
-    profileHelperAppealText: {
+    title: {
+        color: 'darkgray',
+        fontWeight: '400',
         fontSize: 13,
-        fontWeight: '600',
-        color: 'silver'
+    },
+
+    userValue: {
+        color: '#545454',
+        fontSize: 13
+    },
+
+    leftPart: {
+        flexDirection: 'column',
+        width: '50%',
+        justifyContent: 'space-around'
+    },
+
+    rightPart: {
+        flexDirection: 'column',
+        width: '55%',
+        justifyContent: 'space-around'
+    },
+
+    verticalLine: {
+        borderWidth: 0.3,
+        height: '37%',
+        marginTop: 6,
+        borderColor: 'silver',
+        marginHorizontal: 5
     },
 
     profileHelperTop: {
@@ -113,30 +156,3 @@ const styles = StyleSheet.create({
         flex: 1,
     },
 });
-
-const topTextStyle = (info) => StyleSheet.create({
-    color: 'black',
-    fontSize: Platform.OS === 'ios' ? 10 : 12,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 4,
-    paddingTop: 4,
-    borderRadius: 10,
-    marginLeft: info === 'sex' ? 15 : 20,
-    backgroundColor: 'hsla(307, 20%, 95%, 0.5)',
-    overflow: 'hidden'
-})
-
-const bottomTextStyle = (info) => StyleSheet.create({
-    color: 'black',
-    fontSize: Platform.OS === 'ios' ? 10 : 12,
-    paddingLeft: 10,
-    paddingRight: 10,
-    paddingBottom: 4,
-    paddingTop: 4,
-    borderRadius: 10,
-    marginLeft: info === 'carrer' ? 0 : 10,
-    marginRight: info === 'view' ? 15 : 0,
-    backgroundColor: 'hsla(307, 20%, 95%, 0.5)',
-    overflow: 'hidden'
-})

@@ -3,6 +3,7 @@ import { Platform } from "react-native";
 import Icon from '../components/Icon';
 import FindHelper from '../screens/FindHelper'
 import Writing from '../screens/Writing'
+import SearchBtn from "../components/Btn/SearchBtn";
 import MyInfo from "../screens/MyInfo";
 
 const Tab = createBottomTabNavigator();
@@ -27,25 +28,27 @@ export function MyTabs() {
             <Tab.Screen
                 name="home"
                 component={FindHelper}
-                options={{
-                    unmountOnBlur: true,
+                options={({ navigation }) => ({
                     tabBarLabel: '홈',
                     title: '믿음으로',
                     headerTitleAlign: 'left',
                     headerTitleStyle: {
                         fontWeight: 'bold',
                         paddingLeft: 20,
-                        color: '#94c6ad',
-                        fontSize: Platform.OS === 'ios' ? 13 : 16
+                        color: 'black',
+                        fontSize: Platform.OS === 'ios' ? 13 : 17
                     },
                     headerRightContainerStyle: {
                         right: 20
                     },
+                    headerRight: () => (
+                        <SearchBtn />
+                    ),
                     tabBarIcon: ({ color }) => (
                         <Icon props={['material-community', 'home', 26, color]} />
                     ),
 
-                }}
+                })}
             />
 
             <Tab.Screen
@@ -63,6 +66,7 @@ export function MyTabs() {
                 name="myinfo"
                 component={MyInfo}
                 options={{
+                    unmountOnBlur: true,
                     tabBarLabel: '내정보',
                     title: 'MY 믿음',
                     headerTitleStyle: {

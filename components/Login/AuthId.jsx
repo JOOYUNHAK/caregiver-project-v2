@@ -16,7 +16,7 @@ import { saveId, saveIsAuthed } from '../../redux/action/register/firstRegisterA
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { saveUser } from '../../redux/action/user/userAction';
-import { CommonActions } from '@react-navigation/native';
+import { CommonActions, StackActions } from '@react-navigation/native';
 
 
 export default function AuthId({ navigation }) {
@@ -110,16 +110,13 @@ export default function AuthId({ navigation }) {
                         await AsyncStorage.
                             multiSet([['accessToken', accessToken], ['refreshToken', refreshToken.toString()]]);
                         navigation.dispatch(
-                            CommonActions.navigate({
-                                name: 'myinfo'
-                            })
+                            StackActions.pop()
                         )
                         break;
                     }
             }
         }
         catch (err) {
-            console.log(err)
             const statusCode = err.response.data.statusCode;
             const message = err.response.data.message;
             switch (statusCode) {
@@ -148,7 +145,8 @@ export default function AuthId({ navigation }) {
     return (
         <>
             <Text style={styles.infoText}>
-                휴대폰 번호 인증으로 간편하게 로그인하세요.
+                로그인을 하기 위해선{"\n"}
+                휴대폰 인증이 필요해요
             </Text>
             <View style={styles.inputId}>
                 <TextInput
@@ -207,10 +205,11 @@ export default function AuthId({ navigation }) {
 const styles = StyleSheet.create({
 
     infoText: {
-        marginTop: 15,
+        marginTop: 20,
         marginLeft: 22,
-        color: '#4dbd91',
-        fontSize: Platform.OS === 'ios' ? 13 : 16,
+        color: 'black',
+        fontWeight: '700',
+        fontSize: Platform.OS === 'ios' ? 13 : 17,
     },
 
     inputId: {

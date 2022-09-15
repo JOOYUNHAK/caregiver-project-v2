@@ -3,4 +3,6 @@
 import { createAction } from "@reduxjs/toolkit";
 
 export const saveUser = createAction('user/saveUser'); //로그인 성공했을 시
+export const saveEmail = createAction('user/saveEmail');
+export const toggleProfile = createAction('user/toggleProfile');
 export const logout = createAction('user/logout'); //로그아웃

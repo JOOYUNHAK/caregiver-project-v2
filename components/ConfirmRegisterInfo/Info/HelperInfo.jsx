@@ -16,17 +16,12 @@ export default function HelperInfo() {
             <View style={styles.info}>
                 <Icon props={['font-awesome', 'exclamation', 18, 'silver']} />
                 <CustomSpanText
-                    fullText={'인증이 되기 전까지 자격증 미인증으로 노출돼요.'} spanText={['미인증']} type={'combination'} />
+                    fullText={'인증이 되기 전까지 프로필이 노출되지 않아요.'} spanText={['노출']} type={'combination'} />
             </View>
             <View style={styles.info}>
                 <Icon props={['font-awesome', 'exclamation', 18, 'silver']} />
                 <CustomSpanText
                     fullText={'제출은 wndbsgkr@naver.com으로 신분증과 함께 보내주세요.'} spanText={['wndbsgkr@naver.com']} type={'combination'} />
-            </View>
-            <View style={styles.info}>
-                <Icon props={['font-awesome', 'exclamation', 18, 'silver']} />
-                <CustomSpanText
-                    fullText={'신분증 및 증명 자료는 확인 즉시 삭제됩니다.'} spanText={['삭제']} type={'combination'} />
             </View>
             <View style={styles.info}>
                 <Icon props={['font-awesome', 'exclamation', 18, 'silver']} />

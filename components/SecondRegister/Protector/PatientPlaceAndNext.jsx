@@ -9,10 +9,25 @@ import resetArrayData from "../../../functions/resetArrayData";
 import { saveIsNext, savePlace } from "../../../redux/action/register/secondRegisterAction";
 import isNextData from "../../../data/Register/SecondRegister/isNext.data";
 import inputStyle from "../../../styles/Register/inputStyle";
+import { useNavigation, StackActions, useRoute } from "@react-navigation/native";
+import Icon from "../../Icon";
 
 export default function PatientPlaceAndNext() {
     const [isNextHospital, setIsNextHospital] = useState(isNextData);
+
     const dispatch = useDispatch();
+    const navigation = useNavigation();
+    const route = useRoute();
+    let address;
+
+    if (route?.params) {
+        address = route.params.address;
+        dispatch(savePlace(address));
+    }
+
+    /* useEffect(() => {
+        console.log(address)
+    }, [route.params?.address]) */
 
     useEffect(() => {
         setIsNextHospital(resetArrayData(isNextHospital));
@@ -37,12 +52,35 @@ export default function PatientPlaceAndNext() {
                 <Text>
                     간병하게 될 장소
                 </Text>
-                <TextInput
-                    onChangeText={(text) => dispatch(savePlace(text))}
-                    maxLength = {12}
-                    placeholder="Ex)서울대병원, OO요양병원"
-                    style={[inputStyle('startDate'), { width: '90%' }]}
-                />
+
+                {address ?
+                    <TouchableHighlight
+                        style = {{marginTop :12}}
+                        underlayColor = 'none'
+                        onPress={() => navigation.dispatch(
+                            StackActions.push('findAddressPage')
+                        )}>
+                        <Text style={{ color: '#94c6ad', }}>
+                            {address}
+                        </Text>
+                    </TouchableHighlight> :
+                    
+                    <TouchableHighlight
+                        style={{ marginTop: 20 }}
+                        underlayColor='none'
+                        onPress={() => navigation.dispatch(
+                            StackActions.push('findAddressPage')
+                        )}
+                    >
+                        <View style={{ flexDirection: 'row' }}>
+                            <Icon props={['antdesign', 'search1', 18, '#94c6ad']} />
+                            <Text style={{ color: '#94c6ad' }}>
+                                주소검색
+                            </Text>
+                        </View>
+                    </TouchableHighlight>
+                }
+
             </View>
             <View style={styles.columnStyle}>
                 <Text>
