@@ -6,14 +6,15 @@ import {
     Text,
     Platform,
 } from 'react-native';
-import { getCareer, isEqualPay, possibleAreaRange } from "../../../functions/Profile/profileFunctions";
+import { changeStartDate, getCareer, isEqualPay, possibleAreaRange } from "../../../functions/Profile/profileFunctions";
 
 export default function Info({ profile }) {
     let career = profile.career;
     if (career >= 12)
         career = getCareer(career);
     const equalPay = isEqualPay(profile.pay);
-    const exceedArea = possibleAreaRange(profile.possibleArea)
+    const exceedArea = possibleAreaRange(profile.possibleArea);
+    const startDate = changeStartDate(profile.startDate);
 
     return (
         <View style={styles.profileHelperContainer}>
@@ -62,7 +63,7 @@ export default function Info({ profile }) {
                     </Text>
                     <View style={styles.verticalLine} />
                     <Text style={styles.userValue}>
-                        {profile.startDate}
+                        {startDate}
                     </Text>
                 </View>
             </View>

@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useSelector } from "react-redux";
-import { getCareer, isEqualPay } from "../../functions/Profile/profileFunctions";
+import { changeStartDate, getCareer, isEqualPay } from "../../functions/Profile/profileFunctions";
 
 export default function ProfileBasicInfo() {
 
@@ -15,6 +15,7 @@ export default function ProfileBasicInfo() {
     if (career >= 12)
         career = getCareer(career);
     const equalPay = isEqualPay(userProfile.pay);
+    const startDate = changeStartDate(userProfile.startDate);
 
     return (
         <View style={{
@@ -96,7 +97,7 @@ export default function ProfileBasicInfo() {
                         </Text>
                         <View style={styles.verticalLine} />
                         <Text style={styles.userValue}>
-                            {userProfile.startDate}
+                            {startDate}
                         </Text>
                     </View>
                 </View>

@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { Text } from "react-native";
 import { TouchableHighlight } from "react-native";
 import { StyleSheet } from "react-native";
@@ -11,6 +12,11 @@ import Icon from "../Icon";
 
 
 export default function ProfileCareStyle() {
+
+    const [toilet, setToilet] = useState(true);
+    const [suction, setSuction] = useState(true);
+    const [washing, setWashing] = useState(true);
+    const [bedsore, setBedsore] = useState(true);
 
     const { userProfile } = useSelector(state => ({
         userProfile: state.profile.userProfile
@@ -27,6 +33,8 @@ export default function ProfileCareStyle() {
 
                 <View style={styles.eachCareStyle}>
                     <TouchableHighlight
+                        underlayColor='none'
+                        onPress={() => setToilet(!toilet)}
                         style={styles.questionTouch}
                     >
                         <View style={styles.question}>
@@ -37,22 +45,25 @@ export default function ProfileCareStyle() {
                                 Q. 용변처리는 어떻게 하시나요?
                             </Text>
                             <View style={{ position: 'absolute', right: 10 }}>
-                                <Icon props={['material', 'expand-more', 25, 'black']} />
+                                <Icon props={['material', toilet ? 'expand-less' : 'expand-more', 25, 'black']} />
                             </View>
                         </View>
                     </TouchableHighlight>
 
-
-                    <View style={styles.answer}>
-                        <Text style={{
-                            fontSize: 14,
-                            color: '#808080',
-                        }}>
-                            {userProfile.toilet}
-                        </Text>
-                    </View>
+                    {toilet ?
+                        <View style={styles.answer}>
+                            <Text style={{
+                                fontSize: 14,
+                                color: '#808080',
+                            }}>
+                                {userProfile.toilet}
+                            </Text>
+                        </View> : null
+                    }
 
                     <TouchableHighlight
+                        underlayColor='none'
+                        onPress={() => setSuction(!suction)}
                         style={styles.questionTouch}
                     >
                         <View style={styles.question}>
@@ -63,23 +74,25 @@ export default function ProfileCareStyle() {
                                 Q. 석션은 어떻게 하시나요?
                             </Text>
                             <View style={{ position: 'absolute', right: 10 }}>
-                                <Icon props={['material', 'expand-more', 25, 'black']} />
+                                <Icon props={['material', suction ? 'expand-less' : 'expand-more', 25, 'black']} />
                             </View>
                         </View>
                     </TouchableHighlight>
 
-
-                    <View style={styles.answer}>
-                        <Text style={{
-                            fontSize: 14,
-                            color: '#808080',
-                            paddingLeft: 4
-                        }}>
-                            {userProfile.suction}
-                        </Text>
-                    </View>
+                    {suction ?
+                        <View style={styles.answer}>
+                            <Text style={{
+                                fontSize: 14,
+                                color: '#808080',
+                            }}>
+                                {userProfile.suction}
+                            </Text>
+                        </View> : null
+                    }
 
                     <TouchableHighlight
+                        underlayColor='none'
+                        onPress={() => setWashing(!washing)}
                         style={styles.questionTouch}
                     >
                         <View style={styles.question}>
@@ -90,12 +103,12 @@ export default function ProfileCareStyle() {
                                 Q. 환자분의 청결은 어떻게 하시나요?
                             </Text>
                             <View style={{ position: 'absolute', right: 10 }}>
-                                <Icon props={['material', 'expand-more', 25, 'black']} />
+                                <Icon props={['material', washing ? 'expand-less' : 'expand-more', 25, 'black']} />
                             </View>
                         </View>
                     </TouchableHighlight>
 
-
+                    {washing ?
                     <View style={styles.answer}>
                         <Text style={{
                             fontSize: 14,
@@ -104,9 +117,12 @@ export default function ProfileCareStyle() {
                         }}>
                             {userProfile.washing}
                         </Text>
-                    </View>
+                    </View> : null
+                    }
 
                     <TouchableHighlight
+                        underlayColor='none'
+                        onPress={() => setBedsore(!bedsore)}
                         style={styles.questionTouch}
                     >
                         <View style={styles.question}>
@@ -118,12 +134,12 @@ export default function ProfileCareStyle() {
                                 Q. 욕창 관리는 어떻게 하시나요?
                             </Text>
                             <View style={{ position: 'absolute', right: 10 }}>
-                                <Icon props={['material', 'expand-more', 25, 'black']} />
+                                <Icon props={['material', bedsore ? 'expand-less' : 'expand-more', 25, 'black']} />
                             </View>
                         </View>
                     </TouchableHighlight>
 
-
+                    {bedsore ?
                     <View style={styles.answer}>
                         <Text style={{
                             fontSize: 14,
@@ -132,12 +148,9 @@ export default function ProfileCareStyle() {
                         }}>
                             {userProfile.bedsore}
                         </Text>
-                    </View>
+                    </View> : null 
+                    }
                 </View>
-
-            </View>
-
-            <View style={{ borderWidth: 1, height: hp('10%') }}>
 
             </View>
         </>

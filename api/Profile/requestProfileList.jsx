@@ -1,16 +1,23 @@
 /* 프로필 api 중 목록 받아오기 */
 
 import api from "../../config/CustomAxios";
-import { saveCareGiverProfile } from "../../redux/action/profile/profileAction";
+import { saveCareGiverProfile, saveLastListNo } from "../../redux/action/profile/profileAction";
 import store from "../../redux/store";
 
 
 export default async function requestProfileList(purpose) {
     try {
-        const res = await api.get(`user/profile/${purpose}`);
+        const start = store.getState().profile.lastListNo;
+        const res = await api.get(`user/profile/${purpose}`, {
+            params: {
+                start: start
+            }
+        });
         const profileList = res.data;
-        if(purpose === 'careGiver')
+        if(purpose === 'careGiver') {
             store.dispatch(saveCareGiverProfile(profileList));
+            store.dispatch(saveLastListNo(start+5));
+        }
         else {
             console.log('assistant')
         }

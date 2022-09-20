@@ -12,7 +12,7 @@ export default function NextRegisterBtn({ navigation }) {
             weight: state.secondRegister.weight,
             career: state.secondRegister.career,
             time: state.secondRegister.assistant.time,
-            startDate: state.secondRegister.startDate,
+            //startDate: state.secondRegister.startDate,
             training: state.secondRegister.assistant.training,
             possibleArea: state.secondRegister.possibleArea,
         }),
@@ -20,9 +20,9 @@ export default function NextRegisterBtn({ navigation }) {
     );
 
     useEffect(() => {
-        weight && career && time && startDate 
-            && training.length && possibleArea.length ? setIsFill(true) : setIsFill(false)
-    },[ weight, career, time, startDate, training, possibleArea ])
+        weight && career && time && training.length 
+            && possibleArea.length ? setIsFill(true) : setIsFill(false)
+    },[ weight, career, time, training, possibleArea ])
 
     return (
         <View style={{ height: hp('10%'), marginTop: -20 }}>

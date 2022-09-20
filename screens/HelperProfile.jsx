@@ -2,22 +2,19 @@
 
 import { useState } from "react";
 import { useEffect } from "react";
-import { useLayoutEffect } from "react";
-import { Text } from "react-native";
-import { TouchableHighlight } from "react-native";
 import { StyleSheet } from "react-native";
-import { View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSelector } from "react-redux";
 import requestUserProfile from "../api/Profile/requestUserProfile";
+import BottomButtons from "../components/HelperProfile/BottomButtons";
 import ProfileBasicInfo from "../components/HelperProfile/ProfileBasicInfo";
 import ProfileCareStyle from "../components/HelperProfile/ProfileCareStyle";
+import ProfileCertificate from "../components/HelperProfile/ProfileCertificate";
 import ProfileHeader from "../components/HelperProfile/ProfileHeader";
-import Icon from "../components/Icon";
+import ProfileNextHospital from "../components/HelperProfile/ProfileNextHospital";
+import ProfileStrength from "../components/HelperProfile/ProfileStrength";
+import ProfileWarning from "../components/HelperProfile/ProfileWarning";
 import StatusBarComponent from "../components/StatusBarComponent";
-import { getAge, getCareer, isEqualPay } from "../functions/Profile/profileFunctions";
 import Loading from "./Loading";
 
 export default function HelperProfile({ navigation, route }) {
@@ -33,25 +30,32 @@ export default function HelperProfile({ navigation, route }) {
     }, [])
 
     const onScrollHandler = (e) => {
-        console.log(e.nativeEvent.contentOffset.y)
+        //console.log(e.nativeEvent.contentOffset.y)
     }
     return (
         <SafeAreaView style={styles.container}>
             <StatusBarComponent />
             {loading ? <Loading /> :
-                <KeyboardAwareScrollView
-                    keyboardShouldPersistTaps='handled'
-                    extraHeight={150}
-                    extraScrollHeight={30}
-                    enableOnAndroid={true}
-                    enableAutomaticScroll={true}
-                    onScroll={onScrollHandler}
-                    scrollEnabled={true}
-                    showsVerticalScrollIndicator={false}>
-                    <ProfileHeader />
-                    <ProfileBasicInfo />
-                    <ProfileCareStyle />
-                </KeyboardAwareScrollView>
+                <>
+                    <KeyboardAwareScrollView
+                        keyboardShouldPersistTaps='handled'
+                        extraHeight={150}
+                        extraScrollHeight={30}
+                        enableOnAndroid={true}
+                        enableAutomaticScroll={true}
+                        onScroll={onScrollHandler}
+                        scrollEnabled={true}
+                        showsVerticalScrollIndicator={false}>
+                        <ProfileHeader />
+                        <ProfileBasicInfo />
+                        <ProfileCertificate />
+                        <ProfileNextHospital />
+                        <ProfileCareStyle />
+                        <ProfileStrength />
+                        <ProfileWarning />
+                    </KeyboardAwareScrollView>
+                    <BottomButtons />
+                </>
             }
         </SafeAreaView>
     )

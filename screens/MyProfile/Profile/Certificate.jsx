@@ -30,6 +30,7 @@ export default function Certificate({ navigation }) {
             try {
                 const res = await api.get(`user/certificate/${id}`);
                 const { certificate } = res.data;
+                console.log(res.data)
                 if(certificate) {
                     if(certificate.includes(',')) {
                         let arr = certificate.split(',');

@@ -6,11 +6,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import StatusBarComponent from '../components/StatusBarComponent';
-import { useEffect } from 'react';
-import Loading from './Loading';
-import requestProfileList from '../api/Profile/requestProfileList';
 import { MyTopTabs } from '../navigations/TopTabNavigator';
-import SelectFilter from '../components/FindHelper/SelectFilter';
 
 export default function FindHelper({ navigation }) {
 

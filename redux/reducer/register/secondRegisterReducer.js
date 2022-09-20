@@ -17,7 +17,8 @@ import {
     saveDiagnosis,
     savePlace,
     saveIsNext,
-    savePatientState
+    savePatientState,
+    savePeriod
 } from '../../action/register/secondRegisterAction';
 
 const initialState = {
@@ -38,6 +39,7 @@ const initialState = {
     protector: {
         patientSex: '',
         diagnosis: '',
+        period: '',
         place: '',
         isNext: '',
         patientState: ''
@@ -90,6 +92,9 @@ const secondRegisterReducer = createReducer(initialState, (builder) => {
         })
         .addCase(saveDiagnosis, (state, action) => { //보호자용 환자가 받은 진단명 저장
             state.protector.diagnosis = action.payload
+        })
+        .addCase(savePeriod, (state, action) => {
+            state.protector.period = action.payload
         })
         .addCase(savePlace, (state, action) => { // 보호자용 환자 케어 장소 저장
             state.protector.place = action.payload

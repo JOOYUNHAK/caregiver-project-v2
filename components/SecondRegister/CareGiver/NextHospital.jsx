@@ -10,12 +10,12 @@ export default function NextHospital() {
     return (
         <View style={styles.nextHospital}>
             <Text>
-                환자에게 다음 병원이 예정된 경우
+                연장 요청이 들어올 경우
             </Text>
             <TextInput
                 onChangeText={(text) => dispatch(saveNextHospital(text))}
                 style={inputStyle('nextHospital')}
-                placeholder='Ex) 활동 지역이면 가능합니다, 다음 병원은 불가능합니다'
+                placeholder='Ex) 활동 지역이면 가능합니다, 연장은 불가능합니다'
                 maxLength={25}
             />
         </View>

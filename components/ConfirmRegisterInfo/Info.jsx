@@ -9,7 +9,6 @@ export default function Info() {
     return (
         <View style={styles.info}>
             <HelperInfo />
-            <CommonInfo />
         </View>
     )
 }

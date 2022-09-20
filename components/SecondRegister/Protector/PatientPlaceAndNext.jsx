@@ -20,14 +20,13 @@ export default function PatientPlaceAndNext() {
     const route = useRoute();
     let address;
 
-    if (route?.params) {
+   if (route?.params) {
         address = route.params.address;
-        dispatch(savePlace(address));
     }
 
-    /* useEffect(() => {
-        console.log(address)
-    }, [route.params?.address]) */
+    useEffect(() => {
+        dispatch(savePlace(address));
+    }, [route])
 
     useEffect(() => {
         setIsNextHospital(resetArrayData(isNextHospital));

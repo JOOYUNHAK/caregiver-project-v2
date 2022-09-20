@@ -10,11 +10,11 @@ import HelperProfile from './EachHelper/Profile';
 import NoListPage from '../../screens/NoList';
 import Icon from '../Icon';
 import SelectFilter from './SelectFilter';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import requestProfileList from '../../api/Profile/requestProfileList';
 import { useLayoutEffect } from 'react';
-import { useIsFocused } from '@react-navigation/native';
 import Loading from '../../screens/Loading';
+import { refreshProfileList } from '../../redux/action/profile/profileAction';
 
 
 /**
@@ -29,6 +29,7 @@ export default function HelperList({ purpose }) {
         };
         getProfileList();
     }, [])
+    const dispatch = useDispatch();
 
     let listViewRef;
 
@@ -57,6 +58,7 @@ export default function HelperList({ purpose }) {
 
     const refreshData = async () => {
         setRefreshing(true);
+        dispatch(refreshProfileList(purpose));
         await requestProfileList(purpose);
         setRefreshing(false);
     }
@@ -78,8 +80,6 @@ export default function HelperList({ purpose }) {
     return (
         <>
             <SelectFilter props={setSortStandard} />
-            {refreshing ?
-                <Loading /> :
                 <FlatList
                     ListEmptyComponent={
                         <NoListPage code={'noBoardList'} />
@@ -92,12 +92,15 @@ export default function HelperList({ purpose }) {
                     onScrollEndDrag={showButton}
                     onRefresh={refreshData}
                     refreshing={refreshing}
+                    onEndReachedThreshold={0.1}
+                    onEndReached = {async ({ distanceFromEnd }) => {
+                        await requestProfileList(purpose);
+                    }}
                     showsVerticalScrollIndicator={false}
                     ref={(ref) => {
                         listViewRef = ref;
                     }}
                 />
-            }
             
             {showTopBtn ?
                 <TouchableHighlight

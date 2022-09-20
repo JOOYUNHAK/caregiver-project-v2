@@ -27,6 +27,6 @@ export default async function requestCreateUser(RegisterData, navigation) {
     }
 
     catch (err) {
-        console.log(err)
+        console.log(err.response)
     }
 }

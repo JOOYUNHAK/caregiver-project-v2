@@ -15,8 +15,7 @@ import Email from "../screens/MyProfile/Account/Email";
 import Certificate from "../screens/MyProfile/Profile/Certificate";
 import RegisterCompletePage from "../screens/Register/RegisterComplete";
 import FindAddress from "../components/SecondRegister/Protector/FindAddress";
-import UserProfile from "../components/MyProfile/UserProfile";
-import HelperProfile from "../screens/UserProfile";
+import HelperProfile from "../screens/HelperProfile"; 
 
 const Stack = createStackNavigator();
 
