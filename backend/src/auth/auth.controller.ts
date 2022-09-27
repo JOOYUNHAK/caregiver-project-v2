@@ -88,6 +88,7 @@ export class AuthController {
     //회원가입 유저생성
     @Post('register')
     async createUser(@Body() createUserDto: CreateUserDto): Promise<{status: string, accessToken: string, user:UserDto}> {
+        console.log(createUserDto)
         return await this.userService.createUser(createUserDto);
     }
 

@@ -24,6 +24,10 @@ export class CareGiverProfileDto {
         sex: string;
         purpose: string;
         isCertified: boolean;
-        warning: number;
+        warning: {
+            1: string,
+            2: string,
+            3: string
+        };
     }
 }

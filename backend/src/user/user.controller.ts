@@ -5,6 +5,7 @@ import { PersonalGuard } from "src/auth/security/guard/personal.guard";
 import { UserService } from "src/auth/user.service";
 import { CareGiverProfileDto } from "./dto/caregiver-profile.dto";
 import { ProfileUpdateDto } from "./dto/profile-update.dto";
+import { RequestProfileListDto } from "./dto/request-profile-list.dto";
 
 @Controller('user')
 export class UserController {
@@ -27,11 +28,26 @@ export class UserController {
     @Get('profile/:purpose')
     async getProfileList( @Query() query, @Param('purpose') purpose: string): 
         Promise<CareGiverProfileDto [] | CareGiverProfileDto> {
-        console.log(query['id'], purpose)
+        //한 유저의 profile request
         if(!! query['id']) {
             return await this.userService.getProfileOne(purpose, query['id']);
         }
-        return await this.userService.getProfileList(purpose);
+        // 모든 프로필 request( start는 시작 순번 )
+        if( !! query['start']) {
+            const requestProfileListDto = new RequestProfileListDto();
+            requestProfileListDto.purpose = purpose;
+            requestProfileListDto.start = query['start'];
+            requestProfileListDto.mainFilter = query['mainFilter'];
+            requestProfileListDto.payFilter = query['payFilter'];
+            requestProfileListDto.startDateFilter = query['startDateFilter'];
+            requestProfileListDto.ageFilter = query['ageFilter'];
+            requestProfileListDto.areaFilter = query['areaFilter'];
+            requestProfileListDto.licenseFilter = query['licenseFilter'];
+            requestProfileListDto.warningFilter = query['warningFilter'];
+            requestProfileListDto.strengthFilter = query['strengthFilter'];
+
+            return await this.userService.getProfileList(requestProfileListDto);
+        }
     }
 
     @UseGuards(JwtGuard, PersonalGuard)

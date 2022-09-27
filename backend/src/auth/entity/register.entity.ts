@@ -3,7 +3,7 @@ import { User } from "./user.entity";
 
 @Entity('caregiver')
 export class CareGvier {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @Column({ type: 'int' })
@@ -15,7 +15,7 @@ export class CareGvier {
     @Column({ type: 'varchar', length: 15 })
     pay: string;
 
-    @Column({ type: 'varchar', length: 15 })
+    @Column({ type: 'char', length: 1 })
     startDate: string
 
     @Column({ type: 'varchar', length: 25 })
@@ -46,7 +46,10 @@ export class CareGvier {
     keywords: string;
 
     @Column({ type: 'varchar', length: 30 })
-    notice: string
+    notice: string;
+
+    @Column({ type: 'varchar', length: 100})
+    extraFee: string;
 
     @OneToOne(() => User, (user) => user.id, {
         cascade: ['insert']
@@ -60,7 +63,7 @@ export class CareGvier {
 
 @Entity('protector')
 export class Protector {
-    @PrimaryGeneratedColumn('uuid')
+    @PrimaryGeneratedColumn('increment')
     id: number
 
     @Column({ type: 'int' })
@@ -71,6 +74,9 @@ export class Protector {
 
     @Column({type: 'varchar', length: 25})
     diagnosis: string
+
+    @Column({type: 'varchar', length: 25})
+    period: string
 
     @Column({type: 'varchar', length: 40})
     place: string
@@ -121,11 +127,11 @@ export class Assistant {
     @Column({ type: 'int' })
     career: number;
 
-    @Column({ type: 'varchar', length: 15 })
+    @Column({ type: 'varchar', length: 20 })
     time: string;
 
-    @Column({ type: 'varchar', length: 8 })
-    startDate: string;
+    /* @Column({ type: 'varchar', length: 8 })
+    startDate: string; */
 
     @Column({ type: 'char', length: 2 })
     training: string;

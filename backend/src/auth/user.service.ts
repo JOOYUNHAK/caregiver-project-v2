@@ -1,15 +1,16 @@
 import { Inject, Injectable, HttpException, HttpStatus } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
-import { DataSource, Repository } from "typeorm";
+import { DataSource, Repository, Brackets, IsNull } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UserDto } from "./dto/user.dto";
 import { Assistant, CareGvier, Protector } from "./entity/register.entity";
 import { User } from "./entity/user.entity";
 import { Token } from "./entity/token.entity";
 import { ProfileUpdateDto } from "src/user/dto/profile-update.dto";
-import { CareGiverProfileDto,  } from "src/user/dto/caregiver-profile.dto";
+import { CareGiverProfileDto, } from "src/user/dto/caregiver-profile.dto";
 import { AssistantProfileDto } from "src/user/dto/assistant-profile.dto";
+import { RequestProfileListDto } from "src/user/dto/request-profile-list.dto";
 
 @Injectable()
 export class UserService {
@@ -91,26 +92,54 @@ export class UserService {
             return await this.careGiverRepository
                 .createQueryBuilder('cg')
                 .select('cg.license', 'certificate')
+                .where('cg.user_id = :id', { id: id })
                 .getRawOne();
         } else {
             return await this.assistantRepository
                 .createQueryBuilder('at')
                 .select('at.license', 'certificate')
+                .where('cg.user_id = :id', { id: id })
                 .getRawOne();
         }
     }
 
     /**
      * 해당 가입목적의 사용자들 프로필 list 전체 return
-     * @param purpose 가입목적
      * @returns 해당 가입 사용자 프로필 list
      */
-    async getProfileList(purpose: string): Promise<CareGiverProfileDto[]> {
+    async getProfileList(requestProfileListDto: RequestProfileListDto): Promise<CareGiverProfileDto[]> {
+        const { purpose, start, mainFilter, payFilter, startDateFilter, 
+                ageFilter, areaFilter, licenseFilter, warningFilter, strengthFilter } = requestProfileListDto;
         if (purpose === 'careGiver') {
             return await this.careGiverRepository
                 .createQueryBuilder('cg')
                 .innerJoin('cg.user', 'user')
-                .where('user.profile_off = :profile_off', {profile_off: false})
+                .where('user.profile_off = :profile_off', { profile_off: false })
+                .andWhere(
+                    new Brackets((qb) => {
+                        if (!!payFilter) {
+                            qb.where('cg.pay <= :pay', {
+                                pay: payFilter === 'under10' ? 10 : payFilter === 'under15' ? 15 : 20
+                            })
+                        }
+                        if (!!startDateFilter) {
+                            qb.andWhere('cg.startDate <= :startDate', {
+                                startDate: startDateFilter === 'immediately' ? 0 : startDateFilter === '1week' ? 1
+                                    : startDateFilter === '2week' ? 2 : startDateFilter === '3week' ? 3 : 4
+                            })
+                        }
+                        if( !! warningFilter) {
+                            qb.andWhere('user.warning is null')
+                        }
+                       
+                    })
+                )
+                .orderBy(
+                    mainFilter === 'pay' ? 'cg.pay' :
+                        mainFilter === 'startDate' ? 'cg.startDate' : null,
+
+                    mainFilter === 'pay' || mainFilter === 'startDate' ? 'ASC' : 'DESC'
+                )
                 .addSelect([
                     'user.name',
                     'user.birth',
@@ -119,8 +148,12 @@ export class UserService {
                     'user.isCertified',
                     'user.warning'
                 ])
+                .skip(start)
+                .take(5)
                 .getMany();
         }
+
+
         /* else {
             return await this.assistantRepository
                 .createQueryBuilder('at')
@@ -142,13 +175,13 @@ export class UserService {
      * @param profileId 해당 목적 테이블의 id
      * @returns 특정 사용자 profile
      */
-    async getProfileOne(purpose:string , profileId: string): Promise<CareGiverProfileDto> {
-        if(purpose === 'careGiver') {
+    async getProfileOne(purpose: string, profileId: string): Promise<CareGiverProfileDto> {
+        if (purpose === 'careGiver') {
             const profile = await this.careGiverRepository
                 .createQueryBuilder('cg')
                 .innerJoin('cg.user', 'user')
-                .where('cg.id = :profileId', {profileId: profileId})
-                .andWhere('user.profile_off = :profile_off', {profile_off: false})
+                .where('cg.id = :profileId', { profileId: profileId })
+                .andWhere('user.profile_off = :profile_off', { profile_off: false })
                 .addSelect([
                     'user.name',
                     'user.birth',
@@ -158,7 +191,7 @@ export class UserService {
                     'user.warning'
                 ])
                 .getOne();
-            if(profile === null)
+            if (profile === null)
                 throw new HttpException(
                     '해당 프로필을 현재 찾을 수 없습니다.',
                     HttpStatus.NOT_FOUND
@@ -322,11 +355,6 @@ export class UserService {
 //간병인 객체
 function createCareGiver(createUserDto: CreateUserDto, user: User): CareGvier {
 
-    function getPay(): string {
-        return createUserDto.secondRegister['careGiver']['firstPay'] + '만원 ~ ' +
-            createUserDto.secondRegister['careGiver']['secondPay'] + '만원'
-    }
-
     function getKeywords(): string {
         let keyWords = [];
         keyWords.push(createUserDto.lastRegister['careGiver']['keyWord1']);
@@ -342,7 +370,7 @@ function createCareGiver(createUserDto: CreateUserDto, user: User): CareGvier {
 
     careGiver.weight = createUserDto.secondRegister['weight'];
     careGiver.career = createUserDto.secondRegister['career'];
-    careGiver.pay = getPay();
+    careGiver.pay = createUserDto.secondRegister['careGiver']['firstPay'];
     careGiver.startDate = createUserDto.secondRegister['startDate'];
     careGiver.nextHospital = createUserDto.secondRegister['careGiver']['nextHospital'];
     careGiver.possibleArea = createUserDto.secondRegister['possibleArea'].join();
@@ -354,6 +382,7 @@ function createCareGiver(createUserDto: CreateUserDto, user: User): CareGvier {
     careGiver.strength = ({ strength1: strength1, strength2: strength2 });
     careGiver.keywords = getKeywords();
     careGiver.notice = createUserDto.lastRegister['careGiver']['notice'];
+    careGiver.extraFee = createUserDto.lastRegister['careGiver']['extraFee'];
     careGiver.user = user;
     return careGiver;
 }
@@ -368,7 +397,7 @@ function createAssistant(createUserDto: CreateUserDto, user: User): Assistant {
     assistant.weight = createUserDto.secondRegister['weight'];
     assistant.career = createUserDto.secondRegister['career'];
     assistant.time = createUserDto.secondRegister['assistant']['time'];
-    assistant.startDate = createUserDto.secondRegister['startDate'];
+    //assistant.startDate = createUserDto.secondRegister['startDate'];
     assistant.training = createUserDto.secondRegister['assistant']['training'];
     assistant.possibleArea = createUserDto.secondRegister['possibleArea'].join();
     assistant.license = createUserDto.secondRegister['license'].join();
@@ -384,6 +413,7 @@ function createProtector(createUserDto: CreateUserDto, user: User): Protector {
     protector.patientWeight = createUserDto.secondRegister['weight'];
     protector.patientSex = createUserDto.secondRegister['protector']['patientSex'];
     protector.diagnosis = createUserDto.secondRegister['protector']['diagnosis'];
+    protector.period = createUserDto.secondRegister['protector']['period'];
     protector.place = createUserDto.secondRegister['protector']['place'];
     protector.isNext = createUserDto.secondRegister['protector']['isNext'];
     protector.patientState = createUserDto.secondRegister['protector']['patientState'];

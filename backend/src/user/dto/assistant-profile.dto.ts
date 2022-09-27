@@ -3,7 +3,6 @@ export class AssistantProfileDto {
     weight: number;
     career: number;
     time: string;
-    startDate: string;
     training: string;
     possibleArea: string;
     license: string;
