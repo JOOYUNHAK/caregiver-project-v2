@@ -11,13 +11,13 @@ export default async function requestUserProfile(purpose, profileId) {
             }
         })
         store.dispatch(saveUserProfile(res.data));
+        console.log(res)
         return true;
     }
     catch(err) {
+        console.log(err.response)
         const status = err.response.status;
         if(status == 404)
             return false;
     }
-
-    
 }

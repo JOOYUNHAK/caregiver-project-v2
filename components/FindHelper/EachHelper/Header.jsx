@@ -8,18 +8,17 @@ import {
     Platform,
 } from 'react-native';
 import Icon from '../../Icon';
-import { getAge, isEqualPay, possibleAreaRange } from '../../../functions/Profile/profileFunctions';
+import { getAge, possibleAreaRange } from '../../../functions/Profile/profileFunctions';
 import { StackActions, useNavigation } from "@react-navigation/native";
 
 export default function Header({ profile }) {
     const navigation = useNavigation();
     const age = getAge(profile.user.birth);
-    const equalPay = isEqualPay(profile.pay);
     const exceedArea = possibleAreaRange(profile.possibleArea);
     const isCertified = profile.user.isCertified;
 
     return (
-        <View style={header(equalPay, exceedArea, isCertified).header}>
+        <View style={header( exceedArea, isCertified).header}>
             <View style={{ flex: 2 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={styles.name}>
@@ -33,11 +32,6 @@ export default function Header({ profile }) {
                 </View>
 
                 <View style={{ flexDirection: 'row', paddingLeft: 25, marginTop: 3 }}>
-                    {equalPay ?
-                        <Text style={styles.subTagText}>
-                            추가요금 없음
-                        </Text> : null
-                    }
                     {exceedArea ?
                         <Text style={styles.subTagText}>
                             가능 지역 넓음
@@ -131,6 +125,6 @@ const header = (equalPay,exceedArea, isCertified) => StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'flex-start',
         paddingTop: Platform.OS === 'ios' ? 25 : 15,
-        flex: equalPay || exceedArea || isCertified ? 1 : 0.8,
+        flex: exceedArea || isCertified ? 1 : 0.8,
     },
 })

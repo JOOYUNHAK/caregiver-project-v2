@@ -5,8 +5,8 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
+import HelperList from '../components/FindHelper/HelperList';
 import StatusBarComponent from '../components/StatusBarComponent';
-import { MyTopTabs } from '../navigations/TopTabNavigator';
 
 export default function FindHelper({ navigation }) {
 
@@ -22,7 +22,7 @@ export default function FindHelper({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBarComponent />
-        <MyTopTabs />
+        <HelperList purpose='careGiver'/>
     </SafeAreaView>
   );
 }

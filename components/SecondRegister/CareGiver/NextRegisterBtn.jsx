@@ -9,12 +9,11 @@ import { shallowEqual, useSelector } from "react-redux";
 export default function NextRegisterBtn({ navigation }) {
     const [isFill, setIsFill] = useState(false);
     
-    const {weight, career, firstPay, secondPay, startDate, nextHospital, possibleArea} = useSelector(
+    const {weight, career, firstPay, startDate, nextHospital, possibleArea} = useSelector(
         state => ({
             weight: state.secondRegister.weight,
             career: state.secondRegister.career,
             firstPay: state.secondRegister.careGiver.firstPay,
-            secondPay: state.secondRegister.careGiver.secondPay,
             startDate: state.secondRegister.startDate,
             nextHospital: state.secondRegister.careGiver.nextHospital,
             possibleArea: state.secondRegister.possibleArea,
@@ -23,12 +22,12 @@ export default function NextRegisterBtn({ navigation }) {
     );
 
     useEffect(() => {
-        weight && career && firstPay && secondPay && startDate && nextHospital 
+        weight && career && firstPay && startDate && nextHospital 
             && possibleArea.length ? setIsFill(true) : setIsFill(false)
-    }, [ weight, career, firstPay, secondPay, startDate, nextHospital, possibleArea ])
+    }, [ weight, career, firstPay, startDate, nextHospital, possibleArea ])
 
     return (
-        <View style={{ height: hp('10%'), marginTop: -20 }}>
+        <View style={{ height: hp('10%') }}>
             <TouchableHighlight
                 underlayColor='none'
                 disabled = {isFill ? false : true} 

@@ -10,6 +10,7 @@ import BottomButtons from "../components/HelperProfile/BottomButtons";
 import ProfileBasicInfo from "../components/HelperProfile/ProfileBasicInfo";
 import ProfileCareStyle from "../components/HelperProfile/ProfileCareStyle";
 import ProfileCertificate from "../components/HelperProfile/ProfileCertificate";
+import ProfileExtraFee from "../components/HelperProfile/ProfileExtraFee";
 import ProfileHeader from "../components/HelperProfile/ProfileHeader";
 import ProfileNextHospital from "../components/HelperProfile/ProfileNextHospital";
 import ProfileStrength from "../components/HelperProfile/ProfileStrength";
@@ -21,11 +22,13 @@ export default function HelperProfile({ navigation, route }) {
     const [loading, setLoading] = useState(true);
     useEffect(() => {
         async function getUserProfile() {
-            await requestUserProfile(
+            const result = await requestUserProfile(
                 route.params.purpose === '간병인' ? 'careGiver' : 'assistant',
                 route.params.profileId);
+            //todo react-native-dialog download 이후 프로필 찾을 수 없을 때 dialog 띄우기    
             setLoading(false);
         }
+
         getUserProfile();
     }, [])
 
@@ -49,6 +52,7 @@ export default function HelperProfile({ navigation, route }) {
                         <ProfileHeader />
                         <ProfileBasicInfo />
                         <ProfileCertificate />
+                        <ProfileExtraFee />
                         <ProfileNextHospital />
                         <ProfileCareStyle />
                         <ProfileStrength />

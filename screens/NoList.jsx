@@ -17,7 +17,7 @@ export default function NoListPage(props) {
       {code === 'noBoardList' ?
         <Animatable.View animation="fadeInDownBig">
           <Text style={styles.NoListText}>
-            아직 등록한 보조사분들이 없어요!
+            현재 찾을 수 있는 보조사분이 없어요.
           </Text>
         </Animatable.View>
         :

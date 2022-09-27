@@ -36,7 +36,7 @@ export default function AcquisitionLicense() {
     }
 
     return (
-        <View style={selectStyle.select}>
+        <View style={[selectStyle.select,{marginVertical: 17}]}>
             <Text>
                 취득 자격증
             </Text>

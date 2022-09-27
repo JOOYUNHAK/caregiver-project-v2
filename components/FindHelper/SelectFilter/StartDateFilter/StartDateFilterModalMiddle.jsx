@@ -1,0 +1,75 @@
+/* 시작가능일 필터 모달 중간 부분 */
+
+import { Text } from "react-native"
+import { StyleSheet } from "react-native"
+import { TouchableHighlight } from "react-native"
+import { View } from "react-native"
+import { useDispatch, useSelector } from "react-redux"
+import requestProfileList from "../../../../api/Profile/requestProfileList"
+import { StartDateExample } from "../../../../data/Filter"
+import { refreshProfileList, saveStartDateFilter } from "../../../../redux/action/profile/profileAction"
+import Icon from "../../../Icon"
+
+export default function StartDateFilterModalMiddle({ setVisible }) {
+    const dispatch = useDispatch();
+    let { startDateFilter } = useSelector(state => ({
+        startDateFilter: state.profile.filters.startDateFilter
+    }))
+
+    if (startDateFilter === '시작가능일')
+        startDateFilter = '전체날짜';
+
+    const pressStartDate = async (title) => {
+        if (startDateFilter === title)
+            setVisible(false);
+        else {
+            setVisible(false);
+            dispatch(saveStartDateFilter(title));
+            dispatch(refreshProfileList('careGiver'));
+            await requestProfileList('careGiver');
+        }
+    }
+
+    return (
+        <View style={styles.modalMiddle}>
+            {StartDateExample.map((example) => {
+                return (
+                    <TouchableHighlight
+                        key={example.id}
+                        style={{
+                            paddingHorizontal: 30,
+                            marginVertical: 6,
+                            paddingVertical: 15
+                        }}
+                        underlayColor='none'
+                        onPress={() => pressStartDate(example.title)}
+                    >
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={{
+                                fontWeight: startDateFilter === example.title ? '700' : '400',
+                                color: startDateFilter === example.title ? '#94c6ad' : 'black'
+                            }}>
+                                {example.title}
+                            </Text>
+                            {startDateFilter === example.title ?
+                                <View style={{ position: 'absolute', right: 0, alignSelf: 'center' }}>
+                                    <Icon props={['material', 'done', 24, '#94c6ad']} />
+                                </View> :
+                                null
+                            }
+                        </View>
+                    </TouchableHighlight>
+                )
+            })}
+        </View>
+    )
+}
+
+const styles = StyleSheet.create({
+    modalMiddle: {
+        width: '100%',
+        height: 'auto',
+        justifyContent: 'space-around',
+        paddingVertical: 10
+    }
+})

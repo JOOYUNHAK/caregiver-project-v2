@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { firstRegisterReset } from "../../redux/action/register/firstRegisterAction";
 import { reset } from "../../redux/action/login/loginAction";
 import { StackActions } from "@react-navigation/native";
+import { backToPreviousFilter } from "../../redux/action/profile/profileAction";
 
 export default function CloseBtn({ navigation, type }) {
     const dispatch = useDispatch();
@@ -17,6 +18,10 @@ export default function CloseBtn({ navigation, type }) {
             dispatch(reset());
             navigation.pop();
         }
+        else if(type === 'filter') {
+            dispatch(backToPreviousFilter());
+            navigation.pop();
+        }
         else
             navigation.pop();
     }
@@ -26,7 +31,7 @@ export default function CloseBtn({ navigation, type }) {
             underlayColor='none'
             onPress={() => onPressCloseBtn()}
         >
-            <Icon props={['materail', 'close', 30, 'black']} />
+            <Icon props={['materail', 'close', type === 'filter' ? 26 : 30, 'black']} />
         </TouchableHighlight>
     );
 }

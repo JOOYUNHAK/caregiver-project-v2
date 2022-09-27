@@ -24,6 +24,7 @@ export default function PrivateSetting({ navigation }) {
         purpose: state.user.purpose,
         profile_off: state.user.profile_off
     }));
+    
     /**
      * 프로필 공개 여부 업데이트 함수
      */
@@ -62,6 +63,7 @@ export default function PrivateSetting({ navigation }) {
 
             <Modal
                 isVisible={isVisible}
+                onBackdropPress={() => setIsVisible(false)}
                 onBackButtonPress={() => setIsVisible(false)}
                 style={styles.modal}
                 backdropTransitionOutTiming={0}

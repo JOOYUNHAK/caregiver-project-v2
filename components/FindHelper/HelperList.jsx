@@ -79,7 +79,7 @@ export default function HelperList({ purpose }) {
 
     return (
         <>
-            <SelectFilter props={setSortStandard} />
+            <SelectFilter />
                 <FlatList
                     ListEmptyComponent={
                         <NoListPage code={'noBoardList'} />
@@ -92,7 +92,7 @@ export default function HelperList({ purpose }) {
                     onScrollEndDrag={showButton}
                     onRefresh={refreshData}
                     refreshing={refreshing}
-                    onEndReachedThreshold={0.1}
+                    onEndReachedThreshold={0.2}
                     onEndReached = {async ({ distanceFromEnd }) => {
                         await requestProfileList(purpose);
                     }}

@@ -12,6 +12,7 @@ export const saveStrength2 = createAction('lastRegister/saveStrength2'); //  강
 export const saveKeyWord1 = createAction('lastRegister/saveKeyWord1'); // 키워드 부분
 export const saveKeyWord2 = createAction('lastRegister/saveKeyWord2'); // 키워드 부분
 export const saveKeyWord3 = createAction('lastRegister/saveKeyWord3'); // 키워드 부분
+export const saveExtraFee = createAction('lastRegister/saveExtraFee'); //추가요금 부분
 export const saveNotice = createAction('lastRegister/saveNotice'); // 한마디 부분
 
 //보호자용 전용 질문

@@ -9,6 +9,7 @@ import InputNotice from '../../components/ConfirmRegisterInfo/InputNotice';
 import { confirmRegisterInfoReset } from '../../redux/action/register/lastRegisterAction';
 import ConfirmRegisterBtn from '../../components/ConfirmRegisterInfo/ConfirmRegisterBtn';
 import Info from "../../components/ConfirmRegisterInfo/Info";
+import ExtraFee from "../../components/ConfirmRegisterInfo/ExtraFee";
 
 export default function ConfirmRegisterInfo({ navigation }) {
 
@@ -38,6 +39,7 @@ export default function ConfirmRegisterInfo({ navigation }) {
                 scrollEnabled={true}
                 showsVerticalScrollIndicator={false}>
                 <InputNotice />
+                <ExtraFee />
                 <Info />
                 <ConfirmRegisterBtn navigation={navigation} />
             </KeyboardAwareScrollView>

@@ -2,26 +2,21 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
-import { saveFirstPay, saveSecondPay, saveStartDate } from "../../../redux/action/register/secondRegisterAction";
+import { saveFirstPay, saveStartDate } from "../../../redux/action/register/secondRegisterAction";
 import inputStyle from "../../../styles/Register/inputStyle";
-import Icon from "../../Icon";
-import { TouchableHighlight } from "react-native";
-import Tooltip from "react-native-walkthrough-tooltip";
 import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
 
 export default function PayAndStartDate() {
     const dispatch = useDispatch();
-    const [visible, setVisible] = useState(false);
-
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([
-        {label: '즉시가능', value: 0},
-        {label: '1주 이내', value: 1},
-        {label: '2주 이내', value: 2},
-        {label: '3주 이내', value: 3},        
-        {label: '한달 이후', value: 4},
+        {label: '즉시가능', value: 1},
+        {label: '1주 이내', value: 2},
+        {label: '2주 이내', value: 3},
+        {label: '3주 이내', value: 4},        
+        {label: '한달 이후', value: 5},
     ]);
 
     return (
@@ -33,27 +28,6 @@ export default function PayAndStartDate() {
                     <Text>
                         일일급여
                     </Text>
-                    <Tooltip
-                        isVisible={visible}
-                        content={
-                            <Text style = {{fontSize: 12}}>
-                                어떤 경우에도 추가요금이 없는 경우 동일한 금액을 입력해주세요.
-                            </Text>
-                        }
-                        placement='right'
-                        onClose={() => setVisible(false)}
-                        contentStyle = {{ width: 180}}
-                        
-                    >
-                        <TouchableHighlight
-                            style = {{marginTop: 2, marginLeft: 2}}
-                            underlayColor='none'
-                            onPress={() => setVisible(true)}
-                        >
-                            <Icon props={['material', 'help-outline', 16, 'black']} />
-                        </TouchableHighlight>
-                    </Tooltip>
-                
                 </View>
                 <View style={styles.inputPay}>
                     <TextInput
@@ -62,19 +36,7 @@ export default function PayAndStartDate() {
                         maxLength={3}
                         keyboardType='decimal-pad'
                     />
-                    <Text >
-                        만원
-                    </Text>
-                    <Text style={{ marginLeft: 5, marginRight: 8 }}>
-                        ~
-                    </Text>
-                    <TextInput
-                        onChangeText={(text) => dispatch(saveSecondPay(text))}
-                        style={inputStyle('pay')}
-                        maxLength={3}
-                        keyboardType='decimal-pad'
-                    />
-                    <Text>
+                    <Text style = {{marginLeft: 5}}>
                         만원
                     </Text>
                 </View>

@@ -9,6 +9,7 @@ import {
     saveKeyWord3, 
     saveMeal, 
     saveNotice, 
+    saveExtraFee,
     saveStrength1, 
     saveStrength2, 
     saveSuction, 
@@ -29,7 +30,8 @@ const initialState = {
         keyWord1: '',
         keyWord2: '',
         keyWord3: '',
-        notice: ''
+        notice: '',
+        extraFee: ''
     },
     assistant: {
         withPatient: ''
@@ -84,8 +86,12 @@ const lastRegisterReducer = createReducer(initialState, (builder) => {
         .addCase(saveNotice, (state, action) => {
             state.careGiver.notice = action.payload
         })
+        .addCase(saveExtraFee, (state, action) => {
+            state.careGiver.extraFee = action.payload
+        })
         .addCase(confirmRegisterInfoReset, (state) => {
             state.careGiver.notice = '';
+            state.careGiver.extraFee = '';
         })
 });
 

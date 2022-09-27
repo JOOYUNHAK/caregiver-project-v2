@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useSelector } from "react-redux";
-import { changeStartDate, getCareer, isEqualPay } from "../../functions/Profile/profileFunctions";
+import { changeStartDate, getCareer } from "../../functions/Profile/profileFunctions";
 
 export default function ProfileBasicInfo() {
 
@@ -14,7 +14,6 @@ export default function ProfileBasicInfo() {
     let career = userProfile.career;
     if (career >= 12)
         career = getCareer(career);
-    const equalPay = isEqualPay(userProfile.pay);
     const startDate = changeStartDate(userProfile.startDate);
 
     return (
@@ -66,10 +65,7 @@ export default function ProfileBasicInfo() {
                         </Text>
                         <View style={styles.verticalLine} />
                         <Text style={styles.userValue}>
-                            {equalPay ?
-                                `${equalPay}만원` :
-                                (userProfile.pay)
-                            }
+                            {userProfile.pay}만원
                         </Text>
                     </View>
                 </View>
@@ -86,7 +82,7 @@ export default function ProfileBasicInfo() {
                             지역
                         </Text>
                         <View style={styles.verticalLine} />
-                        <Text style={[styles.userValue, { flexWrap: 'wrap' }]}>
+                        <Text style={[styles.userValue, { flexWrap: 'wrap', paddingRight: 10 }]}>
                             {userProfile.possibleArea}
                         </Text>
                     </View>

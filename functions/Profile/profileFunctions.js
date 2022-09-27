@@ -25,22 +25,6 @@ export function getCareer(userCareer) {
 }
 
 /**
- * 사용자의 일당을 넘겨 받아 똑같은 요금인지 check
- * 똑같으면 추가요금이 없는 보조사
- * @example 12만원 ~ 13만원
- * @param userPay string형식의 사용자 일당
- * @returns 일치하는지 여부 boolean
- */
-export function isEqualPay(userPay) {
-    const pay = userPay.split('~ ');
-    const firstPay = pay[0].substr(0, 2);
-    const secondPay = pay[1].substr(0, 2);
-    if (firstPay === secondPay)
-        return firstPay;
-    return false;
-}
-
-/**
  * 선택한 지역들이 많은 사용자를 나누기 위한 함수
  * @param areas  사용자가 선택한 지역들
  * @returns boolean

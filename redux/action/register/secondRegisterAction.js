@@ -4,7 +4,6 @@ import { createAction } from "@reduxjs/toolkit";
 export const saveWeight = createAction('secondRegister/saveWeight');
 export const saveCareer = createAction('secondRegister/saveCareer');
 export const saveFirstPay = createAction('secondRegister/saveFirstPay');
-export const saveSecondPay = createAction('secondRegister/saveSecondPay');
 export const saveTime = createAction('secondRegister/saveTime');
 export const saveTraining = createAction('secondRegister/saveTraining');
 export const saveStartDate = createAction('secondRegister/saveStartDate');

@@ -3,7 +3,6 @@ import {
     saveWeight,
     saveCareer,
     saveFirstPay,
-    saveSecondPay,
     saveStartDate,
     saveNextHospital,
     savePossibleArea,
@@ -29,7 +28,6 @@ const initialState = {
     license: [],
     careGiver: {
         firstPay: '',
-        secondPay: '',
         nextHospital: ''
     },
     assistant: {
@@ -56,9 +54,6 @@ const secondRegisterReducer = createReducer(initialState, (builder) => {
         })
         .addCase(saveFirstPay, (state, action) => { // 간병인 페이 시작 저장
             state.careGiver.firstPay = action.payload
-        })
-        .addCase(saveSecondPay, (state, action) => { //간병인 페이 끝 저장
-            state.careGiver.secondPay = action.payload
         })
         .addCase(saveTime, (state, action) => {  // 활동보조사 활동 가능 시간 저장
             state.assistant.time = action.payload

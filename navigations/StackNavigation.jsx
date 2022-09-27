@@ -15,7 +15,8 @@ import Email from "../screens/MyProfile/Account/Email";
 import Certificate from "../screens/MyProfile/Profile/Certificate";
 import RegisterCompletePage from "../screens/Register/RegisterComplete";
 import FindAddress from "../components/SecondRegister/Protector/FindAddress";
-import HelperProfile from "../screens/HelperProfile"; 
+import HelperProfile from "../screens/HelperProfile";
+import Filter from "../screens/Filter";
 
 const Stack = createStackNavigator();
 
@@ -98,8 +99,8 @@ export function StackNavigation() {
             />
 
             <Stack.Screen
-                name = 'findAddressPage'
-                component = {FindAddress}
+                name='findAddressPage'
+                component={FindAddress}
                 options={({ navigation }) => ({
                     headerShown: 'true',
                     title: '주소검색',
@@ -176,11 +177,11 @@ export function StackNavigation() {
                         <BackBtn navigation={navigation} type='default' />
                     )
                 })}
-                />
+            />
 
             <Stack.Screen
-                name = 'registerCompletePage'
-                component = {RegisterCompletePage}
+                name='registerCompletePage'
+                component={RegisterCompletePage}
             />
 
             <Stack.Screen
@@ -194,11 +195,31 @@ export function StackNavigation() {
                         fontSize: Platform.OS === 'ios' ? 13 : 17,
                         marginLeft: 15
                     },
-                    headerLeftContainerStyle: { 
+                    headerLeftContainerStyle: {
                         left: 10,
                     },
                     headerLeft: () => (
-                        <BackBtn navigation={navigation} type = 'default' />
+                        <BackBtn navigation={navigation} type='default' />
+                    )
+                })}
+            />
+
+            <Stack.Screen
+                name='filterPage'
+                component={Filter}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '필터',
+                    headerTitleAlign: 'left',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 16 : 19,
+                        marginLeft: 5
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <CloseBtn navigation={navigation} type='filter' />
                     )
                 })}
             />

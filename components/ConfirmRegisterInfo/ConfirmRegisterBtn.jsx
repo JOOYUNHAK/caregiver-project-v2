@@ -9,7 +9,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 
 export default function ConfirmRegisterBtn({ navigation }) {
     const [isFill, setIsFill] = useState(false);
-    const { firstRegister, secondRegister, lastRegister} = useSelector(
+    const { firstRegister, secondRegister, lastRegister } = useSelector(
         state => ({
             firstRegister: state.firstRegister.user, 
             secondRegister: state.secondRegister,
@@ -18,10 +18,11 @@ export default function ConfirmRegisterBtn({ navigation }) {
         shallowEqual
     );
     const notice = lastRegister.careGiver['notice'];
+    const extraFee = lastRegister.careGiver['extraFee'];
 
      useEffect(() => {
-        notice ? setIsFill(true) : setIsFill(false)
-    }, [notice] )
+        notice && extraFee ? setIsFill(true) : setIsFill(false)
+    }, [notice, extraFee] )
 
     return (
         <View style={{ width: wp('100%') }}>

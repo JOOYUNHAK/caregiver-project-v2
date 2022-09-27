@@ -6,7 +6,7 @@ const selectStyle = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        height: hp('25%'),
+        height: 'auto',
         paddingLeft: 20,
     },
 
@@ -15,7 +15,7 @@ const selectStyle = StyleSheet.create({
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
         flexWrap: 'wrap',
-        marginTop: 10
+        marginTop: 10,
     },
 })
 

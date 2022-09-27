@@ -30,7 +30,7 @@ export function MyTabs() {
                 component={FindHelper}
                 options={({ navigation }) => ({
                     tabBarLabel: '홈',
-                    title: '믿음으로',
+                    title: '케어초이스',
                     headerTitleAlign: 'left',
                     headerTitleStyle: {
                         fontWeight: 'bold',

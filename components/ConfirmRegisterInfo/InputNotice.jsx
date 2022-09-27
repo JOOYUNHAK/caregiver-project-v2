@@ -19,7 +19,7 @@ export default function InputNotice() {
                 maxLength={30}
                 onChangeText={(text) => dispatch(saveNotice(text))}
                 style={styles.noticeTextInput}
-                placeholder='Ex) 저를 믿고 연락주세요, 당분간 환자분들 받지 못합니다.'
+                placeholder='Ex) 친절하게 모시겠습니다, 당분간 환자분들 받지 못합니다.'
             />
         </View>
     )
