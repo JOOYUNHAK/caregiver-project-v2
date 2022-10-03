@@ -4,13 +4,14 @@ import { JwtService } from "@nestjs/jwt";
 import { DataSource, Repository, Brackets, IsNull } from "typeorm";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { UserDto } from "./dto/user.dto";
-import { Assistant, CareGvier, Protector } from "./entity/register.entity";
+import { Assistant, CareGiver, Protector } from "./entity/register.entity";
 import { User } from "./entity/user.entity";
 import { Token } from "./entity/token.entity";
 import { ProfileUpdateDto } from "src/user/dto/profile-update.dto";
 import { CareGiverProfileDto, } from "src/user/dto/caregiver-profile.dto";
 import { AssistantProfileDto } from "src/user/dto/assistant-profile.dto";
 import { RequestProfileListDto } from "src/user/dto/request-profile-list.dto";
+import { Heart } from "src/user/entity/heart.entity";
 
 @Injectable()
 export class UserService {
@@ -21,8 +22,11 @@ export class UserService {
         @Inject('PROTECTOR_REPOSITORY')
         private protectorRepository: Repository<Protector>,
 
+        @Inject('HEART_REPOSITORY')
+        private heartRepository: Repository<Heart>,
+
         @Inject('CAREGIVER_REPOSITORY')
-        private careGiverRepository: Repository<CareGvier>,
+        private careGiverRepository: Repository<CareGiver>,
 
         @Inject('ASSISTANT_REPOSITORY')
         private assistantRepository: Repository<Assistant>,
@@ -71,7 +75,8 @@ export class UserService {
      */
     async updateProfile(profileUpdateDto: ProfileUpdateDto) {
         const { id } = profileUpdateDto;
-        const range = profileUpdateDto?.private
+        const range = profileUpdateDto
+            ?.private
 
         await this.userRepository.update({ id: id }, { profile_off: range })
     }
@@ -103,57 +108,158 @@ export class UserService {
         }
     }
 
-    /**
-     * 해당 가입목적의 사용자들 프로필 list 전체 return
+    /**W
+     * 해당 가입목적의 사용자들 프로필 list 전체(filter 존재시 적용) return
      * @returns 해당 가입 사용자 프로필 list
      */
     async getProfileList(requestProfileListDto: RequestProfileListDto): Promise<CareGiverProfileDto[]> {
-        const { purpose, start, mainFilter, payFilter, startDateFilter, 
-                ageFilter, areaFilter, licenseFilter, warningFilter, strengthFilter } = requestProfileListDto;
+        const { purpose, start, mainFilter, payFilter, startDateFilter, sexFilter,
+            ageFilter, areaFilter, licenseFilter, warningFilter, strengthFilter, exceptLicenseFilter } = requestProfileListDto;
         if (purpose === 'careGiver') {
-            return await this.careGiverRepository
-                .createQueryBuilder('cg')
-                .innerJoin('cg.user', 'user')
+            console.log(mainFilter)
+
+            let query;
+            // 찜 필터는 찜 개수 구해서 sub query로 넘겨줌
+            if (mainFilter === 'heart') {
+                
+                //서브 쿼리로 카운트 값을 구한 후 merge
+                const heartCountSubQuery = this.heartRepository
+                    .createQueryBuilder()
+                    .subQuery()
+                    .select([
+                        'heart.heart_id as heartId',
+                        'COUNT(heart.heart_id) AS count'
+                    ])
+                    .from(Heart, 'heart')
+                    .groupBy('heartId')
+                    .getQuery();
+
+                query = this.careGiverRepository
+                    .createQueryBuilder('cg')
+                    .innerJoin('cg.user', 'user')
+                    .leftJoin(heartCountSubQuery, 'heart', 'heart.heartId = cg.id')
+                    .addSelect([
+                        'heart.count as count'
+                    ])
+            }
+            else {
+                query = this.careGiverRepository
+                    .createQueryBuilder('cg')
+                    .innerJoin('cg.user', 'user')
+            }
+
+
+            return await query
+                .select([
+                    'cg.id as id',
+                    'cg.career as career',
+                    'cg.pay as pay',
+                    'cg.startDate as startDate',
+                    'cg.possibleArea as possibleArea',
+                    'cg.license as license',
+                    'cg.keywords as keywords',
+                    'cg.notice as notice',
+                    'user.name as name',
+                    'user.birth as birth',
+                    'user.sex as sex',
+                    'user.purpose as purpose',
+                    'user.isCertified as isCertified',
+                    'user.warning as warning',
+                ])
                 .where('user.profile_off = :profile_off', { profile_off: false })
                 .andWhere(
                     new Brackets((qb) => {
+                        //일당 필터
                         if (!!payFilter) {
-                            qb.where('cg.pay <= :pay', {
-                                pay: payFilter === 'under10' ? 10 : payFilter === 'under15' ? 15 : 20
+                            qb.andWhere('cg.pay <= :pay', {
+                                pay: payFilter === 'under10' ? 10 :
+                                    payFilter === 'under15' ? 15 : 20
                             })
                         }
+                        //시작가능일 필터
                         if (!!startDateFilter) {
                             qb.andWhere('cg.startDate <= :startDate', {
-                                startDate: startDateFilter === 'immediately' ? 0 : startDateFilter === '1week' ? 1
-                                    : startDateFilter === '2week' ? 2 : startDateFilter === '3week' ? 3 : 4
+                                startDate: startDateFilter === 'immediately' ? 1 : startDateFilter === '1week' ? 2
+                                    : startDateFilter === '2week' ? 3 : startDateFilter === '3week' ? 4 : 5
                             })
                         }
-                        if( !! warningFilter) {
+                        //나이 필터
+                        if (!!ageFilter) {
+                            const { startAge, endAge } = getStartEndYear(ageFilter);
+                            qb.andWhere('user.birth between :startAge and :endAge', {
+                                startAge: endAge, endAge: startAge
+                            })
+                        }
+                        //성별 필터
+                        if (!!sexFilter) {
+                            qb.andWhere('user.sex = :sex', { sex: sexFilter === '남' ? '남' : '여' });
+                        }
+                        //지역 필터
+                        if (!!areaFilter) {
+                            const areaList = convertStringToLikeQuery(areaFilter);
+
+                            //첫번째 쿼리문 무조건 필터 한개는 들어오기
+                            switch (areaList.length) {
+                                case 1:
+                                    qb.andWhere('cg.possibleArea like :area', { area: areaList[0] });
+                                    break;
+                                case 2:
+                                    qb.andWhere(new Brackets((sub) => {
+                                        sub.where('cg.possibleArea like :firstArea ', { firstArea: areaList[0] })
+                                            .orWhere('cg.possibleArea like :secondArea', { secondArea: areaList[1] });
+                                    }))
+                                    break;
+                                case 3:
+                                    qb.andWhere(new Brackets((sub) => {
+                                        sub.where('cg.possibleArea like :firstArea ', { firstArea: areaList[0] })
+                                            .orWhere('cg.possibleArea like :secondArea', { secondArea: areaList[1] })
+                                            .orWhere('cg.possibleArea like :thirdArea', { thirdArea: areaList[2] });
+                                    }))
+                                    break;
+                            }
+                        }
+                        if (!!licenseFilter) {
+                            const licenseList = convertStringToLikeQuery(licenseFilter);
+
+                            switch (licenseList.length) {
+                                case 1:
+                                    qb.andWhere('cg.license like :license', { license: licenseList[0] });
+                                    break;
+                                case 2:
+                                    qb.andWhere(new Brackets((sub) => {
+                                        sub.where('cg.license like :firstLicense ', { firstLicense: licenseList[0] })
+                                            .orWhere('cg.license like :secondLicense', { secondLicense: licenseList[1] });
+                                    }))
+                                    break;
+                                case 3:
+                                    qb.andWhere(new Brackets((sub) => {
+                                        sub.where('cg.license like :firstLicense ', { firstLicense: licenseList[0] })
+                                            .orWhere('cg.license like :secondLicense', { secondLicense: licenseList[1] })
+                                            .orWhere('cg.license like :thirdLicense', { thirdLicense: licenseList[2] });
+                                    }))
+                                    break;
+                            }
+                        }
+                        if (!!warningFilter) {
                             qb.andWhere('user.warning is null')
                         }
-                       
+                        if (!!strengthFilter)
+                            qb.andWhere('cg.strength != :strength', { strength: '{"first":"","second":""}' })
+                        /* if( !!exceptLicenseFilter)
+                            qb.andWhere('cg.license is not null') */
                     })
                 )
                 .orderBy(
                     mainFilter === 'pay' ? 'cg.pay' :
-                        mainFilter === 'startDate' ? 'cg.startDate' : null,
+                        mainFilter === 'startDate' ? 'cg.startDate' :
+                            mainFilter === 'heart' ? 'heart.count' : null,
 
                     mainFilter === 'pay' || mainFilter === 'startDate' ? 'ASC' : 'DESC'
                 )
-                .addSelect([
-                    'user.name',
-                    'user.birth',
-                    'user.sex',
-                    'user.purpose',
-                    'user.isCertified',
-                    'user.warning'
-                ])
-                .skip(start)
-                .take(5)
-                .getMany();
+                .offset(start)
+                .limit(5)
+                .getRawMany();
         }
-
-
         /* else {
             return await this.assistantRepository
                 .createQueryBuilder('at')
@@ -175,8 +281,25 @@ export class UserService {
      * @param profileId 해당 목적 테이블의 id
      * @returns 특정 사용자 profile
      */
-    async getProfileOne(purpose: string, profileId: string): Promise<CareGiverProfileDto> {
+    async getProfileOne(purpose: string, profileId: string, userId: string): Promise<CareGiverProfileDto> {
         if (purpose === 'careGiver') {
+            let heart = await this.heartRepository
+                .createQueryBuilder('heart')
+                .select('COUNT(heart.heart_id) AS heartCount')
+                .groupBy('heart.heart_id')
+                .having('heart.heart_id =:profileId', { profileId: profileId })
+                .addSelect(subQuery => {
+                    return subQuery
+                        .select('heart.heart_id AS isHearted')
+                        .from(Heart, 'heart')
+                        .where('heart.user_id = :userId AND heart.heart_id = :profileId', {
+                            userId: userId, profileId: profileId
+                        })
+                }, 'isHearted')
+                .getRawOne();
+            //조회되는 값이 없으면 만들어서 data return
+            heart === undefined ? heart = { heartCount: 0, isHearted: null } : heart
+
             const profile = await this.careGiverRepository
                 .createQueryBuilder('cg')
                 .innerJoin('cg.user', 'user')
@@ -188,15 +311,20 @@ export class UserService {
                     'user.sex',
                     'user.purpose',
                     'user.isCertified',
-                    'user.warning'
+                    'user.warning',
                 ])
                 .getOne();
+
+            //찜 관련 db 반환위해
+            const result = { ...profile, heart }
+
             if (profile === null)
                 throw new HttpException(
-                    '해당 프로필을 현재 찾을 수 없습니다.',
+                    '해당 간병인의 프로필은 현재 비공개 및 탈퇴의 이유로 찾을 수 없습니다.',
                     HttpStatus.NOT_FOUND
                 )
-            return profile;
+
+            return result;
         }
     }
 
@@ -353,7 +481,7 @@ export class UserService {
 }
 
 //간병인 객체
-function createCareGiver(createUserDto: CreateUserDto, user: User): CareGvier {
+function createCareGiver(createUserDto: CreateUserDto, user: User): CareGiver {
 
     function getKeywords(): string {
         let keyWords = [];
@@ -363,7 +491,7 @@ function createCareGiver(createUserDto: CreateUserDto, user: User): CareGvier {
         return keyWords.join();
     }
 
-    const careGiver = new CareGvier();
+    const careGiver = new CareGiver();
 
     const strength1 = createUserDto.lastRegister['strength']['first'];
     const strength2 = createUserDto.lastRegister['strength']['second'];
@@ -379,7 +507,7 @@ function createCareGiver(createUserDto: CreateUserDto, user: User): CareGvier {
     careGiver.toilet = createUserDto.lastRegister['toilet'];
     careGiver.bedsore = createUserDto.lastRegister['bedsore'];
     careGiver.washing = createUserDto.lastRegister['washing'];
-    careGiver.strength = ({ strength1: strength1, strength2: strength2 });
+    careGiver.strength = ({ first: strength1, second: strength2 });
     careGiver.keywords = getKeywords();
     careGiver.notice = createUserDto.lastRegister['careGiver']['notice'];
     careGiver.extraFee = createUserDto.lastRegister['careGiver']['extraFee'];
@@ -425,4 +553,41 @@ function createProtector(createUserDto: CreateUserDto, user: User): Protector {
     protector.bathChair = createUserDto.lastRegister['protector']['bathChair'];
     protector.user = user;
     return protector;
+}
+
+function getStartEndYear(ageFilter: number): { startAge: string, endAge: string } {
+    let startAge: string, endAge: string;
+    const year = new Date().getFullYear();
+    switch (Number(ageFilter)) {
+        case 20:
+            startAge = year - 20 + 2 + '';
+            endAge = year - 20 + 1 - 9 + '';
+            break;
+        case 30:
+            startAge = year - 30 + 2 + '';
+            endAge = year - 30 + 1 - 9 + '';
+            break;
+        case 40:
+            startAge = year - 40 + 2 + '';
+            endAge = year - 40 + 1 - 9 + '';
+            break;
+        case 50:
+            startAge = year - 50 + 2 + '';
+            endAge = year - 50 + 1 - 9 + '';
+            break;
+        case 60:
+            startAge = year - 60 + 2 + '';
+            endAge = year - 60 + 1 - 9 + '';
+            break;
+    }
+    return { startAge: startAge, endAge: endAge }
+}
+
+function convertStringToLikeQuery(filterString: string): string[] {
+    const filterList = filterString.split(',');
+    filterList.forEach((filter, index) => {
+        const likeQuery = '\%' + filter + '\%';
+        filterList[index] = likeQuery;
+    });
+    return filterList;
 }

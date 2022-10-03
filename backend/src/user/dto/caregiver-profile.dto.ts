@@ -3,7 +3,7 @@ export class CareGiverProfileDto {
     id: number;
     weight: number;
     career: number;
-    pay: string;
+    pay: number;
     startDate: string;
     nextHospital: string;
     possibleArea: string;
@@ -13,8 +13,8 @@ export class CareGiverProfileDto {
     bedsore: string;
     washing: string;
     strength: {
-        strength1: string,
-        strength2: string
+        first: string,
+        second: string
     };
     keywords: string;
     notice: string;
@@ -25,9 +25,13 @@ export class CareGiverProfileDto {
         purpose: string;
         isCertified: boolean;
         warning: {
-            1: string,
-            2: string,
-            3: string
-        };
+            first: string,
+            second: string,
+            third: string
+        }
+    };
+    Heart?: {
+        heartCount: number,
+        isHearted: number
     }
 }

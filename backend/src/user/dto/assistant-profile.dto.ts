@@ -7,8 +7,8 @@ export class AssistantProfileDto {
     possibleArea: string;
     license: string;
     strength: {
-        strength1: string,
-        strength2: string
+        1: string,
+        2: string
     };
     withPatient: string;
     keywords: string;

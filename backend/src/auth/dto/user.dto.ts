@@ -6,9 +6,9 @@ export class UserDto {
     isCertified: boolean;
     profile_off: boolean;
     warning: {
-        1: string, 
-        2: string,
-        3: string
+        first: string, 
+        second: string,
+        third: string
     };
     token_index: number;
 }

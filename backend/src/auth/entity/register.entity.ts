@@ -1,8 +1,9 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Heart } from "src/user/entity/heart.entity";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
 
 @Entity('caregiver')
-export class CareGvier {
+export class CareGiver {
     @PrimaryGeneratedColumn('increment')
     id: number
 
@@ -12,8 +13,8 @@ export class CareGvier {
     @Column({ type: 'int' })
     career: number;
 
-    @Column({ type: 'varchar', length: 15 })
-    pay: string;
+    @Column({ type: 'int'})
+    pay: number;
 
     @Column({ type: 'char', length: 1 })
     startDate: string
@@ -40,7 +41,7 @@ export class CareGvier {
     washing: string;
 
     @Column({ type: 'simple-json', nullable: true })
-    strength: { strength1: string, strength2: string }
+    strength: { first: string, second: string }
 
     @Column({ type: 'varchar', length: 15 })
     keywords: string;
@@ -58,7 +59,10 @@ export class CareGvier {
         name: 'user_id',
         referencedColumnName: 'id'
     })
-    user: User
+    user: User;
+
+    @OneToMany(() => Heart, (heart) => heart.heart_id)
+    heart: Heart []
 }
 
 @Entity('protector')

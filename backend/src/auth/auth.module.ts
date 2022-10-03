@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { DatabaseModule } from '../database/database.module';
 import { AuthController } from './auth.controller';
 import { userRepository } from './user.repository';
@@ -12,6 +12,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './security/strategy/jwt.strategy';
 import { tokenRepository } from './token.repository';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { tokenRepository } from './token.repository';
     DatabaseModule,
     RedisModule,
     PassportModule,
-    JwtModule
+    JwtModule,
+    forwardRef(() => UserModule)
   ],
   controllers: [AuthController],
   providers: [
@@ -33,6 +35,14 @@ import { tokenRepository } from './token.repository';
     SendService,
     JwtStrategy
   ],
-  exports: [JwtStrategy, PassportModule, JwtModule, UserService]
+  exports: [
+    JwtStrategy, 
+    PassportModule, 
+    JwtModule, 
+    UserService,
+    ...userRepository,
+    ...careGiverRepository,
+    ...tokenRepository
+  ]
 })
 export class AuthModule {}

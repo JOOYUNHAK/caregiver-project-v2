@@ -25,7 +25,7 @@ export class User {
     isCertified: boolean
 
     @Column({ type: 'simple-json', nullable: true })
-    warning: { 1: string, 2: string, 3: string}
+    warning: { first: string, second: string, third: string}
 
     @Column({ default: false })
     profile_off: boolean
