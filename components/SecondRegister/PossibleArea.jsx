@@ -47,17 +47,17 @@ export default function PossibleArea() {
                             onPress={() => { selectArea(select.title) }}
                             key={select.id}
                             style={{
-                                borderWidth: 0.5,
+                                borderWidth: select.checked ? 1 :0.5,
                                 margin: 5,
                                 borderRadius: 5,
-                                backgroundColor: select.checked ? '#a5d847' : 'white',
-                                borderColor: select.checked ? 'whitesmoke' : '#cacaca'
+                                backgroundColor: 'white',
+                                borderColor: select.checked ? '#0c2461' : 'silver'
                             }}>
                             <Text style={{
                                 paddingVertical: 5,
                                 paddingLeft: 20,
                                 paddingRight: 20,
-                                color: select.checked ? 'whitesmoke' : '#81c300'
+                                color: select.checked ? '#0c2461' : 'darkgray'
                             }}>
                                 {select.title}
                             </Text>

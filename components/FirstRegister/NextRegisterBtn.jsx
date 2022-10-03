@@ -60,6 +60,6 @@ const styles = (isFill) => StyleSheet.create({
         marginLeft: 20,
         marginRight: 20,
         borderRadius: 10,
-        backgroundColor: isFill ? '#78e7b9' : '#c0f3dc'
+        backgroundColor: isFill ? 'rgba(65, 92, 118, 0.85)' : 'rgba(65, 92, 118, 0.25)'
     }
 });

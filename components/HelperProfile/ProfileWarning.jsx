@@ -30,7 +30,7 @@ export default function ProfileWarning() {
             
             <View style = {{marginBottom: 5}}>
                 <Text style = {styles.noListText}>
-                    현재까지 신고받은 이력이 없습니다.
+                    현재까지 신고받은 이력이 없어요.
                 </Text>
             </View>
 
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
 
     noListText: {
         marginTop: 15,
-        fontSize: 15,
+        fontSize: 14,
         color: '#a1a1a1'
     }
 

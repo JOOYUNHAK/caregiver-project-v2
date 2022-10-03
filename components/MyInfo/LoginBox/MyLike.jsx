@@ -1,4 +1,5 @@
 /* 로그인박스 찜 */
+import { StackActions, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
     View,
@@ -10,8 +11,14 @@ import {
 import Icon from '../../Icon';
 
 export default function MyLike() {
+    const navigation = useNavigation();
     return (
-        <TouchableHighlight style={{ width: '33%' }}>
+        <TouchableHighlight 
+            underlayColor='none'
+            onPress={() => navigation.dispatch(
+                StackActions.push('heartListPage')
+            )}
+            style={{ width: '33%', }}>
             <View style={styles.likeBox}>
                 <View>
                     <Icon props={['font-awesome', 'heart', 28, '#94c6ad']} />

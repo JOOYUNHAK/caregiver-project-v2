@@ -11,9 +11,7 @@ export default function ProfileBasicInfo() {
         userProfile: state.profile.userProfile
     }));
     
-    let career = userProfile.career;
-    if (career >= 12)
-        career = getCareer(career);
+    const career = getCareer(userProfile.career);
     const startDate = changeStartDate(userProfile.startDate);
 
     return (

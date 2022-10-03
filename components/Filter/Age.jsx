@@ -32,7 +32,7 @@ export default function Age() {
 
     return (
         <View style={{
-            marginTop: 30,
+            marginTop: 40,
             paddingLeft: 20,
         }}>
             <View style = {{flexDirection: 'row', alignItems: 'center'}}>
@@ -78,6 +78,6 @@ const styles = (ageFilter, title) => StyleSheet.create({
         fontSize: 14,
         marginLeft: 10,
         fontWeight: '700',
-        color: '#43c32c',
+        color: 'rgba(65, 92, 118, 0.85)',
     }
 })

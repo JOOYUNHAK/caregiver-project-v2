@@ -19,8 +19,13 @@ export function getAge(userBirth) {
 export function getCareer(userCareer) {
     const year = Math.floor(userCareer / 12);
     const month = userCareer % 12;
-    if (month === 0)
+    if (month == 0) {
+        if(year == 0)
+            return '초보'
         return `${year}년`
+    }
+    else if(year == 0 && month != 0)
+        return `${month}개월`
     return `${year}년 ${month}개월`
 }
 
@@ -43,16 +48,16 @@ export function possibleAreaRange(areas) {
  */
 export function changeStartDate(weight) {
     switch (weight) {
-        case '0':
-            return '즉시가능'
         case '1':
-            return '1주 이내'
+            return '즉시가능'
         case '2':
-            return '2주 이내'
+            return '1주 이내'
         case '3':
-            return '3주 이내'
+            return '2주 이내'
         case '4':
-            return '한달 이후'
+            return '3주 이내'
+        case '5':
+            return '한달 이내'
     }
 }
 /**

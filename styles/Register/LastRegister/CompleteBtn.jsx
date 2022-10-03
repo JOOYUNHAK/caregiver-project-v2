@@ -8,7 +8,7 @@ const completeBtnStyle = (isFill) => StyleSheet.create({
     alignSelf: 'center',
     borderRadius: 5,
     width: wp('90%'),
-    backgroundColor: isFill ? '#78e7b9' : '#c0f3dc'
+    backgroundColor: isFill ? 'rgba(65, 92, 118, 0.85)' : 'rgba(65, 92, 118, 0.25)'
 });
 
 const completeBtnTextStyle = (isFill) => StyleSheet.create({

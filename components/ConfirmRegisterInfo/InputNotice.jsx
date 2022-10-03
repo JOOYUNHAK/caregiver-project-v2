@@ -11,8 +11,8 @@ export default function InputNotice() {
     const dispatch = useDispatch();
     return (
         <View style={styles.notice}>
-            <Text style={{ fontSize: 15 }}>
-                보호자분들께 알려드려요.
+            <Text>
+                보호자분들께 전하는 한마디를 적어주세요
             </Text>
             <RegisterHelpText helpText={'하고싶은 말, 공지사항등을 한줄로 자유롭게 작성해 주세요.'} />
             <TextInput
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
         borderBottomColor: 'silver', 
         borderBottomWidth: 0.5, 
         width: '100%', 
-        fontSize: 14, 
+        fontSize: 13, 
         paddingVertical: 1, 
         paddingLeft: 3, 
         marginTop: 5 

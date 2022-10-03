@@ -34,8 +34,8 @@ export default function LastRegister({ navigation }) {
             <StatusBarComponent />
             <KeyboardAwareScrollView
                 keyboardShouldPersistTaps='handled'
-                extraHeight={150}
-                extraScrollHeight={90}
+                extraHeight={70}
+                extraScrollHeight={120}
                 enableOnAndroid={true}
                 scrollEnabled={true}
                 enableAutomaticScroll={true}

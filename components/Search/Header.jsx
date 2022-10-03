@@ -48,7 +48,7 @@ export default function Header({ navigation, recentWords, autoStore, lengthCheck
                 <TouchableOpacity
                     onPress={() => navigation.pop()}
                     style={{ flex: 1 }}>
-                    <Icon props={['antdesign', 'arrowleft', 24, '#94c6ad']} />
+                    <Icon props={['antdesign', 'arrowleft', 24, 'black']} />
                 </TouchableOpacity>
 
                 <View style={styles.searchPageBox}>

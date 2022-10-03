@@ -7,29 +7,18 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import { useSelector } from "react-redux";
 import { getAge } from "../../functions/Profile/profileFunctions";
 import Icon from "../../components/Icon";
+import Heart from "./ProfileHeader/Heart";
 
 
 export default function ProfileHeader() {
-    const { userProfile } = useSelector(state => ({
+    const {  userProfile } = useSelector(state => ({
         userProfile: state.profile.userProfile
     }));
 
     const age = getAge(userProfile.user.birth);
     return (
-        <View style={{
-            height: hp('20%'),
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 18,
-            width: wp('100%'),
-            backgroundColor: 'white',
-        }}>
-            <View style={{
-                flexDirection: 'column',
-                height: '90%',
-                width: '100%',
-                justifyContent: 'flex-end',
-            }}>
+        <View style={styles.profileHeader}>
+            <View style={styles.innerProfileHeader}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={{ fontWeight: '500', fontSize: 15, marginBottom: 3 }}>
                         {userProfile.user.sex},
@@ -46,9 +35,7 @@ export default function ProfileHeader() {
                     }}>
                         믿음의 {userProfile.user.purpose} {userProfile.user.name}님
                     </Text>
-                    <View style={{ position: 'absolute', right: 15, paddingTop: 3 }}>
-                        <Icon props={['material', 'favorite-border', 22, 'black']} />
-                    </View>
+                    <Heart />
                 </View>
 
                 <View style={{
@@ -91,12 +78,21 @@ export default function ProfileHeader() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
+
+    profileHeader: {
+        height: hp('20%'),
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 18,
+        width: wp('100%'),
+        backgroundColor: 'white',
+    },
+
+    innerProfileHeader: {
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignContent: 'center',
-        backgroundColor: 'whitesmoke'
+        height: '90%',
+        width: '100%',
+        justifyContent: 'flex-end',
     },
 
     profileHelperAppeal: {

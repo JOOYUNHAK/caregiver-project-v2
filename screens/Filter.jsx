@@ -12,13 +12,16 @@ import Area from "../components/Filter/Area";
 import Except from "../components/Filter/Except";
 import FilterBottomButton from "../components/Filter/FilterBottomButton";
 import License from "../components/Filter/License";
+import Sex from "../components/Filter/Sex";
 import StatusBarComponent from "../components/StatusBarComponent";
 import { backToPreviousFilter } from "../redux/action/profile/profileAction";
 
 export default function Filter() {
     const dispatch = useDispatch();
     const backAction = () => {
-        dispatch(backToPreviousFilter());
+        setTimeout(() => {
+            dispatch(backToPreviousFilter());            
+        }, 1);
     }
     useEffect(() => {
 
@@ -38,6 +41,7 @@ export default function Filter() {
                 enableOnAndroid={true}
                 scrollEnabled={true}
                 showsVerticalScrollIndicator={false}>
+                    <Sex />
                     <Age />
                     <Area />
                     <License />

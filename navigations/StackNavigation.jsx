@@ -17,6 +17,7 @@ import RegisterCompletePage from "../screens/Register/RegisterComplete";
 import FindAddress from "../components/SecondRegister/Protector/FindAddress";
 import HelperProfile from "../screens/HelperProfile";
 import Filter from "../screens/Filter";
+import MyHeartList from "../screens//MyInfo/MyHeartList";
 
 const Stack = createStackNavigator();
 
@@ -220,6 +221,26 @@ export function StackNavigation() {
                     },
                     headerLeft: () => (
                         <CloseBtn navigation={navigation} type='filter' />
+                    )
+                })}
+            />
+
+            <Stack.Screen
+                name="heartListPage"
+                component={MyHeartList}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '찜',
+                    headerTitleAlign: 'left',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 16 : 19,
+                        marginLeft: 5
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <BackBtn navigation={navigation} type = 'default' />
                     )
                 })}
             />

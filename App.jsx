@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, } from '@react-navigation/native';
 import { StackNavigation } from './navigations/StackNavigation';
 import { Provider } from 'react-redux';
 import 'react-native-gesture-handler';

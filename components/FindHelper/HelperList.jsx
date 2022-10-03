@@ -16,20 +16,18 @@ import { useLayoutEffect } from 'react';
 import Loading from '../../screens/Loading';
 import { refreshProfileList } from '../../redux/action/profile/profileAction';
 
-
-/**
- * @todo 밑으로 스크롤시 일정개수 요청
- * @param 
- * @returns 
- */
 export default function HelperList({ purpose }) {
-    useLayoutEffect(() => {
+    useEffect(() => {
         async function getProfileList() {
             await requestProfileList(purpose)
         };
         getProfileList();
     }, [])
+
     const dispatch = useDispatch();
+    const { listLoading } = useSelector(state => ({
+        listLoading: state.profile.listLoading
+    }));
 
     let listViewRef;
 
@@ -39,10 +37,6 @@ export default function HelperList({ purpose }) {
 
     const [showTopBtn, setShowTopBtn] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
-
-    const [sortStandard, setSortStandard] = useState('normal');
-    const [reRender, setReRender] = useState(false);
-
     const ScrollToTop = () => {
         listViewRef.scrollToOffset({ offset: 0, animated: true });
         setShowTopBtn(false);
@@ -80,6 +74,7 @@ export default function HelperList({ purpose }) {
     return (
         <>
             <SelectFilter />
+            {listLoading ? <Loading /> :
                 <FlatList
                     ListEmptyComponent={
                         <NoListPage code={'noBoardList'} />
@@ -88,20 +83,22 @@ export default function HelperList({ purpose }) {
                     renderItem={({ item }) => <HelperProfile item={item} key={item.id} />}
                     windowSize={1}
                     style={{ height: '100%', paddingTop: 10, backgroundColor: 'white' }} //수정
-                    extraData={reRender}
                     onScrollEndDrag={showButton}
                     onRefresh={refreshData}
                     refreshing={refreshing}
-                    onEndReachedThreshold={0.2}
-                    onEndReached = {async ({ distanceFromEnd }) => {
-                        await requestProfileList(purpose);
+                    onEndReachedThreshold={0.1}
+                    onEndReached={async ({ distanceFromEnd }) => {
+                        if (distanceFromEnd < -30);
+                        else
+                           // console.log('here')
+                           await requestProfileList(purpose); 
                     }}
                     showsVerticalScrollIndicator={false}
                     ref={(ref) => {
                         listViewRef = ref;
                     }}
                 />
-            
+            }
             {showTopBtn ?
                 <TouchableHighlight
                     style={styles.TopBtn}
@@ -109,6 +106,7 @@ export default function HelperList({ purpose }) {
                     onPress={ScrollToTop}>
                     <Icon props={['antdesign', 'arrowup', 25, 'dimgray']} />
                 </TouchableHighlight> : null}
+
         </>
 
     );

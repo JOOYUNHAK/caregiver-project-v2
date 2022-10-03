@@ -8,6 +8,8 @@ import { View } from "react-native";
 import { TouchableHighlight } from "react-native";
 import { heightPercentageToDP as hp} from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
+import { resetHeartList } from "../../../redux/action/profile/profileAction";
+import { saveIsAuthed } from "../../../redux/action/register/firstRegisterAction";
 import { logout } from "../../../redux/action/user/userAction";
 
 export default function Logout({ navigation }) {
@@ -18,7 +20,9 @@ export default function Logout({ navigation }) {
             style={{ heigh: hp('6%') }}
             underlayColor='none'
             onPress={async () => {
-                dispatch(logout());
+                dispatch(logout()); //현재 유저정보 리셋
+                dispatch(saveIsAuthed(false)); //휴대폰 인증 여부 리셋
+                dispatch(resetHeartList()); // 찜 목록 초기화
                 await AsyncStorage.multiRemove(['accessToken', 'refreshToken']);
                 navigation.dispatch(
                     StackActions.pop()

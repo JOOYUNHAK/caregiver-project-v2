@@ -10,7 +10,7 @@ export default function NextHospital() {
     return (
         <View style={styles.nextHospital}>
             <Text>
-                연장 요청이 들어올 경우
+                보호자분이 연장을 원할경우 가능하신가요?
             </Text>
             <TextInput
                 onChangeText={(text) => dispatch(saveNextHospital(text))}

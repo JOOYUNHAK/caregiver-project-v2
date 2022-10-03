@@ -46,9 +46,9 @@ export default function SelectSex() {
                             style={{
                                 borderRadius: 8,
                                 width: '40%',
-                                borderWidth: 0.5,
-                                backgroundColor: select.checked ? '#a5d847' : 'white',
-                                borderColor: select.checked ? 'whitesmoke' : '#cacaca',
+                                borderWidth: select.checked ? 1 :0.5,
+                                backgroundColor: 'white',
+                                borderColor: select.checked ? '#0c2461' : 'silver',
                                 marginTop: 10,
                             }}
                             key={select.id}
@@ -56,7 +56,7 @@ export default function SelectSex() {
                             onPress={() => { selectBox(select.title) }}
                         >
                             <Text style={{
-                                color: select.checked ? 'white' : '#81c300',
+                                color: select.checked ? '#0c2461' : 'darkgray',
                                 textAlign: 'center',
                                 paddingVertical: 13
                             }}>

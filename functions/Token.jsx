@@ -53,6 +53,7 @@ export async function requestRefreshToken(navigation) {
             return true;
         }
         catch (err) {
+            console.log(err)
             await AsyncStorage.multiRemove(['accessToken', 'refreshToken']);
             store.dispatch(logout());
             //console.log(err.response.data)

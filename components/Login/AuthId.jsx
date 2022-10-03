@@ -248,9 +248,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 30,
         marginLeft: 10,
         paddingVertical: 15,
-        color: '#78e7b9',
+        color: 'rgba(65, 92, 118, 0.85)',
         textAlign: 'center',
-        borderColor: 'silver',
+        borderColor: 'rgba(65, 92, 118, 0.85)',
         borderWidth: 0.5,
         borderRadius: 5
     }
@@ -261,7 +261,7 @@ const getAuthBtn = (id, isSend, authCode, infoMessage) => StyleSheet.create({
     marginRight: 20,
     backgroundColor:
         ((id.length == 10 || id.length == 11) && !isSend) ||
-            (authCode.length == 6 && isSend) ? '#78e7b9' : '#c0f3dc',
+            (authCode.length == 6 && isSend) ? 'rgba(65, 92, 118, 0.85)' :  'rgba(65, 92, 118, 0.25)',
     borderRadius: 10,
     marginTop: isSend && !infoMessage ? 15 : 0
 })

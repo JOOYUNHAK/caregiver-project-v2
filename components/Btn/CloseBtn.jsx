@@ -10,16 +10,18 @@ export default function CloseBtn({ navigation, type }) {
     const dispatch = useDispatch();
 
     const onPressCloseBtn = () => {
-        if(type === 'firstRegisterReset') {
+        if (type === 'firstRegisterReset') {
             dispatch(firstRegisterReset());
             navigation.pop();
-        } 
-        else if(type === 'authEmail') {
+        }
+        else if (type === 'authEmail') {
             dispatch(reset());
             navigation.pop();
         }
-        else if(type === 'filter') {
-            dispatch(backToPreviousFilter());
+        else if (type === 'filter') {
+            setTimeout(() => {
+                dispatch(backToPreviousFilter());
+            }, 1);
             navigation.pop();
         }
         else

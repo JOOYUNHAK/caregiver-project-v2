@@ -59,7 +59,7 @@ export default function PatientPlaceAndNext() {
                         onPress={() => navigation.dispatch(
                             StackActions.push('findAddressPage')
                         )}>
-                        <Text style={{ color: '#94c6ad', }}>
+                        <Text style={{ color: '#0c2461', }}>
                             {address}
                         </Text>
                     </TouchableHighlight> :
@@ -72,8 +72,8 @@ export default function PatientPlaceAndNext() {
                         )}
                     >
                         <View style={{ flexDirection: 'row' }}>
-                            <Icon props={['antdesign', 'search1', 18, '#94c6ad']} />
-                            <Text style={{ color: '#94c6ad' }}>
+                            <Icon props={['antdesign', 'search1', 18, '#0c2461']} />
+                            <Text style={{ color: '#0c2461' }}>
                                 주소검색
                             </Text>
                         </View>
@@ -94,15 +94,15 @@ export default function PatientPlaceAndNext() {
                                 key={select.id}
                                 style={{
                                     width: '45%',
-                                    borderWidth: 0.5,
+                                    borderWidth: select.checked ? 1 : 0.5,
                                     borderRadius: 5,
-                                    backgroundColor: select.checked ? '#a5d847' : 'white',
-                                    borderColor: select.checked ? 'whitesmoke' : '#cacaca',
+                                    backgroundColor: 'white',
+                                    borderColor: select.checked ? '#0c2461' : 'silver',
                                 }}>
                                 <Text style={{
                                     textAlign: 'center',
                                     paddingVertical: 5,
-                                    color: select.checked ? 'whitesmoke' : '#81c300',
+                                    color: select.checked ? '#0c2461' : 'darkgray',
                                 }}>
                                     {select.title}
                                 </Text>

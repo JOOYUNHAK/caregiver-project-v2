@@ -35,8 +35,9 @@ export default function NextRegisterBtn({ navigation }) {
                 style={{ 
                     width: '90%',
                     alignSelf: 'center',
+                    marginTop: 20,
                     borderRadius: 10, 
-                    backgroundColor: isFill ? '#78e7b9' : '#c0f3dc' }}
+                    backgroundColor: isFill ? 'rgba(65, 92, 118, 0.85)' : 'rgba(65, 92, 118, 0.25)'}}
             >
                 <Text style={{ 
                     textAlign: 'center', 

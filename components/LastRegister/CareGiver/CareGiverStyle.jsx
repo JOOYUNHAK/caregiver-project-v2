@@ -27,14 +27,14 @@ export default function CareGiverStyle() {
 
     return (
         <View style={styles.careGiverStyle}>
-            <Text style={{ paddingLeft: 20 }}>
-                저의 간병 스타일은 이런식이에요.
+            <Text style={{ paddingLeft: 20, }}>
+                회원님만의 간병 스타일 또는 경험을 적어주세요
             </Text>
             {careGiverStyleData.map((content) => {
                 return (
                     <View key={content.id} style={styles.eachContent}>
-                        <Text style={styles.eachContentTitle}>
-                            {content.title}
+                        <Text style={styles.eachContentQuestion}>
+                            {content.question}
                         </Text>
                         <TextInput
                             maxLength={30}
@@ -57,21 +57,18 @@ const styles = StyleSheet.create({
         width: wp('95%'),
     },
     eachContent: {
-        flexDirection: 'row', 
         justifyContent: 'flex-start', 
         alignItems: 'flex-start', 
         margin: 10, 
-        marginTop: 20, 
+        marginTop: 10, 
         overflow: 'hidden',
         paddingLeft: 20, 
         paddingBottom: 5
     },
 
-    eachContentTitle: {
-        paddingVertical: 10, 
-        paddingHorizontal: 20, 
-        borderColor: 'whitesmoke', 
-        elevation: 1.5
+    eachContentQuestion: {
+        paddingVertical: 8,
+        color: '#564d4f'
     },
     eachContentTextInput: {
         borderBottomColor: 'silver',

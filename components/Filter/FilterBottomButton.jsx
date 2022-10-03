@@ -15,7 +15,8 @@ import { refreshProfileList, resetFilter, savePreviousFilter } from "../../redux
 export default function FilterBottomButton() {
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const { ageFilter, areaFilter, licenseFilter, warningFilter, strengthFilter } = useSelector(state => ({
+    const { sexFilter, ageFilter, areaFilter, licenseFilter, warningFilter, strengthFilter } = useSelector(state => ({
+        sexFilter: state.profile.filters.sexFilter,
         ageFilter: state.profile.filters.ageFilter,
         areaFilter: state.profile.filters.areaFilter,
         licenseFilter: state.profile.filters.licenseFilter,
@@ -28,9 +29,9 @@ export default function FilterBottomButton() {
     const [reset, setReset] = useState(false);
 
     useEffect(() => {
-        ageFilter !== '나이' || licenseFilter.length ||
+        !!sexFilter || ageFilter !== '나이' || licenseFilter.length ||
             areaFilter.length || warningFilter || strengthFilter ? setReset(true) : setReset(false)
-    }, [ageFilter, areaFilter, licenseFilter, warningFilter, strengthFilter]);
+    }, [sexFilter, ageFilter, areaFilter, licenseFilter, warningFilter, strengthFilter]);
 
     const pressFilter = async () => {
         dispatch(savePreviousFilter());
@@ -88,13 +89,13 @@ const styles = (reset) => StyleSheet.create({
         borderWidth: reset ? 1.2 : 1,
         height: '100%',
         borderRadius: 5,
-        borderColor: reset ? '#43c32c' : 'silver'
+        borderColor: reset ? 'rgba(65, 92, 118, 0.95)' : 'silver'
     },
 
     resetBtnText: {
         fontSize: 16,
         fontWeight: reset ? '500' : '300',
-        color: reset ? '#43c32c' : 'darkgray',
+        color: reset ? 'rgba(65, 92, 118, 0.95)' : 'darkgray',
     },
 
     filterBtn: {
@@ -102,7 +103,7 @@ const styles = (reset) => StyleSheet.create({
         width: '65%',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#43c32c',
+        backgroundColor: 'rgba(65, 92, 118, 0.95)',
         height: '100%',
         borderRadius: 5
     },

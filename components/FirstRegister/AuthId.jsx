@@ -195,7 +195,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginLeft: 10,
         paddingVertical: 15,
-        color: '#78e7b9',
+        color: 'rgba(65, 92, 118, 0.85)',
         textAlign: 'center',
         borderColor: 'silver',
         borderWidth: 0.5,
@@ -213,7 +213,7 @@ const inputPlaceHolderText = (type) => StyleSheet.create({
         (Platform.OS === 'ios' ? 10 : 14)
     ,
     borderWidth: 0.5,
-    borderColor: 'silver',
+    borderColor: 'rgba(65, 92, 118, 0.85)',
     width: type === 'auth' ? wp('50%') : wp('90%'),
     alignSelf: type === 'auth' ? 'flex-start' : 'center',
     marginLeft: type === 'auth' ? 20 : 0
@@ -226,6 +226,6 @@ const getAuthBtn = (id, isSend, authCode, isAuthed) => StyleSheet.create({
     //전화번호가 입력되고 인증버튼 눌렸을 경우와 인증코드가 6자리가 되었을경우
     backgroundColor:
         ((id.length == 11 || id.length == 10) && !isSend) ||
-            (authCode.length == 6 && isSend && !isAuthed) ? '#78e7b9' : '#c0f3dc',
+            (authCode.length == 6 && isSend && !isAuthed) ? 'rgba(65, 92, 118, 0.85)' : 'rgba(65, 92, 118, 0.25)',
     marginTop: 15
 })

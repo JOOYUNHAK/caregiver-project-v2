@@ -10,7 +10,7 @@ export default function ExtraFee() {
     const dispatch = useDispatch();
     return (
         <View style={styles.extraFee}>
-            <Text style={{ fontSize: 15 }}>
+            <Text>
                 혹시, 추가요금이 붙는 상황이 있나요?
             </Text>
             <RegisterHelpText helpText={'자세할수록 보호자분들의 선택에 도움이 돼요.'} />
@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
         borderBottomColor: 'silver', 
         borderBottomWidth: 0.5, 
         width: '100%', 
-        fontSize: 14, 
+        fontSize: 13, 
         paddingVertical: 1, 
         paddingLeft: 3, 
         marginTop: 5 

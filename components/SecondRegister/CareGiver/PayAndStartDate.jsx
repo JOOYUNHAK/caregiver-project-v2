@@ -16,7 +16,7 @@ export default function PayAndStartDate() {
         {label: '1주 이내', value: 2},
         {label: '2주 이내', value: 3},
         {label: '3주 이내', value: 4},        
-        {label: '한달 이후', value: 5},
+        {label: '한달 이내', value: 5},
     ]);
 
     return (
@@ -26,7 +26,7 @@ export default function PayAndStartDate() {
                     flexDirection: 'row'
                 }}>
                     <Text>
-                        일일급여
+                        일일급여가 어떻게 되시나요?
                     </Text>
                 </View>
                 <View style={styles.inputPay}>
@@ -44,9 +44,10 @@ export default function PayAndStartDate() {
 
             <View style={styles.startDate}>
                 <Text>
-                    시작 가능 날짜
+                    시작 가능일이 언제쯤이신가요?
                 </Text>
                 <DropDownPicker
+                    theme = 'LIGHT'
                     open={open}
                     value={value}
                     items={items}

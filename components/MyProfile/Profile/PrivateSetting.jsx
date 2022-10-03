@@ -40,7 +40,8 @@ export default function PrivateSetting({ navigation }) {
         }
         catch (err) {
             console.log(err.response)
-            await requestRefreshToken(navigation);
+            if(await requestRefreshToken(navigation))
+                await updateProfilePrivate();
         }
     }
 
@@ -86,7 +87,6 @@ export default function PrivateSetting({ navigation }) {
                 </View>
             </Modal>
         </>
-
     )
 }
 

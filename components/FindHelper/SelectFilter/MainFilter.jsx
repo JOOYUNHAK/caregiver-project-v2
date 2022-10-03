@@ -12,8 +12,9 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-nat
 import MainFilterModalHeader from "./MainFilter/MainFilterModalHeader";
 import MainFilterModalMiddle from "./MainFilter/MainFilterModalMiddle";
 import MainFilterModalBottom from "./MainFilter/MainFilterModalBottom";
+import { useEffect } from "react";
 
-export default function MainFilter() {
+export default function MainFilter({ scrollRef }) {
     const { mainFilter } = useSelector(state => ({
         mainFilter: state.profile.filters.mainFilter
     }))
@@ -23,12 +24,16 @@ export default function MainFilter() {
     const setVisible = (bool) => {
         setIsVisible(bool);
     };
+
+    useEffect(() => {
+        scrollRef.current.scrollTo({x: 0});
+    }, [isVisible])
     
     return (
         <>
             <TouchableHighlight
                 style={{
-                    marginLeft: 35,
+                    marginLeft: 15,
                 }}
                 underlayColor='none'
                 onPress={() => setIsVisible(true)}
@@ -36,11 +41,12 @@ export default function MainFilter() {
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <Text style={{
                         fontSize: 13,
-                        color: '#7a7a7a',
+                        color: mainFilter === '기본순' ? '#7a7a7a' : '#94c6ad',
                     }}>
                         {mainFilter}
                     </Text>
-                    <Icon props={['material', 'expand-more', 20, '#7a7a7a']} />
+                    <Icon props={['material', 'expand-more', 20, 
+                        mainFilter === '기본순' ? '#7a7a7a' : '#94c6ad']} />
                 </View>
             </TouchableHighlight>
 

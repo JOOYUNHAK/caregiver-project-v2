@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         marginLeft: 10,
         paddingVertical: 15,
-        color: '#78e7b9',
+        color: 'rgba(65, 92, 118, 0.85)',
         textAlign: 'center',
         borderColor: 'silver',
         borderWidth: 0.5,
@@ -238,7 +238,7 @@ const btnTextStyle = (emailPass, isSend, authCode) => StyleSheet.create({
     borderRadius: 5,
     borderColor: 'whitesmoke',
     fontSize: Platform.OS === 'ios' ? 12 : 15,
-    backgroundColor: (emailPass && !isSend) || (authCode.length == 6 && isSend) ? '#78e7b9' : '#c0f3dc',
+    backgroundColor: (emailPass && !isSend) || (authCode.length == 6 && isSend) ? 'rgba(65, 92, 118, 0.85)' : 'rgba(65, 92, 118, 0.25)',
     color: 'white'
 })
 
@@ -252,3 +252,4 @@ const inputPlaceHolderText = StyleSheet.create({
     borderColor: 'silver',
     alignSelf: 'center',
 })
+

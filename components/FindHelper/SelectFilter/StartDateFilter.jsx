@@ -12,8 +12,10 @@ import { widthPercentageToDP as wp} from "react-native-responsive-screen";
 import StartDateFilterModalHeader from "./StartDateFilter/StartDateFilterModalHeader";
 import StartDateFilterModalMiddle from "./StartDateFilter/StartDateFilterModalMiddle";
 import StartDateFilterModalBottom from "./StartDateFilter/StartDateFilterModalBottom";
+import { useEffect } from "react";
 
-export default function StartDateFilter() {
+export default function StartDateFilter({ scrollRef }) {
+
     const { startDateFilter } = useSelector(state => ({
         startDateFilter: state.profile.filters.startDateFilter
     }))
@@ -21,6 +23,10 @@ export default function StartDateFilter() {
     const setVisible = (bool) => {
         setIsVisible(bool);
     };
+
+    useEffect(() => {
+        scrollRef.current.scrollTo({x: 140});
+    },[isVisible]);
 
     return (
         <>
@@ -34,11 +40,12 @@ export default function StartDateFilter() {
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <Text style={{
                         fontSize: 13,
-                        color: '#7a7a7a',
+                        color: startDateFilter === '시작가능일' ? '#7a7a7a' : '#94c6ad',
                     }}>
                         {startDateFilter}
                     </Text>
-                    <Icon props={['material', 'expand-more', 20, '#7a7a7a']} />
+                    <Icon props={['material', 'expand-more', 20, 
+                        startDateFilter === '시작가능일' ? '#7a7a7a' : '#94c6ad']} />
                 </View>
             </TouchableHighlight>
 

@@ -33,15 +33,17 @@ export default function Help() {
     
     return (
         <View style={styles.helpToPatient}>
-            <Text>
-                환자분께서 도움이 필요한 부분
+            <Text style = {{paddingLeft :20}}>
+                환자분께서 도움이 필요한 부분을 적어주세요
             </Text>
+            <View style = {{paddingLeft: 20}}>
             <RegisterHelpText helpText={'해당사항이 없으신 경우 작성하지 않으셔도 돼요.'} />
+            </View>
             {helpContentData.map((content) => {
                 return (
                     <View key={content.id} style={styles.eachContent}>
-                        <Text style={styles.eachContentTitle}>
-                            {content.title}
+                        <Text style={styles.eachContentQuestion}>
+                            {content.question}
                         </Text>
                         <TextInput
                             maxLength={30}
@@ -60,24 +62,21 @@ const styles = StyleSheet.create({
     helpToPatient: {
         flexDirection: 'column',
         justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        width: wp('100%'),
-        padding: 20
+        marginTop: 20,
+        width: wp('95%'),
     },
     eachContent: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        alignItems: 'flex-start',
-        marginTop: 20,
+        justifyContent: 'flex-start', 
+        alignItems: 'flex-start', 
+        margin: 10, 
+        marginTop: 10, 
         overflow: 'hidden',
-        paddingBottom: 5,
-        width: wp('90%'),
+        paddingLeft: 20, 
+        paddingBottom: 5
     },
-    eachContentTitle: {
-        paddingVertical: 10,
-        paddingHorizontal: 20,
-        borderColor: 'whitesmoke',
-        elevation: 1.5,
+    eachContentQuestion: {
+        paddingVertical: 8,
+        color: '#564d4f'
     },
     eachContentTextInput: {
         borderBottomColor: 'silver',

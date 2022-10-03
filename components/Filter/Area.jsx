@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
         marginRight: 5,
         fontSize: 14,
         fontWeight: '700',
-        color: '#43c32c',
+        color: 'rgba(65, 92, 118, 0.85)',
     },
 
     examples: {

@@ -52,7 +52,7 @@ const styles = (isFill) => StyleSheet.create({
         paddingVertical: 15,
         borderRadius: 5,
         color: 'white',
-        backgroundColor: isFill ? '#78e7b9' : '#c0f3dc',
+        backgroundColor: isFill ? 'rgba(65, 92, 118, 0.85)' : 'rgba(65, 92, 118, 0.25)',
         fontSize: 15
     }
 })

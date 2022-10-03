@@ -6,7 +6,6 @@ import { View } from "react-native";
 import { heightPercentageToDP as hp} from "react-native-responsive-screen";
 
 export default function PayFilterModalHeader() {
-
     return(
         <View style = {styles.modalHeader}>
             <Text style = {{fontSize: 13}}>

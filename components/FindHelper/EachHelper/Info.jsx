@@ -9,9 +9,7 @@ import {
 import { changeStartDate, getCareer, possibleAreaRange } from "../../../functions/Profile/profileFunctions";
 
 export default function Info({ profile }) {
-    let career = profile.career;
-    if (career >= 12)
-        career = getCareer(career);
+    const career = getCareer(profile.career);
     const exceedArea = possibleAreaRange(profile.possibleArea);
     const startDate = changeStartDate(profile.startDate);
 

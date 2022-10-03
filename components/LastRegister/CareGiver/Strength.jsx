@@ -11,7 +11,7 @@ export default function Strength() {
     return (
         <View style={styles.strength}>
             <Text >
-                저는 다른 분들보다 이 부분이 강점이에요.
+                회원님만의 강점이 있다면 적어주세요
             </Text>
             <RegisterHelpText helpText={'꼭 작성하지 않으셔도 되는 항목이에요.'} />
             <View style={styles.eachStrength}>

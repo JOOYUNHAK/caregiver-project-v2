@@ -12,8 +12,9 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-nat
 import PayFilterModalHeader from "./PayFilter/PayFilterModalHeader";
 import PayFilterModalMiddle from "./PayFilter/PayFilterModalMiddle";
 import PayFilterModalBottom from "./PayFilter/PayFilterModalBottom";
+import { useEffect } from "react";
 
-export default function PayFilter() {
+export default function PayFilter({ scrollRef }) {
     const { payFilter } = useSelector(state => ({
         payFilter: state.profile.filters.payFilter
     }))
@@ -22,6 +23,10 @@ export default function PayFilter() {
     const setVisible = (bool) => {
         setIsVisible(bool);
     };
+
+    useEffect(() => {
+        scrollRef.current.scrollTo({x: 70})
+    }, [isVisible])
 
     return (
         <>
@@ -35,11 +40,12 @@ export default function PayFilter() {
                 <View style={{ flexDirection: 'row', alignItems: 'center', }}>
                     <Text style={{
                         fontSize: 13,
-                        color: '#7a7a7a',
+                        color: payFilter === '일당' ? '#7a7a7a' : '#94c6ad',
                     }}>
                         {payFilter}
                     </Text>
-                    <Icon props={['material', 'expand-more', 20, '#7a7a7a']} />
+                    <Icon props={['material', 'expand-more', 20, 
+                        payFilter === '일당' ? '#7a7a7a' : '#94c6ad']} />
                 </View>
             </TouchableHighlight>
 

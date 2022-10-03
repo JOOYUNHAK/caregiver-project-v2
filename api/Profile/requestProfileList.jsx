@@ -1,41 +1,53 @@
 /* 프로필 api 중 목록 받아오기 */
 
+import { useNavigation } from "@react-navigation/native";
 import api from "../../config/CustomAxios";
-import { saveCareGiverProfile, saveLastListNo } from "../../redux/action/profile/profileAction";
+import { listLoading, saveCareGiverProfile, saveLastListNo } from "../../redux/action/profile/profileAction";
 import store from "../../redux/store";
 
 
 export default async function requestProfileList(purpose) {
     try {
-        let { mainFilter, payFilter, startDateFilter, ageFilter,
-            areaFilter, licenseFilter, warningFilter, strengthFilter } = store.getState().profile.filters;
+        let { mainFilter, payFilter, startDateFilter, sexFilter, ageFilter,
+            areaFilter, licenseFilter, warningFilter, strengthFilter, exceptLicenseFilter } = store.getState().profile.filters;
+
         mainFilter = getMainFilterValue(mainFilter);
         payFilter = getPayFilterValue(payFilter);
         startDateFilter = getStartDateFilterValue(startDateFilter);
+        sexFilter = !!sexFilter ? sexFilter : undefined;
         ageFilter = getAgeFilterValue(ageFilter);
         areaFilter = getAreaFilterValue(areaFilter);
         licenseFilter = getLicenseFilterValue(licenseFilter);
         warningFilter = warningFilter ? true : undefined;
         strengthFilter = strengthFilter ? true : undefined;
+        exceptLicenseFilter = exceptLicenseFilter ? true : undefined;
 
         const start = store.getState().profile.lastListNo;
+
+        start == 0 ? store.dispatch(listLoading(true)) : null
+        //const startTime = Date.now();
         const res = await api.get(`user/profile/${purpose}`, {
             params: {
                 mainFilter: mainFilter,
                 payFilter: payFilter,
                 startDateFilter: startDateFilter,
+                sexFilter: sexFilter,
                 ageFilter: ageFilter,
                 areaFilter: areaFilter,
                 licenseFilter: licenseFilter,
                 warningFilter: warningFilter,
                 strengthFilter: strengthFilter,
+                exceptLicenseFilter: exceptLicenseFilter,
                 start: start
             }
         });
+        //const endTime = Date.now();
+        //console.log(endTime - startTime)
         const profileList = res.data;
         if (purpose === 'careGiver') {
             store.dispatch(saveCareGiverProfile(profileList));
             store.dispatch(saveLastListNo(start + 5));
+            start == 0 ? store.dispatch(listLoading(false)) : null;
         }
         else {
             console.log('assistant')
@@ -60,7 +72,7 @@ function getMainFilterValue(mainFilter) {
             return 'heart';
         case '일당 낮은 순':
             return 'pay';
-        case '시작가능일 빠른 순':
+        case '시작일 빠른 순':
             return 'startDate';
     }
 }
@@ -113,13 +125,13 @@ function getAgeFilterValue(ageFilter) {
 };
 
 function getAreaFilterValue(areaFilter) {
-    if( areaFilter.length )
+    if (areaFilter.length)
         return areaFilter.join(',');
     return undefined;
 };
 
 function getLicenseFilterValue(licenseFilter) {
-    if( licenseFilter.length ) 
+    if (licenseFilter.length)
         return licenseFilter.join(',');
     return undefined;
 }

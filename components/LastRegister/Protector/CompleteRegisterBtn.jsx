@@ -1,7 +1,8 @@
 /* 회원가입 완료 버튼 */
 
+import { Platform } from "react-native";
 import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen"
+import { widthPercentageToDP as wp, heightPercentageToDP as hp, widthPercentageToDP } from "react-native-responsive-screen"
 import { useSelector, shallowEqual } from "react-redux";
 import requestCreateUser from "../../../functions/Register/requestCreateUser";
 
@@ -16,9 +17,16 @@ export default function CompleteRegisterBtn({ navigation }) {
     )
 
     return (
-        <View style={styles.completeBtn}>
             <TouchableHighlight
                 underlayColor='none'
+                style={{ 
+                    marginVertical: hp('3%'),
+                    width: wp('90%'),
+                    marginLeft :20,
+                    alignSelf: 'center',
+                    borderRadius: 10, 
+                    backgroundColor: 'rgba(65, 92, 118, 0.85)' 
+                }}
                 onPress={async () =>
                     await requestCreateUser(
                         {
@@ -29,11 +37,14 @@ export default function CompleteRegisterBtn({ navigation }) {
                         navigation
                     )
                    }>
-            <Text style={styles.completeBtnText}>
+            <Text style={{ 
+                    textAlign: 'center', 
+                    fontSize: Platform.OS === 'ios' ? 13 : 16,
+                    color: 'white',
+                    paddingVertical: 15 }}>
                 가입할래요
             </Text>
         </TouchableHighlight>
-        </View >
     )
 }
 

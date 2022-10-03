@@ -30,11 +30,11 @@ export default function RegisterCompletePage() {
     return (
         <View style={styles.container}>
             <Text style={{
-                marginTop: hp('30%'),
+                marginTop: hp('40%'),
                 fontSize: 24,
                 color: 'darkgray'
             }}>
-                믿음으로,
+                케어초이스,
             </Text>
             <Text style={{
                 fontSize: 26,
@@ -70,10 +70,10 @@ const styles = StyleSheet.create({
     },
 
     btn: {
-        marginTop: hp('50%'),
+        marginTop: hp('40%'),
         paddingVertical: 17,
         borderRadius: 5,
-        backgroundColor: '#71b6df',
+        backgroundColor: 'rgba(65, 92, 118, 0.85)',
         width: wp('90%')
     }
 })

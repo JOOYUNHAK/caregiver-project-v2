@@ -1,5 +1,6 @@
 /* 페이 필터 모달 중간 부분 */
 
+import { useNavigation } from "@react-navigation/native"
 import { View } from "react-native"
 import { Text } from "react-native"
 import { TouchableHighlight } from "react-native"

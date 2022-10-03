@@ -16,7 +16,7 @@ import CustomSpanText from '../CustomSpanText.jsx';
 
 export default function ShowMatchingWord({ filterData,  recentWords, autoStore }) {
 
-    const [fontReady, setFontReady] = useState(false);
+    /* const [fontReady, setFontReady] = useState(false);
 
     useEffect(() => {
         async function loadFont() {
@@ -26,7 +26,7 @@ export default function ShowMatchingWord({ filterData,  recentWords, autoStore }
             setFontReady(true);
         }
         loadFont();
-    }, []);
+    }, []); */
 
     const searchWord = async (value) => {
         if (Board.searchValueCheck(value)) {
@@ -40,20 +40,18 @@ export default function ShowMatchingWord({ filterData,  recentWords, autoStore }
 
         return (
             <>
-                {fontReady === true ?
                     <TouchableHighlight
                         underlayColor='none'
                         onPress={() => { searchWord(value).word }}
                     >
                         <View style={ styles.eachMatchWord}>
-                            <Icon props={['antdesign', 'search1', 16, 'red']} />
+                            <Icon props={['antdesign', 'search1', 16, 'black']} />
                            
                             <Text style={styles.eachMatchWordText}>
                                 {value.word}
                             </Text> 
                         </View>
                     </TouchableHighlight>
-                    : null}
             </>
         )
     }
@@ -74,20 +72,17 @@ const styles = StyleSheet.create({
     matchWords: {
         width: '100%', 
         flexDirection: 'column', 
-        marginTop: -10, 
         marginLeft: 20
     },  
 
     eachMatchWord: {
         flexDirection: 'row', 
         alignItems: 'center',
-        marginTop: 30 
+        marginTop: 25 
     },
 
     eachMatchWordText: {
         fontSize:  Platform.OS === 'ios' ? 12 : 15, 
-        fontWeight: '400', 
         paddingLeft: 10,
-        fontFamily: 'Maru',
     }
 })

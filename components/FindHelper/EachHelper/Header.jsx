@@ -13,20 +13,24 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 
 export default function Header({ profile }) {
     const navigation = useNavigation();
-    const age = getAge(profile.user.birth);
+    // 기본 프로필 목록과 나의 찜 프로필 목록 데이터가 다르므로
+    const age = getAge(profile.birth);
     const exceedArea = possibleAreaRange(profile.possibleArea);
-    const isCertified = profile.user.isCertified;
+    
+    const name = profile.name;
+    const sex =  profile.sex;
+    const isCertified = profile.isCertified;
 
     return (
-        <View style={header( exceedArea, isCertified).header}>
+        <View style={header(exceedArea, isCertified).header}>
             <View style={{ flex: 2 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={styles.name}>
                         <Text style={styles.nameText}>
-                            {profile.user.name}
+                            {name}
                         </Text>
                         <Text style={styles.subInfoText}>
-                            {profile.user.sex}, {age}세
+                            {sex}, {age}세
                         </Text>
                     </View>
                 </View>
@@ -45,12 +49,13 @@ export default function Header({ profile }) {
                 </View>
             </View>
 
-            <TouchableHighlight 
-                underlayColor='none' 
+            <TouchableHighlight
+                underlayColor='none'
                 onPress={() => navigation.dispatch(
                     StackActions.push('helperProfilePage', {
-                        purpose: profile.user.purpose,
-                        profileId: profile.id
+                        purpose: profile.purpose,
+                        profileId: profile.id ,
+                        name: name
                     })
                 )}>
                 <View style={styles.confirmProfileBtn}>
@@ -120,7 +125,7 @@ const styles = StyleSheet.create({
     },
 });
 
-const header = (equalPay,exceedArea, isCertified) => StyleSheet.create({
+const header = (equalPay, exceedArea, isCertified) => StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'flex-start',

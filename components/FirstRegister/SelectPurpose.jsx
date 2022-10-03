@@ -43,10 +43,9 @@ export default function SelectPurpose() {
                             style={{
                                 borderRadius: 5,
                                 width: '25%',
-                                backgroundColor:
-                                    select.checked ? '#a5d847' : 'white',
-                                borderWidth: 0.5,
-                                borderColor: select.checked ? 'whitesmoke' : '#cacaca',
+                                backgroundColor: 'white',
+                                borderWidth: select.checked ? 1 : 0.5,
+                                borderColor: select.checked ? '#0c2461' : 'silver',
                                 marginTop: 10,
                             }}
                             key={select.id}
@@ -54,7 +53,7 @@ export default function SelectPurpose() {
                             onPress={() => { selectBox(select.title) }}
                         >
                             <Text style={{
-                                color: select.checked ? 'whitesmoke' : '#81c300',
+                                color: select.checked ? '#0c2461' : 'darkgray',
                                 textAlign: 'center',
                                 paddingVertical: 13
                             }}>

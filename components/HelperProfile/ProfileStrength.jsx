@@ -11,10 +11,10 @@ export default function ProfileStrength() {
     }));
 
     let strengthList = [];
-    if (!!strength.strength1)
-        strengthList.push(strength.strength1);
-    if (!!strength.strength2)
-        strengthList.push(strength.strength2);
+    if (!!strength['first'])
+        strengthList.push(strength['first']);
+    if (!!strength['second'])
+        strengthList.push(strength['second']);
 
     return (
         <View style={styles.strength}>
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 
     noListText: {
         marginTop: 15,
-        fontSize: 15,
+        fontSize: 14,
         color: '#a1a1a1',
     }
 })
