@@ -1,33 +1,46 @@
 /* 페이 필터 모달 중간 부분 */
 
-import { useNavigation } from "@react-navigation/native"
+import { useNavigation, useRoute } from "@react-navigation/native"
 import { View } from "react-native"
 import { Text } from "react-native"
 import { TouchableHighlight } from "react-native"
 import { StyleSheet } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import requestProfileList from "../../../../api/Profile/requestProfileList"
+import requestSearchResult from "../../../../api/Search/requestSearchResult"
 import { PayFilterExample } from "../../../../data/Filter"
-import { refreshProfileList, savePayFilter } from "../../../../redux/action/profile/profileAction"
+import { refreshProfileList, savePayFilter, setNoData } from "../../../../redux/action/profile/profileAction"
+import { refreshSearchProfileList, saveSearchPayFilter, setSearchNoData } from "../../../../redux/action/search/searchAction"
 import Icon from "../../../Icon"
 
 export default function PayFilterModalMiddle({ setVisible }) {
     const dispatch = useDispatch();
+    const { name } = useRoute();
     let { payFilter } = useSelector(state => ({
-        payFilter: state.profile.filters.payFilter
+        payFilter: name === 'searchResultPage' ?
+            state.search.filters.payFilter :
+            state.profile.filters.payFilter
     }));
-    
-    if(payFilter === '일당')
+
+    if (payFilter === '일당')
         payFilter = '전체금액';
-    
+
     const pressPay = async (title) => {
-        if( payFilter === title)
+        if (payFilter === title)
             setVisible(false);
         else {
             setVisible(false);
-            dispatch(savePayFilter(title));
-            dispatch(refreshProfileList('careGiver'));
-            await requestProfileList('careGiver');
+            if (name === 'searchResultPage') {
+                dispatch(setSearchNoData(false));
+                dispatch(saveSearchPayFilter(title));
+                dispatch(refreshSearchProfileList());
+                requestSearchResult();
+            } else {
+                dispatch(setNoData(false));
+                dispatch(savePayFilter(title));
+                dispatch(refreshProfileList('careGiver'));
+                requestProfileList('careGiver');
+            }
         }
     }
     return (
@@ -41,7 +54,7 @@ export default function PayFilterModalMiddle({ setVisible }) {
                             marginVertical: 6,
                             paddingVertical: 15
                         }}
-                        underlayColor = 'none'
+                        underlayColor='none'
                         onPress={() => pressPay(example.title)}
                     >
                         <View style={{ flexDirection: 'row' }}>

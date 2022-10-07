@@ -7,12 +7,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { TouchableHighlight } from "react-native";
 import { saveSexFilter } from "../../redux/action/profile/profileAction";
 import { StyleSheet } from "react-native";
+import { useRoute } from "@react-navigation/native";
+import { saveSearchSexFilter } from "../../redux/action/search/searchAction";
 
 export default function Sex () {
     const dispatch = useDispatch();
+    const { previousName } = useRoute().params;
     const { sexFilter } = useSelector(state => ({
-        sexFilter: state.profile.filters.sexFilter
+        sexFilter: previousName === 'searchResultPage' ? 
+            state.search.filters.sexFilter :
+            state.profile.filters.sexFilter
     }));
+    const pressSex = (sex) => {
+        previousName === 'searchResultPage' ? 
+            dispatch(saveSearchSexFilter(sex)) :
+            dispatch(saveSexFilter(sex))
+    }
 
     return(
         <View style={{
@@ -46,7 +56,7 @@ export default function Sex () {
                             }}
                             key={example.id}
                             underlayColor='none'
-                            onPress={() => dispatch(saveSexFilter(example.title))}
+                            onPress={() => pressSex(example.title)}
                         >
                             <Text style = {{
                                 fontSize: 13,

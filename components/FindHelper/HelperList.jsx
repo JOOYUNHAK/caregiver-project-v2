@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import requestProfileList from '../../api/Profile/requestProfileList';
 import { useLayoutEffect } from 'react';
 import Loading from '../../screens/Loading';
-import { refreshProfileList } from '../../redux/action/profile/profileAction';
+import { refreshProfileList, setNoData } from '../../redux/action/profile/profileAction';
 
 export default function HelperList({ purpose }) {
     useEffect(() => {
@@ -52,6 +52,7 @@ export default function HelperList({ purpose }) {
 
     const refreshData = async () => {
         setRefreshing(true);
+        dispatch(setNoData(false));
         dispatch(refreshProfileList(purpose));
         await requestProfileList(purpose);
         setRefreshing(false);
@@ -90,7 +91,6 @@ export default function HelperList({ purpose }) {
                     onEndReached={async ({ distanceFromEnd }) => {
                         if (distanceFromEnd < -30);
                         else
-                           // console.log('here')
                            await requestProfileList(purpose); 
                     }}
                     showsVerticalScrollIndicator={false}

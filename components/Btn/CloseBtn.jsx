@@ -3,12 +3,13 @@ import { TouchableHighlight } from "react-native";
 import { useDispatch } from "react-redux";
 import { firstRegisterReset } from "../../redux/action/register/firstRegisterAction";
 import { reset } from "../../redux/action/login/loginAction";
-import { StackActions } from "@react-navigation/native";
+import { StackActions, useRoute } from "@react-navigation/native";
 import { backToPreviousFilter } from "../../redux/action/profile/profileAction";
+import { backToPreviousSearchFilter } from "../../redux/action/search/searchAction";
 
 export default function CloseBtn({ navigation, type }) {
     const dispatch = useDispatch();
-
+    const { previousName } = useRoute().params;
     const onPressCloseBtn = () => {
         if (type === 'firstRegisterReset') {
             dispatch(firstRegisterReset());
@@ -20,7 +21,9 @@ export default function CloseBtn({ navigation, type }) {
         }
         else if (type === 'filter') {
             setTimeout(() => {
-                dispatch(backToPreviousFilter());
+                previousName === 'searchResultPage' ?
+                dispatch(backToPreviousSearchFilter()) :
+                dispatch(backToPreviousFilter())
             }, 1);
             navigation.pop();
         }

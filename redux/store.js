@@ -5,6 +5,7 @@ import lastRegisterReducer from './reducer/register/lastRegisterReducer';
 import loginReducer from "./reducer/login/loginReducer";
 import userReducer from "./reducer/user/userReducer";
 import profileReducer from "./reducer/profile/profileReducer";
+import searchReducer from "./reducer/search/searchReducer";
 const store = configureStore ({
     reducer: {
         //register: registerSlice.reducer
@@ -13,7 +14,8 @@ const store = configureStore ({
         lastRegister: lastRegisterReducer,
         login: loginReducer,
         user: userReducer,
-        profile: profileReducer
+        profile: profileReducer,
+        search: searchReducer
     }
 });
 

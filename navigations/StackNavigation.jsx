@@ -18,6 +18,7 @@ import FindAddress from "../components/SecondRegister/Protector/FindAddress";
 import HelperProfile from "../screens/HelperProfile";
 import Filter from "../screens/Filter";
 import MyHeartList from "../screens//MyInfo/MyHeartList";
+import SearchResult from "../screens/SearchResult";
 
 const Stack = createStackNavigator();
 
@@ -244,6 +245,9 @@ export function StackNavigation() {
                     )
                 })}
             />
+
+            <Stack.Screen name="searchResultPage" component={SearchResult}/>
+
         </Stack.Navigator>
     );
 }

@@ -13,10 +13,14 @@ import MainFilterModalHeader from "./MainFilter/MainFilterModalHeader";
 import MainFilterModalMiddle from "./MainFilter/MainFilterModalMiddle";
 import MainFilterModalBottom from "./MainFilter/MainFilterModalBottom";
 import { useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
 
 export default function MainFilter({ scrollRef }) {
+    const { name } = useRoute();
     const { mainFilter } = useSelector(state => ({
-        mainFilter: state.profile.filters.mainFilter
+        mainFilter: name === 'searchResultPage' ?
+            state.search.filters.mainFilter :
+            state.profile.filters.mainFilter
     }))
 
     const [isVisible, setIsVisible] = useState(false);

@@ -1,19 +1,26 @@
 /* 시작가능일 필터 모달 중간 부분 */
 
+import { useRoute } from "@react-navigation/native"
 import { Text } from "react-native"
 import { StyleSheet } from "react-native"
 import { TouchableHighlight } from "react-native"
 import { View } from "react-native"
 import { useDispatch, useSelector } from "react-redux"
 import requestProfileList from "../../../../api/Profile/requestProfileList"
+import requestSearchResult from "../../../../api/Search/requestSearchResult"
 import { StartDateExample } from "../../../../data/Filter"
-import { refreshProfileList, saveStartDateFilter } from "../../../../redux/action/profile/profileAction"
+import { refreshProfileList, saveStartDateFilter, setNoData } from "../../../../redux/action/profile/profileAction"
+import { refreshSearchProfileList, saveSearchStartDateFilter, setSearchNoData } from "../../../../redux/action/search/searchAction"
 import Icon from "../../../Icon"
 
 export default function StartDateFilterModalMiddle({ setVisible }) {
     const dispatch = useDispatch();
+    const { name } = useRoute();
+
     let { startDateFilter } = useSelector(state => ({
-        startDateFilter: state.profile.filters.startDateFilter
+        startDateFilter: name === 'searchResultPage' ?
+            state.search.filters.startDateFilter :
+            state.profile.filters.startDateFilter
     }))
 
     if (startDateFilter === '시작가능일')
@@ -24,9 +31,17 @@ export default function StartDateFilterModalMiddle({ setVisible }) {
             setVisible(false);
         else {
             setVisible(false);
-            dispatch(saveStartDateFilter(title));
-            dispatch(refreshProfileList('careGiver'));
-            await requestProfileList('careGiver');
+            if (name === 'searchResultPage') {
+                dispatch(setSearchNoData(false));
+                dispatch(saveSearchStartDateFilter(title));
+                dispatch(refreshSearchProfileList());
+                await requestSearchResult();
+            } else {
+                dispatch(setNoData(false));
+                dispatch(saveStartDateFilter(title));
+                dispatch(refreshProfileList('careGiver'));
+                await requestProfileList('careGiver');
+            }
         }
     }
 

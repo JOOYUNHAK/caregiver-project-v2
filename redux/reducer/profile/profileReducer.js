@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { backToPreviousFilter, completeHeart, listLoading, refreshProfileList, removeNotFoundProfile, resetFilter, resetHeartList, resetMainFilters, saveAgeFilter, saveAreaFilter, saveCareGiverProfile, saveExceptLicenseFilter, saveHeartListProfile, saveLastListNo, saveLicenseFilter, saveMainFilter, savePayFilter, savePreviousFilter, saveSexFilter, saveStartDateFilter, saveStrengthFilter, saveUserProfile, saveWarningFilter, toggleHeart } from "../../action/profile/profileAction";
+import { backToPreviousFilter, completeHeart, listLoading, refreshProfileList, removeNotFoundProfile, resetFilter, resetHeartList, resetMainFilters, saveAgeFilter, saveAreaFilter, saveCareGiverProfile, saveExceptLicenseFilter, saveHeartListProfile, saveLastListNo, saveLicenseFilter, saveMainFilter, savePayFilter, savePreviousFilter, saveSexFilter, saveStartDateFilter, saveStrengthFilter, saveUserProfile, saveWarningFilter, setNoData, toggleHeart } from "../../action/profile/profileAction";
 
 const initialState = {
     careGiver: [],
@@ -11,6 +11,7 @@ const initialState = {
 
     listLoading: true,
     completeHeart: false,
+    noData: false,
 
     filters: {
         mainFilter: '기본순',
@@ -71,6 +72,9 @@ const profileReducer = createReducer(initialState, (builder) => {
         })
         .addCase(completeHeart, (state, action) => {
             state.completeHeart = action.payload;
+        })
+        .addCase(setNoData, (state, action) => {
+            state.noData = action.payload;
         })
         .addCase(toggleHeart, (state, action) => {
 

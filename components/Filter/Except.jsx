@@ -1,25 +1,25 @@
 /* 필터 제외 부분 */
 
+import { useRoute } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
-import { shallowEqual, useSelector } from "react-redux";
-import ExceptLicense from "./Except/ExceptLicense";
+import { useSelector } from "react-redux";
 import Strength from "./Except/Strength";
 import Warning from "./Except/Warning";
 
 export default function Except() {
-
-    /* const { warningFilter, StrengthFilter } = useSelector(state => ({
-        warningFilter: state.profile.filters.warningFilter,
-        StrengthFilter: state.profile.filters.StrengthFilter
-    },
-        shallowEqual
-    )) */
+    const { previousName } = useRoute().params;
     const { warningFilter, strengthFilter, exceptLicenseFilter } = useSelector(state => ({
-        warningFilter: state.profile.filters.warningFilter,
-        strengthFilter: state.profile.filters.strengthFilter,
-        exceptLicenseFilter: state.profile.filters.exceptLicenseFilter
+        warningFilter: previousName === 'searchResultPage' ?
+            state.search.filters.warningFilter :
+            state.profile.filters.warningFilter,
+        strengthFilter: previousName === 'searchResultPage' ?
+            state.search.filters.strengthFilter : 
+            state.profile.filters.strengthFilter,
+        exceptLicenseFilter: previousName === 'searchResultPage' ?
+            state.search.filters.exceptLicenseFilter :
+            state.profile.filters.exceptLicenseFilter
     }))
 
 

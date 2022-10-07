@@ -1,55 +1,74 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { saveAutoStore, saveIsBlocked, saveRecentSearchKeywords } from "../redux/action/search/searchAction";
+import store from "../redux/store";
 
-//검색어 저장 함수 (기존배열, 새로 넣을 단어)
-export async function storeSearchValue(arr, data) {
-    const existWords = arr;
-    const searchValue = data;
-
-    let tmp, newWords;
+/**
+ * 검색시 최근 검색어 내 핸드폰에 저장
+ * @param {*} searchValue 검색어
+ */
+export async function storeSearchValue(searchValue) {
+    
+    const isValuePassed = searchValueCheck(searchValue); //차단된 검색어인지
+    const isAutoStore = await getAutoStore(); //최근 검색어 저장 켜져있는지
+    
+    if( isValuePassed ) {
+        if ( isAutoStore )
+            store.dispatch(saveIsBlocked(false));
+        else return;
+    }
+    else {
+        store.dispatch(saveIsBlocked(true));
+        return;
+    };
+        
+    const recentKeywords = await AsyncStorage.getItem('recentWords'); //현재 저장되어 있는 최근 검색어 목록
+    let recentKeywordsArr = JSON.parse(recentKeywords); //배열로 변경
 
     //최근 검색어가 하나도 없었으면
-    if (existWords === null) {
-        await AsyncStorage.setItem('recentWords', JSON.stringify({ 'word': searchValue }));
+    if (recentKeywordsArr === null) {
+        const _newArr = [searchValue];
+        store.dispatch( saveRecentSearchKeywords( _newArr ))
+        await AsyncStorage.setItem('recentWords', JSON.stringify(_newArr));
     }
     //최근 검색어가 여러개일 경우
     else {
-        //최근검색어가 하나만 있는 경우
-        if (existWords.length === 1) {
-            //하나 있는데 그게 검색하는 값과 같은 경우 그냥 넘어감
-            if (existWords[0].word === searchValue);
-            //최근 검색한 단어가 가장 먼저 나와야 하기 때문에 기존배열 앞에 추가
-            else {
-                newWords = [{ 'word': searchValue }, ...existWords];
-                await AsyncStorage.setItem('recentWords',
-                    JSON.stringify(newWords));
-            }
-        //최근 검색어가 두개 이상 있는 경우
-        } else {
-            //검색한 단어가 기존 있던 단어와 같지 않은 경우 그대로 맨 앞 추가
-            if ((existWords.find(v => v.word === searchValue)) === undefined) {
-                newWords = [{ 'word': searchValue }, ...existWords];
-                await AsyncStorage.setItem('recentWords',
-                    JSON.stringify(newWords));
-            }
-            //값이 같은 경우 그 값을 제외한 배열을 반환받아 맨 앞에 검색한 단어를 추가하여 저장
-            else {
-                tmp = existWords.filter(v => v.word !== searchValue);
-                newWords = [{ 'word': searchValue }, ...tmp];
-                await AsyncStorage.setItem('recentWords',
-                    JSON.stringify(newWords));
+        //이미 있는 경우
+        if( recentKeywordsArr.includes(searchValue) ) {
+            //배열길이가 1이 아니면
+            if (recentKeywordsArr.length != 1) {
+                // 중복된 값을 제외한 배열 반환
+                recentKeywordsArr = recentKeywordsArr.filter(
+                    words => words !== searchValue
+                );
+                // 검색한 단어 맨 앞 추가
+                recentKeywordsArr.unshift(searchValue);
             }
         }
+        //없는 경우
+        else {
+            recentKeywordsArr.unshift(searchValue);
+        }
+        await AsyncStorage.setItem('recentWords', JSON.stringify(recentKeywordsArr));
+        store.dispatch( saveRecentSearchKeywords( recentKeywordsArr ));
     }
 };
 
 //전체 단어 삭제
 export async function deleteAllWords() {
     await AsyncStorage.removeItem('recentWords');
+    store.dispatch( saveRecentSearchKeywords( null ));
+}
+
+export async function deleteOneWord( existArr, keyWord ) {
+    const newArr = existArr.filter( word => word !== keyWord);
+    store.dispatch( saveRecentSearchKeywords( newArr ));
+    await AsyncStorage.setItem('recentWords', JSON.stringify(newArr));
 }
 
 //자동저장 기능
-export async function setAutoStore(option) {
-    await AsyncStorage.setItem('autoStore', option.toString());
+export async function setAutoStore(autoStore) {
+    await AsyncStorage.setItem('autoStore', JSON.stringify( autoStore ));
+    store.dispatch( saveAutoStore( autoStore ));
 }
 
 //검색어가 불건전한 단어인지 (검색 단어)
@@ -84,22 +103,15 @@ export function searchValueCheck (searchValue ) {
 //최근 검색했던 단어들 불러오기
 export async function getStoreWords() {
     const words = await AsyncStorage.getItem('recentWords');
-    let parseWords = JSON.parse(words);
-
-    //단어가 하나도 없으면
-    if (parseWords === null)
+    if ( !words )
         return null;
-    //단어가 Array가 아닌 Object면 배열로 만들어서 넘겨줌
-    if(parseWords.length === undefined) 
-        return [parseWords];
-
-    return parseWords;
+    return JSON.parse(words);
 }
 
 //자동저장 여부 불러오기
 export async function getAutoStore() {
     const autoStore = await AsyncStorage.getItem('autoStore');
-    
+
     if( autoStore === null || autoStore === 'true' )
         return true;
     

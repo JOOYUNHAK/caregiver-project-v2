@@ -4,81 +4,49 @@ import {
     SafeAreaView,
 } from 'react-native';
 import StatusBarComponent from '../components/StatusBarComponent';
-import Header from '../components/Search/Header';
-import Main from '../components/Search/Main';
-import * as firebaseFunction from '../config/firebaseFunctions.js';
 import * as MyPhoneStorage from '../functions/Search.js';
 import ShowMatchingWord from '../components/Search/ShowMatchingWord';
-import { useLayoutEffect } from 'react';
-import searchData from '../data/search.data';
+import SearchHeader from '../components/Search/SearchHeader';
+import { useDispatch } from 'react-redux';
+import { refreshSearchProfileList, resetPreviousSearchFilters, resetSearchFilter, resetSearchMainFilters, saveAutoStore, saveRecentSearchKeywords, saveSearchValue, setSearchNoData } from '../redux/action/search/searchAction';
+import RecentSearchKeyWords from '../components/Search/RecentSearchKeyWords';
+import MostSearchedKeyWords from '../components/Search/MostSearchedKeyWords';
 
 
-export default function SearchPage(props) {
-    const data = props.route.params.data[0];
-    const navigation = props.navigation;
-    const [recentWords, setRecentWords] = useState(data);
-    const [searchValue, setSearchValue] = useState('');
-    const [length, setLength] = useState(0);
+export default function SearchPage({ navigation }) {
 
-    const [initEnglishWords, setInitEnglishWords] = useState([]);
-    const [initNumberWords, setInitNumberWords] = useState([]);
-    const [initKoreaWords, setInitKoreaWords] = useState([]);
-    const [filterData, setFilterData] = useState(searchData);
-    const [autoStore, setAutoStore] = useState(props.route.params.data[1]);
-    /* useLayoutEffect(() => {
-        async function getMyRecentPart() {
-            const a = await MyPhoneStorage.getAutoStore();
-            setRecentWords(await MyPhoneStorage.getStoreWords());
-            setAutoStore(a);
-        }
-        getMyRecentPart();
-    }, []); */
-
-    //처음 렌더링 때 검색어들 받아오기
-    /* useEffect(() => {
-        async function getStorageWords() {
-            firebaseFunction.getStorageWords(
-                setInitEnglishWords, setInitNumberWords, setInitKoreaWords);
-        }
-        getStorageWords();
-    }, []) */
-
-    //입력값이 변할 때마다 해당 검색어에 맞는 단어 보여주기
+    const dispatch = useDispatch();
     useEffect(() => {
-        const englishReg = /^[a-zA-Z]/;  //영어로 시작하는지
-        const numberReg = /^[0-9]/; //숫자로 시작하는지 
-        const inputValue = searchValue.replace(/ /g, '');
-        
-        if (numberReg.test(inputValue))
-            firebaseFunction.getFilterWord(searchData, searchValue, setFilterData);
-        else
-            firebaseFunction.getFilterWord(searchData, searchValue, setFilterData);
-    }, [searchValue]) 
+        async function _getAboutRecent() {
+            const _isAutoStore = await MyPhoneStorage.getAutoStore();
+             dispatch(saveAutoStore(
+                _isAutoStore === false ? false : true
+            ));
+            const _recentSearchKeywords = await MyPhoneStorage.getStoreWords();
+            dispatch(saveRecentSearchKeywords(_recentSearchKeywords));
+        }
+        _getAboutRecent();
 
-    //입력값 길이 체크
-    const lengthCheck = (length) => {
-        setLength(length);
-    }
+        //검색 결과 페이지의 필터 및 검색 조건 초기화
+        const _unsubscribe = navigation.addListener('focus', () => {
+            dispatch(saveSearchValue(''));
+            dispatch(setSearchNoData(false));
+            dispatch(refreshSearchProfileList());
+            dispatch(resetSearchMainFilters());
+            dispatch(resetSearchFilter());
+            dispatch(resetPreviousSearchFilters());
+        })
+        return _unsubscribe;
+    }, [])
 
     return (
 
         <SafeAreaView style={styles.container}>
             <StatusBarComponent />
-            <Header
-                navigation={navigation}
-                recentWords={recentWords}
-                autoStore={autoStore}
-                lengthCheck={lengthCheck}
-                setValue={setSearchValue} />
-             {!length ?
-                <Main 
-                    data={recentWords} 
-                    autoStore={autoStore} 
-                /> : 
-                <ShowMatchingWord 
-                    filterData = {filterData} 
-                    recentWords = {recentWords} 
-                    autoStore = {autoStore} />} 
+            <SearchHeader />
+            <RecentSearchKeyWords />
+            <MostSearchedKeyWords />
+            <ShowMatchingWord />
         </SafeAreaView>
     )
 }

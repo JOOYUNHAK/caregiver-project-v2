@@ -1,5 +1,6 @@
 /* 필터 나이 부분 */
 
+import { useRoute } from "@react-navigation/native";
 import { StyleSheet } from "react-native";
 import { FlatList } from "react-native";
 import { TouchableHighlight } from "react-native";
@@ -8,19 +9,29 @@ import { View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { AgeExample } from "../../data/Filter";
 import { saveAgeFilter } from "../../redux/action/profile/profileAction";
+import { saveSearchAgeFilter } from "../../redux/action/search/searchAction";
 
 export default function Age() {
     const dispatch = useDispatch();
+    const { previousName } = useRoute().params;
     const { ageFilter } = useSelector(state => ({
-        ageFilter: state.profile.filters.ageFilter
+        ageFilter: previousName === 'searchResultPage' ? 
+            state.search.filters.ageFilter :    
+            state.profile.filters.ageFilter
     }))
+
+    const pressAge = (age) => {
+        previousName === 'searchResultPage' ?
+            dispatch(saveSearchAgeFilter(age)) :
+            dispatch(saveAgeFilter(age))
+    }
 
     const renderAgeExample = ({ item }) => {
         return(
             <TouchableHighlight
                 style = {styles(ageFilter, item.title).eachExample}
                 underlayColor='none'
-                onPress={() => dispatch(saveAgeFilter(item.title))}
+                onPress={() => pressAge(item.title)}
             >
                 <Text
                     style = {styles(ageFilter, item.title).exampleText}>

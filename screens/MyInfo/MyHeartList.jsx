@@ -10,10 +10,8 @@ import getHeartList from "../../api/MyInfo/getHeartList";
 import StatusBarComponent from "../../components/StatusBarComponent";
 import HeartProfile from "../../components/FindHelper/EachHelper/Profile";
 import NoListPage from "../NoList";
-import { View } from "react-native";
-import { Text } from "react-native";
-import { TouchableHighlight } from "react-native";
 import HeartInfo from "../../components/MyInfo/MyHeartList/HeartInfo";
+import Loading from "../Loading";
 
 export default function MyHeartList({ navigation }) {
     const [loading, setLoading] = useState(true);
@@ -37,21 +35,25 @@ export default function MyHeartList({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBarComponent />
-            <FlatList
-                ListHeaderComponent={
-                    <HeartInfo />
-                }
-                ListEmptyComponent={
-                    <NoListPage code={
-                        !!id ? 'noHeartList' : 'noLoginHeartList'
-                    } />
-                }
-                data={heartProfileList}
-                renderItem={({ item }) => <HeartProfile item={item} key={item.id} />}
-                windowSize={1}
-                style={{ height: '100%', paddingTop: 0, backgroundColor: 'white' }} //수정
-                showsVerticalScrollIndicator={false}
-            />
+            {
+                loading ? <Loading /> 
+                :
+                <FlatList
+                    ListHeaderComponent={
+                        <HeartInfo />
+                    }
+                    ListEmptyComponent={
+                        <NoListPage code={
+                            !!id ? 'noHeartList' : 'noLoginHeartList'
+                        } />
+                    }
+                    data={heartProfileList}
+                    renderItem={({ item }) => <HeartProfile item={item} key={item.id} />}
+                    windowSize={1}
+                    style={{ height: '100%', paddingTop: 0, backgroundColor: 'white' }} //수정
+                    showsVerticalScrollIndicator={false}
+                />
+            }
         </SafeAreaView>
     )
 }

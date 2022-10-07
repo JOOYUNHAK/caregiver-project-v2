@@ -1,4 +1,4 @@
-/* 정렬 기준들 */
+/* 검색 결과 메인 필터들 */
 
 import React, { useState } from 'react';
 import { useRef } from 'react';
@@ -7,24 +7,16 @@ import {
     StyleSheet,
     View,
 } from 'react-native';
-import FilterIcon from './SelectFilter/FilterIcon';
-import MainFilter from './SelectFilter/MainFilter';
-import PayFilter from './SelectFilter/PayFilter';
-import ResetEtcFilter from './SelectFilter/ResetEtcFilter';
-import ResetFilter from './SelectFilter/ResetFilter';
-import StartDateFilter from './SelectFilter/StartDateFilter';
-
+import FilterIcon from '../FindHelper/SelectFilter/FilterIcon';
+import MainFilter from '../FindHelper/SelectFilter/MainFilter';
+import PayFilter from '../FindHelper/SelectFilter/PayFilter';
+import ResetEtcFilter from '../FindHelper/SelectFilter/ResetEtcFilter';
+import ResetFilter from '../FindHelper/SelectFilter/ResetFilter';
+import StartDateFilter from '../FindHelper/SelectFilter/StartDateFilter';
 
 export default function SelectFilter() {
 
     const scrollRef = useRef(null);
-    {/* <ScrollView
-            horizontal={true}
-            style={{ backgroundColor: 'white'}} //수정
-            showsHorizontalScrollIndicator={false}
-            ref={scrollRef}
-        >
-             </ScrollView> */}
 
     return (
 

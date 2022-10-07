@@ -13,10 +13,14 @@ import PayFilterModalHeader from "./PayFilter/PayFilterModalHeader";
 import PayFilterModalMiddle from "./PayFilter/PayFilterModalMiddle";
 import PayFilterModalBottom from "./PayFilter/PayFilterModalBottom";
 import { useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
 
 export default function PayFilter({ scrollRef }) {
+    const { name } = useRoute();
     const { payFilter } = useSelector(state => ({
-        payFilter: state.profile.filters.payFilter
+        payFilter: name === 'searchResultPage' ?
+            state.search.filters.payFilter :
+            state.profile.filters.payFilter
     }))
 
     const [isVisible, setIsVisible] = useState(false);

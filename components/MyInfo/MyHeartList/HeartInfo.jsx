@@ -2,6 +2,7 @@
 
 import { useNavigation } from "@react-navigation/native";
 import { TouchableHighlight } from "react-native";
+import { StyleSheet } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import { useSelector } from "react-redux";
@@ -17,16 +18,7 @@ export default function HeartInfo() {
         await deleteHeartList(navigation);
     }
     return (
-        <View style={{
-            height: 50,
-            flexDirection: 'row',
-            alignItems: 'center',
-            backgroundColor: '#f8f8f8',
-            paddingHorizontal: 30,
-            borderTopColor: 'silver',
-            borderTopWidth: 0.5,
-            marginBottom: 10
-        }}>
+        <View style={styles.heartInfo}>
             <Text style={{ fontSize: 12, fontWeight: '400', width: '50%', fontWeight: '500' }}>
                 총 {heartProfileList.length}명
             </Text>
@@ -42,5 +34,17 @@ export default function HeartInfo() {
             </TouchableHighlight>
         </View>
     )
-
 }
+
+const styles = StyleSheet.create({
+    heartInfo: {
+        height: 50,
+        flexDirection: 'row',
+        alignItems: 'center',
+        backgroundColor: '#f8f8f8',
+        paddingHorizontal: 30,
+        borderTopColor: 'silver',
+        borderTopWidth: 0.5,
+        marginBottom: 10,
+    }
+})

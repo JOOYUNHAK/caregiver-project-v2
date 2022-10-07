@@ -1,5 +1,6 @@
 /* 기타필터가 있을 경우 초기화 버튼 */
 
+import { useRoute } from "@react-navigation/native";
 import { useEffect } from "react";
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
@@ -7,28 +8,53 @@ import { TouchableHighlight } from "react-native";
 import { Text } from "react-native";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import requestProfileList from "../../../api/Profile/requestProfileList";
-import { refreshProfileList, resetFilter, savePreviousFilter } from "../../../redux/action/profile/profileAction";
+import requestSearchResult from "../../../api/Search/requestSearchResult";
+import { refreshProfileList, resetFilter, savePreviousFilter, setNoData } from "../../../redux/action/profile/profileAction";
+import { refreshSearchProfileList, resetSearchFilter, savePreviousSearchFilter, setSearchNoData } from "../../../redux/action/search/searchAction";
 import Icon from "../../Icon";
 
 export default function ResetEtcFilter({ scrollRef }) {
     const dispatch = useDispatch();
+    const { name } = useRoute();
+
     const { sexFilter, ageFilter, areaFilter,
         licenseFilter, warningFilter, strengthFilter } = useSelector(state => ({
-            sexFilter: state.profile.filters.sexFilter,
-            ageFilter: state.profile.filters.ageFilter,
-            areaFilter: state.profile.filters.areaFilter,
-            licenseFilter: state.profile.filters.licenseFilter,
-            warningFilter: state.profile.filters.warningFilter,
-            strengthFilter: state.profile.filters.strengthFilter,
+            sexFilter: name === 'searchResultPage' ?
+                state.search.filters.sexFilter :
+                state.profile.filters.sexFilter,
+            ageFilter: name === 'searchResultPage' ?
+                state.search.filters.ageFilter :
+                state.profile.filters.ageFilter,
+            areaFilter: name === 'searchResultPage' ?
+                state.search.filters.areaFilter :
+                state.profile.filters.areaFilter,
+            licenseFilter: name === 'searchResultPage' ?
+                state.search.filters.licenseFilter :
+                state.profile.filters.licenseFilter,
+            warningFilter: name === 'searchResultPage' ?
+                state.search.filters.warningFilter :
+                state.profile.filters.warningFilter,
+            strengthFilter: name === 'searchResultPage' ?
+                state.search.filters.strengthFilter :
+                state.profile.filters.strengthFilter,
         }),
-        shallowEqual
+            shallowEqual
         );
 
     const resetEtcFilter = async () => {
-        dispatch(resetFilter());
-        dispatch(savePreviousFilter());
-        dispatch(refreshProfileList('careGiver'));
-        await requestProfileList('careGiver');
+        if (name === 'searchResultPage') {
+            dispatch(setSearchNoData(false));
+            dispatch(resetSearchFilter());
+            dispatch(savePreviousSearchFilter());
+            dispatch(refreshSearchProfileList());
+            await requestSearchResult();
+        } else {
+            dispatch(setNoData(false));
+            dispatch(resetFilter());
+            dispatch(savePreviousFilter());
+            dispatch(refreshProfileList('careGiver'));
+            await requestProfileList('careGiver');
+        }
     }
 
     useEffect(() => {
@@ -37,8 +63,8 @@ export default function ResetEtcFilter({ scrollRef }) {
 
     return (
         <>
-            { !sexFilter && ageFilter === '나이' && areaFilter.length == 0 
-                && licenseFilter.length == 0 && !warningFilter && !strengthFilter? null :
+            {!sexFilter && ageFilter === '나이' && areaFilter.length == 0
+                && licenseFilter.length == 0 && !warningFilter && !strengthFilter ? null :
                 <TouchableHighlight
                     onPress={resetEtcFilter}
                     style={styles.resetFilter}

@@ -13,11 +13,14 @@ import StartDateFilterModalHeader from "./StartDateFilter/StartDateFilterModalHe
 import StartDateFilterModalMiddle from "./StartDateFilter/StartDateFilterModalMiddle";
 import StartDateFilterModalBottom from "./StartDateFilter/StartDateFilterModalBottom";
 import { useEffect } from "react";
+import { useRoute } from "@react-navigation/native";
 
 export default function StartDateFilter({ scrollRef }) {
-
+    const { name } = useRoute();
     const { startDateFilter } = useSelector(state => ({
-        startDateFilter: state.profile.filters.startDateFilter
+        startDateFilter: name === 'searchResultPage' ? 
+            state.search.filters.startDateFilter :
+            state.profile.filters.startDateFilter
     }))
     const [isVisible, setIsVisible] = useState(false);
     const setVisible = (bool) => {

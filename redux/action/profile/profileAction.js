@@ -7,6 +7,7 @@ export const saveUserProfile = createAction('profile/saveUserProfile');
 export const saveLastListNo = createAction('profile/saveLastListNo'); //현재 요청한 프로필의 마지막 번호
 export const refreshProfileList = createAction('profile/refreshProfileList'); //새로고침 했을 때 action
 export const removeNotFoundProfile = createAction('profile/removeNotFoundProfile'); //찾지 못하는 프로필 목록에서 제거
+export const setNoData = createAction('profile/setNoData'); //받은 데이터가 없을 경우 계속해서 데이터 요청하는 것을 방지
 
 // Filter
 export const saveMainFilter = createAction('profile/saveMainFilter'); 

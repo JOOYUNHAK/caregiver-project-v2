@@ -21,10 +21,6 @@ import Loading from "./Loading";
 import { StackActions } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 import { removeNotFoundProfile } from "../redux/action/profile/profileAction";
-import * as Animatable from 'react-native-animatable';
-import { Text } from "react-native";
-import { TouchableHighlight } from "react-native";
-import { View } from "react-native";
 
 export default function HelperProfile({ navigation, route }) {
     const dispatch = useDispatch();

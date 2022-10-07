@@ -1,6 +1,6 @@
 /* 필터 적용 및 초기화 버튼 */
 
-import { StackActions, useNavigation } from "@react-navigation/native";
+import { StackActions, useNavigation, useRoute } from "@react-navigation/native";
 import { useState } from "react";
 import { useEffect } from "react";
 import { Text } from "react-native";
@@ -10,18 +10,34 @@ import { View } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import requestProfileList from "../../api/Profile/requestProfileList";
-import { refreshProfileList, resetFilter, savePreviousFilter } from "../../redux/action/profile/profileAction";
+import requestSearchResult from "../../api/Search/requestSearchResult";
+import { refreshProfileList, resetFilter, savePreviousFilter, setNoData } from "../../redux/action/profile/profileAction";
+import { refreshSearchProfileList, resetSearchFilter, savePreviousSearchFilter, setSearchNoData } from "../../redux/action/search/searchAction";
 
 export default function FilterBottomButton() {
     const dispatch = useDispatch();
+    const { previousName } = useRoute().params;
     const navigation = useNavigation();
-    const { sexFilter, ageFilter, areaFilter, licenseFilter, warningFilter, strengthFilter } = useSelector(state => ({
-        sexFilter: state.profile.filters.sexFilter,
-        ageFilter: state.profile.filters.ageFilter,
-        areaFilter: state.profile.filters.areaFilter,
-        licenseFilter: state.profile.filters.licenseFilter,
-        warningFilter: state.profile.filters.warningFilter,
-        strengthFilter: state.profile.filters.strengthFilter,
+    const { sexFilter, ageFilter, areaFilter, 
+            licenseFilter, warningFilter, strengthFilter } = useSelector(state => ({
+        sexFilter: previousName === 'searchResultPage' ?
+            state.search.filters.sexFilter :
+            state.profile.filters.sexFilter,
+        ageFilter: previousName === 'searchResultPage' ?
+            state.search.filters.ageFilter :
+            state.profile.filters.ageFilter,
+        areaFilter: previousName === 'searchResultPage' ?
+            state.search.filters.areaFilter :
+            state.profile.filters.areaFilter,
+        licenseFilter: previousName === 'searchResultPage' ?
+            state.search.filters.licenseFilter :
+            state.profile.filters.licenseFilter,
+        warningFilter: previousName === 'searchResultPage' ?
+            state.search.filters.warningFilter :
+            state.profile.filters.warningFilter,
+        strengthFilter: previousName === 'searchResultPage' ?
+            state.search.filters.strengthFilter :
+            state.profile.filters.strengthFilter,
     }),
         shallowEqual
     );
@@ -34,12 +50,26 @@ export default function FilterBottomButton() {
     }, [sexFilter, ageFilter, areaFilter, licenseFilter, warningFilter, strengthFilter]);
 
     const pressFilter = async () => {
-        dispatch(savePreviousFilter());
-        dispatch(refreshProfileList('careGiver'));
         navigation.dispatch(
             StackActions.pop()
         );
-        await requestProfileList('careGiver');
+        if (previousName === 'searchResultPage') {
+            dispatch(setSearchNoData(false));
+            dispatch(savePreviousSearchFilter());
+            dispatch(refreshSearchProfileList());
+            requestSearchResult();
+        } else {
+            dispatch(setNoData(false));
+            dispatch(savePreviousFilter());
+            dispatch(refreshProfileList('careGiver'));
+            requestProfileList('careGiver');
+        }
+    }
+
+    const pressResetFilter = () => {
+        previousName === 'searchResultPage' ?
+            dispatch(resetSearchFilter()) :
+            dispatch(resetFilter())
     }
 
     return (
@@ -47,8 +77,8 @@ export default function FilterBottomButton() {
 
             <TouchableHighlight
                 disabled={reset ? false : true}
-                underlayColor = 'none'
-                onPress={() => dispatch(resetFilter())}
+                underlayColor='none'
+                onPress={() => pressResetFilter()}
                 style={styles(reset).resetBtn}
             >
                 <Text style={styles(reset).resetBtnText}>
@@ -59,7 +89,7 @@ export default function FilterBottomButton() {
             <TouchableHighlight
                 style={styles().filterBtn}
                 underlayColor='none'
-                onPress={pressFilter}
+                onPress={() => pressFilter()}
             >
                 <Text style={styles().filterBtnText}>
                     필터 적용

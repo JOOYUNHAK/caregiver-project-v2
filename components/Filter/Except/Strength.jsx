@@ -1,24 +1,34 @@
 /* 필터 제외 부분  강점 미작성 */
 
+import { useRoute } from "@react-navigation/native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
 import { TouchableHighlight } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { saveStrengthFilter } from "../../../redux/action/profile/profileAction";
+import { saveSearchStrengthFilter } from "../../../redux/action/search/searchAction";
 
 export default function Strength() {
 
     const dispatch = useDispatch();
+    const { previousName } = useRoute().params;
     const { strengthFilter } = useSelector(state => ({
-        strengthFilter: state.profile.filters.strengthFilter
+        strengthFilter: previousName === 'searchResultPage' ?
+            state.search.filters.strengthFilter :
+            state.profile.filters.strengthFilter
     }))
-    
+    const pressStrength = () => {
+        previousName === 'searchResultPage' ?
+            dispatch(saveSearchStrengthFilter(!strengthFilter)) :
+            dispatch(saveStrengthFilter(!strengthFilter))
+    }
+
     return (
         <TouchableHighlight
             style={styles(strengthFilter).eachExample}
             underlayColor='none'
-            onPress={() => dispatch(saveStrengthFilter(!strengthFilter))}
+            onPress={() => pressStrength()}
         >
             <View style = {{flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={styles(strengthFilter).exampleText}>

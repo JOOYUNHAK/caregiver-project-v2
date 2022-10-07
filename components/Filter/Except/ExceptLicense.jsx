@@ -1,5 +1,6 @@
 /* 기타 필터 자격증 미보유  */
 
+import { useRoute } from "@react-navigation/native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import { StyleSheet } from "react-native";
@@ -10,8 +11,11 @@ import { saveExceptLicenseFilter } from "../../../redux/action/profile/profileAc
 export default function ExceptLicense() {
 
     const dispatch = useDispatch();
+    const { previousName } = useRoute().params;
     const { exceptLicenseFilter } = useSelector(state => ({
-        exceptLicenseFilter: state.profile.filters.exceptLicenseFilter
+        exceptLicenseFilter: previousName === 'searchResultPage' ?
+            state.search.filters.exceptLicenseFilter :
+            state.profile.filters.exceptLicenseFilter
     }))
     
     return (

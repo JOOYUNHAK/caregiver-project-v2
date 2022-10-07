@@ -1,5 +1,6 @@
 /*  세부 필터 조건 페이지 */
 
+import { useRoute } from "@react-navigation/native";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { BackHandler } from "react-native";
@@ -15,16 +16,17 @@ import License from "../components/Filter/License";
 import Sex from "../components/Filter/Sex";
 import StatusBarComponent from "../components/StatusBarComponent";
 import { backToPreviousFilter } from "../redux/action/profile/profileAction";
+import { backToPreviousSearchFilter } from "../redux/action/search/searchAction";
 
-export default function Filter() {
+export default function Filter({ route }) {
     const dispatch = useDispatch();
+    const { previousName } = route.params;
     const backAction = () => {
-        setTimeout(() => {
-            dispatch(backToPreviousFilter());            
-        }, 1);
+            previousName === 'searchResultPage' ?
+                dispatch(backToPreviousSearchFilter()) :
+                dispatch(backToPreviousFilter());
     }
     useEffect(() => {
-
         BackHandler.addEventListener('hardwareBackPress', backAction);
         return () => 
             BackHandler.removeEventListener('hardwareBackPress', backAction);
