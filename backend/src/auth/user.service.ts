@@ -555,7 +555,7 @@ function createProtector(createUserDto: CreateUserDto, user: User): Protector {
     return protector;
 }
 
-function getStartEndYear(ageFilter: number): { startAge: string, endAge: string } {
+export function getStartEndYear(ageFilter: number): { startAge: string, endAge: string } {
     let startAge: string, endAge: string;
     const year = new Date().getFullYear();
     switch (Number(ageFilter)) {
@@ -583,7 +583,7 @@ function getStartEndYear(ageFilter: number): { startAge: string, endAge: string 
     return { startAge: startAge, endAge: endAge }
 }
 
-function convertStringToLikeQuery(filterString: string): string[] {
+export function convertStringToLikeQuery(filterString: string): string[] {
     const filterList = filterString.split(',');
     filterList.forEach((filter, index) => {
         const likeQuery = '\%' + filter + '\%';

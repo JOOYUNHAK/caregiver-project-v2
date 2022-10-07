@@ -4,6 +4,8 @@ import { ConfigModule } from '@nestjs/config';
 import configurationYaml from '../config/configuration.yaml';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
+import { SearchModule } from './search/search.module';
+import { TasksModule } from './tasks/tasks.module';
 
 
 @Module({
@@ -13,7 +15,9 @@ import { UserModule } from './user/user.module';
       load: [configurationYaml]
     }),
     AuthModule,
-    UserModule
+    UserModule,
+    SearchModule,
+    TasksModule
   ],
   controllers: [],
   providers: [],
