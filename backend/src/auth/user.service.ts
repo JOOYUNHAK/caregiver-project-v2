@@ -12,6 +12,9 @@ import { CareGiverProfileDto, } from "src/user/dto/caregiver-profile.dto";
 import { AssistantProfileDto } from "src/user/dto/assistant-profile.dto";
 import { RequestProfileListDto } from "src/user/dto/request-profile-list.dto";
 import { Heart } from "src/user/entity/heart.entity";
+import { RedisClientType } from "redis";
+import { RequestPatientProfileDto } from "src/user/dto/request-patient-profile.dto";
+import { PatientProfileDto } from "src/user/dto/patient-profile-dto";
 
 @Injectable()
 export class UserService {
@@ -36,6 +39,9 @@ export class UserService {
 
         @Inject('DATA_SOURCE')
         private dataSoucre: DataSource,
+
+        @Inject('REDIS_CLIENT')
+        private redis: RedisClientType,
 
         private configService: ConfigService,
         private jwtService: JwtService
@@ -260,19 +266,6 @@ export class UserService {
                 .limit(5)
                 .getRawMany();
         }
-        /* else {
-            return await this.assistantRepository
-                .createQueryBuilder('at')
-                .innerJoin('at.user', 'user')
-                .addSelect([
-                    'user.name',
-                    'user.birth',
-                    'user.sex',
-                    'user.isCertified',
-                    'user.warning',
-                ])
-                .getMany();
-        } */
     }
 
     /**
@@ -306,6 +299,7 @@ export class UserService {
                 .where('cg.id = :profileId', { profileId: profileId })
                 .andWhere('user.profile_off = :profile_off', { profile_off: false })
                 .addSelect([
+                    'user.id',
                     'user.name',
                     'user.birth',
                     'user.sex',
@@ -341,6 +335,34 @@ export class UserService {
             expiresIn: this.configService.get('jwt.accessToken.expireTime')
         });
         return accessToken;
+    }
+
+    async getPatientProfile(
+        requesetPatientProfileDto: RequestPatientProfileDto
+        ): Promise<PatientProfileDto> {
+        
+        const { id } = requesetPatientProfileDto;
+        return await this.protectorRepository
+            .createQueryBuilder('pt')
+            .innerJoin('pt.user', 'user')
+            .select([
+                'pt.patientWeight as weight',
+                'pt.patientSex as sex',
+                'pt.diagnosis as diagnosis',
+                'DATE_FORMAT(pt.startPeriod, "%Y년 %m월 %d일") as start',
+                'DATE_FORMAT(pt.endPeriod, "%Y년 %m월 %d일") as end',
+                'pt.place as place',
+                'pt.isNext as next',
+                'pt.patientState as state',
+                'pt.suction as suction',
+                'pt.toilet as toilet',
+                'pt.bedsore as bedSore',
+                'pt.washing as washing',
+                'pt.meal as meal',
+                'pt.bathChair as bathChair',
+            ])
+            .where('user.id = :id', { id: id})
+            .getRawOne();
     }
 
     //refreshToken 발행
@@ -478,6 +500,26 @@ export class UserService {
         const registerUser = await this.setRefreshToken(user.id); // accessToken과 refreshToken 발급하고 return
         return { status: 'success', accessToken: accessToken, user: registerUser }
     }
+
+    //보호자가 프로필 조회할 때마다 count 집계
+    async countViewProfile( id: string, profileId: string ) {
+        const _viewKey = 'profile:' + profileId + ":user:" + id;
+        const _isViewed = await this.redis.SISMEMBER('user.viewed', _viewKey);
+        if( !_isViewed ) {
+            this.redis.ZINCRBY('count.viewed.profiles', 1, profileId);
+        }
+        this.redis.SADD('user.viewed', _viewKey);
+    }
+
+    async getMostViewed(): Promise<(string|object[])[]> {
+        let _mostViewedProfiles = await this.redis.GET('most.viewed.profiles');
+        const _viewUpdateTime = await this.redis.GET('most.viewed.profiles.update.time');
+        const rank = JSON.parse(_mostViewedProfiles);
+        return [
+            [...rank],
+            _viewUpdateTime
+        ]
+    }
 }
 
 //간병인 객체
@@ -541,7 +583,11 @@ function createProtector(createUserDto: CreateUserDto, user: User): Protector {
     protector.patientWeight = createUserDto.secondRegister['weight'];
     protector.patientSex = createUserDto.secondRegister['protector']['patientSex'];
     protector.diagnosis = createUserDto.secondRegister['protector']['diagnosis'];
-    protector.period = createUserDto.secondRegister['protector']['period'];
+    protector.startPeriod = createUserDto.secondRegister['protector']['startPeriod'];
+    if( !!createUserDto.secondRegister['protector']['endPeriod']) {
+        protector.endPeriod = createUserDto.secondRegister['protector']['endPeriod'];
+    }
+    //protector.period = createUserDto.secondRegister['protector']['period'];
     protector.place = createUserDto.secondRegister['protector']['place'];
     protector.isNext = createUserDto.secondRegister['protector']['isNext'];
     protector.patientState = createUserDto.secondRegister['protector']['patientState'];

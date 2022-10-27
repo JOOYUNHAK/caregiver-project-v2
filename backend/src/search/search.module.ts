@@ -1,4 +1,4 @@
-import { MiddlewareConsumer, Module, NestModule, RequestMethod } from "@nestjs/common";
+import { MiddlewareConsumer, Module, NestModule, RequestMethod, forwardRef } from "@nestjs/common";
 import { AuthModule } from "src/auth/auth.module";
 import { RedisModule } from "src/redis/redis.module";
 import { UserModule } from "src/user/user.module";
@@ -10,7 +10,7 @@ import { SearchService } from "./search.service";
     imports: [
         AuthModule,
         UserModule,
-        RedisModule
+        RedisModule,
     ],
     controllers: [SearchController],
     providers: [SearchService]

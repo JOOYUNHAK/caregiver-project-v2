@@ -9,14 +9,18 @@ export class Heart {
 
     @Column({ type: 'varchar' })
 
-    @ManyToOne(() => User, (user) => user.id)
+    @ManyToOne(() => User, (user) => user.id, {
+        onDelete: 'CASCADE'
+    })
     @JoinColumn({
         name: 'user_id',
         referencedColumnName: 'id'
     })
     user_id: User
 
-    @ManyToOne(() => CareGiver, (careGiver) => careGiver.id)
+    @ManyToOne(() => CareGiver, (careGiver) => careGiver.id, {
+        onDelete: 'CASCADE'
+    })
     @JoinColumn({
         name: 'heart_id',
         referencedColumnName: 'id'

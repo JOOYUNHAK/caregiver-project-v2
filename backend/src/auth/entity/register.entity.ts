@@ -79,8 +79,13 @@ export class Protector {
     @Column({type: 'varchar', length: 25})
     diagnosis: string
 
-    @Column({type: 'varchar', length: 25})
-    period: string
+   /*  @Column({type: 'varchar', length: 25})
+    period: string */
+    @Column()
+    startPeriod: Date
+
+    @Column({ nullable: true })
+    endPeriod: Date
 
     @Column({type: 'varchar', length: 40})
     place: string
@@ -111,7 +116,8 @@ export class Protector {
 
     //단방향 OneToOne
     @OneToOne( () => User, ( user ) => user.id, {
-        cascade: ['insert']
+        cascade: ['insert'],
+        onDelete: 'CASCADE'
     } )
     @JoinColumn({
         name: 'user_id',

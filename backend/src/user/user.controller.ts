@@ -6,10 +6,12 @@ import { RolesGuard } from "src/auth/security/guard/roles.guard";
 import { UserService } from "src/auth/user.service";
 import { Roles } from "src/decorator/roles.decorator";
 import { CareGiverProfileDto } from "./dto/caregiver-profile.dto";
+import { RequestPatientProfileDto } from "./dto/request-patient-profile.dto";
 import { HeartListDto } from "./dto/heart-list.dto";
 import { ProfileUpdateDto } from "./dto/profile-update.dto";
 import { RequestProfileListDto } from "./dto/request-profile-list.dto";
 import { HeartService } from "./heart.service";
+import { PatientProfileDto } from "./dto/patient-profile-dto";
 
 @Controller('user')
 export class UserController {
@@ -33,7 +35,6 @@ export class UserController {
     @Get('profile/:purpose')
     async getProfileList( @Request() req, @Query() query, @Param('purpose') purpose: string): 
         Promise<CareGiverProfileDto [] | CareGiverProfileDto> {
-        console.log('hi')
         //한 유저의 profile request
         if(!! query['profileId']) {
             //비회원도 프로필은 볼 수 있어야 하기 때문에 id가 없으면 임의의 전화번호가 될 수 없는 값으로 조회
@@ -56,6 +57,19 @@ export class UserController {
 
             return await this.userService.getProfileList(requestProfileListDto);
         }
+    }
+
+    //보호자 프로필 얻기
+    @Get('profile')
+    async getProfileOne(
+        @Query() requestPatientProfileDto: RequestPatientProfileDto
+        ): Promise<PatientProfileDto> {
+        return await this.userService.getPatientProfile(requestPatientProfileDto);
+    }
+
+    @Get('most/profiles')
+    async getMostViewed() {
+        return await this.userService.getMostViewed();
     }
 
     @UseGuards(JwtGuard, PersonalGuard)

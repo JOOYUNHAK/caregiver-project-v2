@@ -189,14 +189,25 @@ export class SearchService {
 
     async storeSearchKeyWord( id: string, keyWord: string ) {
         const _searchedKey = keyWord + ':' + id; //어떤 사용자가 어떤 키워드를 검색했는지 key
-        const _isSearched = await this.redis.HGET('user.searched', _searchedKey);
+        const _isSearched = await this.redis.SISMEMBER('user.searched', _searchedKey);
         //만약 해당 유저가 해당 키워드를 검색한 적 없으면 해당 키워드 count 하나 증가
         if( ! _isSearched) {
             //hscan 으로 key 값을 늘리는 방법도 생각
             this.redis.ZINCRBY('count.searched.keywords', 1, keyWord);
-            this.redis.HSETNX('user.searched', _searchedKey , '1'); // 해당 사용자의 hash key에 해당 키워드 저장
         }
-    }    
+        //해당 아디이가 검색한 key값 저장
+        this.redis.SADD('user.searched', _searchedKey);
+    }
+
+    async getMostSearched(): Promise<(string|string[])[]> {
+        let _mostSearchedKeyWords = await this.redis.GET('most.searched.keywords');
+        const _keyWordsUpdateTime = await this.redis.GET('most.searched.keywords.update.time');
+        _mostSearchedKeyWords = JSON.parse(_mostSearchedKeyWords);
+        return [
+            [..._mostSearchedKeyWords],
+            _keyWordsUpdateTime
+        ]
+    }
 }
 
 

@@ -17,4 +17,9 @@ export class SearchController{
             @Query() searchProfileDto: SearchProfileDto): Promise<SearchProfileListDto []> {
                 return await this.searchService.getSearchProfile(searchProfileDto);
     }
+
+    @Get('most/keywords')
+    async getMostSearched(): Promise<(string|string[])[]> {
+        return await this.searchService.getMostSearched();
+    }
 }

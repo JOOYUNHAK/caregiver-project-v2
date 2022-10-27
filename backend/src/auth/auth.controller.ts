@@ -1,9 +1,11 @@
 import { Body, Controller, Get, Param, Post, UseGuards, Request, Headers } from '@nestjs/common';
+import { Roles } from 'src/decorator/roles.decorator';
 import { AuthService } from './auth.service';
 import { CheckAuthCodeDto } from './dto/check-auth-code.dto';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UserDto } from './dto/user.dto';
 import { JwtGuard } from './security/guard/jwt.guard';
+import { RolesGuard } from './security/guard/roles.guard';
 import { SendService } from './send.service';
 import { UserService } from './user.service';
 
@@ -22,6 +24,12 @@ export class AuthController {
     async authToken(@Request() req) {
         return req.user;
     }
+
+    //간병 신청했을 때
+    @UseGuards(JwtGuard, RolesGuard)
+    @Roles('간병인')
+    @Post('application')
+    async validateRole() { }
 
     //토큰 만료되었을 때 refreshToken으로 토큰 재발급 요청
     @Get('refreshToken/:refreshTokenIndex')

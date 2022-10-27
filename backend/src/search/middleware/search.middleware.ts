@@ -11,8 +11,12 @@ export class SearchMiddleware implements NestMiddleware {
         private searchService: SearchService
     ) {}
     async use(req: any, res: any, next: (error?: any) => void) {
-
-        if( req.headers['authorization'] !== undefined ) {
+        //보호자인경우와 인기검색어에 있는 목록을 누르지 
+        //않을 경우만 다시 인기검색어 카운트
+        if( 
+            req.headers['authorization'] !== undefined && 
+            req.query.mostKeyWord === undefined
+            ) {
             const _authorization = req.headers['authorization'];
             const _accessToken: string = _authorization.split(' ')[1];
             const _userid = this.jwtService.decode(_accessToken)['userid'];

@@ -8,10 +8,9 @@ export class RolesGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
         const roles = this.reflector.get<string[]>('roles', context.getHandler());
         const { purpose } = context.switchToHttp().getRequest().user;
-
         if (roles.includes(purpose))
             throw new HttpException(
-                '찜 등록은 보호자만 가능합니다',
+                '보호자만 이용 가능한 기능입니다.',
                 HttpStatus.FORBIDDEN
             );
 
