@@ -8,18 +8,9 @@ import store from "../redux/store";
  */
 export async function storeSearchValue(searchValue) {
     
-    const isValuePassed = searchValueCheck(searchValue); //차단된 검색어인지
     const isAutoStore = await getAutoStore(); //최근 검색어 저장 켜져있는지
-    
-    if( isValuePassed ) {
-        if ( isAutoStore )
-            store.dispatch(saveIsBlocked(false));
-        else return;
-    }
-    else {
-        store.dispatch(saveIsBlocked(true));
+    if ( !isAutoStore )
         return;
-    };
         
     const recentKeywords = await AsyncStorage.getItem('recentWords'); //현재 저장되어 있는 최근 검색어 목록
     let recentKeywordsArr = JSON.parse(recentKeywords); //배열로 변경
@@ -91,6 +82,11 @@ export function searchValueCheck (searchValue ) {
         "애미",
         "정액",
         "일베",
+        '개년',
+        '썅년',
+        '병신',
+        '창놈',
+        '시발'
     ];
 
     koreanFilterWord.forEach((word) => {

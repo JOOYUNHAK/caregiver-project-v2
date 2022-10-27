@@ -47,7 +47,7 @@ export default function SubBtn({ navigation }) {
 const styles = StyleSheet.create({
 
     userAboutAccount: {
-        paddingTop: 30,
+        paddingTop: 20,
         flex: 7,
         flexDirection: 'row',
         justifyContent: 'center',

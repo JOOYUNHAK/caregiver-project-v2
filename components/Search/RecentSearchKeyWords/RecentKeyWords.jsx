@@ -31,9 +31,9 @@ export default function RecentKeywords() {
                 'searchResultPage'
             )
         )
-        storeSearchValue( item );
         dispatch(saveSearchValue(item));
         requestSearchResult();
+        storeSearchValue( item );
     }
 
 
@@ -41,6 +41,7 @@ export default function RecentKeywords() {
         return (
             <View style={styles.keyWords}>
                 <TouchableHighlight
+                    key={item}
                     underlayColor='none'
                     onPress={() => onPressEachKeyword(item)}
                     style={{

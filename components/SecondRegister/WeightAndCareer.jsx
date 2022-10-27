@@ -2,12 +2,17 @@
 
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveCareer, saveWeight } from "../../redux/action/register/secondRegisterAction";
 import inputStyle from "../../styles/Register/inputStyle";
 
 export default function WeightAndCareer() {
     const dispatch = useDispatch();
+    const { weight, career } = useSelector(state => ({
+        weight: state.secondRegister.weight,
+        career: state.secondRegister.career
+    }))
+
     return (
         <View style={styles.weightAndCareer}>
             <View style={styles.weight}>
@@ -16,6 +21,7 @@ export default function WeightAndCareer() {
                 </Text>
                 <TextInput
                     maxLength={3}
+                    value = {String(weight)}
                     onChangeText={(text) => dispatch(saveWeight(text))}
                     style={inputStyle('weight')}
                     keyboardType='decimal-pad'
@@ -30,6 +36,7 @@ export default function WeightAndCareer() {
                     경력은
                 </Text>
                 <TextInput
+                    value={String(career)}
                     onChangeText={(text) => dispatch(saveCareer(text))}
                     style={inputStyle('career')}
                     keyboardType='decimal-pad'

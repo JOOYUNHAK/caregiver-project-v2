@@ -32,7 +32,6 @@ export default async function RegisterHeart(profileId, navigation) {
             //만료된 토큰일 경우
             case 401:
                 if (await requestRefreshToken(navigation)) {
-                    console.log('error her')
                     await RegisterHeart(profileId, navigation);
                 }
                 break;

@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit"
-import { backToPreviousSearchFilter, refreshSearchProfileList, resetPreviousSearchFilters, resetSearchFilter, resetSearchMainFilters, saveAutoStore, saveIsBlocked, savePreviousSearchFilter, saveRecentSearchKeywords, saveResultProfile, saveSearchAgeFilter, saveSearchAreaFilter, saveSearchLastListNo, saveSearchLicenseFilter, saveSearchMainFilter, saveSearchPayFilter, saveSearchSexFilter, saveSearchStartDateFilter, saveSearchStrengthFilter, saveSearchValue, saveSearchWarningFilter, searchLoading, setSearchNoData } from "../../action/search/searchAction"
+import { backToPreviousSearchFilter, refreshSearchProfileList, resetPreviousSearchFilters, resetSearchFilter, resetSearchMainFilters, saveAutoStore, saveIsBlocked, saveMostKeyWord, saveMostKeyWordsLoading, saveMostSearchedKeyWords, saveMostViewed, saveMostViewedLoading, saveMostViewedProfiles, savePreviousSearchFilter, saveRecentSearchKeywords, saveResultProfile, saveSearchAgeFilter, saveSearchAreaFilter, saveSearchLastListNo, saveSearchLicenseFilter, saveSearchMainFilter, saveSearchPayFilter, saveSearchSexFilter, saveSearchStartDateFilter, saveSearchStrengthFilter, saveSearchValue, saveSearchWarningFilter, searchLoading, setSearchNoData } from "../../action/search/searchAction"
 
 const initialState = {
     searchValue: '',
@@ -39,6 +39,16 @@ const initialState = {
         strengthFilter: false,
         exceptLicenseFilter: false
     },
+
+    mostKeyWord: false,
+    mostSearchedKeyWords: [],
+    keyWordsUpdateTime: '',
+    mostKeyWordsLoading: true,
+
+    mostViewedLoading: true,
+    mostViewed: false,
+    mostViewedProfiles: [],
+    profilesUpdateTime: '',
 }
 
 const searchReducer = createReducer(initialState, (builder) => {
@@ -59,7 +69,6 @@ const searchReducer = createReducer(initialState, (builder) => {
             state.recentSearchKeywords = action.payload;
         })
         .addCase(saveResultProfile, (state, action) => {
-
             const _resultProfileList = action.payload[0];
             _resultProfileList.map((profile) => {
                 state.resultProfile.push(profile);
@@ -176,6 +185,27 @@ const searchReducer = createReducer(initialState, (builder) => {
             state.filters.payFilter = '일당';
             state.filters.startDateFilter = '시작가능일';
         })
+        .addCase(saveMostKeyWord, (state, action) => {
+            state.mostKeyWord = action.payload;
+        })
+        .addCase(saveMostSearchedKeyWords, (state, action) => {
+            state.mostSearchedKeyWords = action.payload[0];
+            state.keyWordsUpdateTime = action.payload[1];
+        })
+        .addCase(saveMostKeyWordsLoading, (state, action) => {
+            state.mostKeyWordsLoading = action.payload;
+        })
+        .addCase(saveMostViewedLoading, (state, action) => {
+            state.mostViewedLoading = action.payload;
+        })
+        .addCase(saveMostViewed, (state, action) => {
+            state.mostViewed = action.payload;
+        })
+        .addCase(saveMostViewedProfiles, (state, action) => {
+            state.mostViewedProfiles = action.payload[0];
+            state.profilesUpdateTime = action.payload[1];
+        })
+
 })
 
 export default searchReducer;

@@ -1,16 +1,26 @@
 /* 간병인용 급여, 시작 날짜 입력 */
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveFirstPay, saveStartDate } from "../../../redux/action/register/secondRegisterAction";
 import inputStyle from "../../../styles/Register/inputStyle";
 import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useEffect } from "react";
 
 export default function PayAndStartDate() {
     const dispatch = useDispatch();
+    const { firstPay, startDate } = useSelector(state => ({
+        firstPay: state.secondRegister.careGiver.firstPay,
+        startDate: state.secondRegister.startDate
+    }))
+
+    useEffect(() => {
+        setValue(String(startDate))
+    }, [value]);
+    
     const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
+    const [value, setValue] = useState(startDate);
     const [items, setItems] = useState([
         {label: '즉시가능', value: 1},
         {label: '1주 이내', value: 2},
@@ -33,6 +43,7 @@ export default function PayAndStartDate() {
                     <TextInput
                         onChangeText={(text) => dispatch(saveFirstPay(text))}
                         style={inputStyle('pay')}
+                        value={String(firstPay)}
                         maxLength={3}
                         keyboardType='decimal-pad'
                     />
@@ -54,7 +65,7 @@ export default function PayAndStartDate() {
                     setOpen={setOpen}
                     setValue={setValue}
                     setItems={setItems}
-                    placeholder='대략적인 날짜 선택'
+                    placeholder={ !! value ? items[value - 1].label : '대략적인 날짜 선택' }
                     placeholderStyle={{
                         color: 'grey',
                         fontSize: 12

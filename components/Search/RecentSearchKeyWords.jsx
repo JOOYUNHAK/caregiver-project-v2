@@ -84,8 +84,7 @@ const styles = StyleSheet.create({
     mainText: {
         fontWeight: 'bold',
         width: '50%',
-        color: 'dimgray',
-        fontSize: Platform.OS === 'ios' ? 11 : 15
+        fontSize: Platform.OS === 'ios' ? 11 : 16
     },
 
     subText: {
@@ -99,7 +98,7 @@ const styles = StyleSheet.create({
     subTextStyle: {
         fontWeight: '500',
         color: 'silver',
-        fontSize: Platform.OS === 'ios' ? 10 : 13
+        fontSize: Platform.OS === 'ios' ? 10 : 12
     },
 
     vertical: {

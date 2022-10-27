@@ -2,9 +2,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Platform } from "react-native";
 import Icon from '../components/Icon';
 import FindHelper from '../screens/FindHelper'
-import Writing from '../screens/Writing'
 import SearchBtn from "../components/Btn/SearchBtn";
 import MyInfo from "../screens/MyInfo";
+import ChatList from "../screens/ChatList";
 
 const Tab = createBottomTabNavigator();
 
@@ -53,8 +53,15 @@ export function MyTabs() {
 
             <Tab.Screen
                 name="chat"
-                component={Writing}
+                component={ChatList}
                 options={{
+                    unmountOnBlur: true,
+                    title: '채팅',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                        fontSize: Platform.OS === 'ios' ? 14 : 17,
+                        left: 5
+                    },
                     tabBarLabel: '채팅',
                     tabBarIcon: ({ color }) => (
                         <Icon props={['ionicon', 'chatbubbles-outline', 26, color]} />

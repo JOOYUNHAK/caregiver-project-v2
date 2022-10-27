@@ -1,12 +1,15 @@
 /* 간병인용 다음 병원 질문 입력 */
 import { StyleSheet, Text, TextInput,  View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { saveNextHospital } from "../../../redux/action/register/secondRegisterAction";
 import inputStyle from "../../../styles/Register/inputStyle";
 
 export default function NextHospital() {
     const dispatch = useDispatch();
+    const { nextHospital } = useSelector(state => ({
+        nextHospital: state.secondRegister.careGiver.nextHospital,
+    }))
     return (
         <View style={styles.nextHospital}>
             <Text>
@@ -14,6 +17,7 @@ export default function NextHospital() {
             </Text>
             <TextInput
                 onChangeText={(text) => dispatch(saveNextHospital(text))}
+                value={nextHospital}
                 style={inputStyle('nextHospital')}
                 placeholder='Ex) 활동 지역이면 가능합니다, 연장은 불가능합니다'
                 maxLength={25}

@@ -10,7 +10,6 @@ import Search from "../screens/Search";
 import SecondRegister from "../screens/Register/SecondRegister";
 import ConfirmRegisterInfo from "../screens/Register/ConfirmRegisterInfo";
 import MyProfile from "../screens/MyProfile";
-import { Text } from "react-native";
 import Email from "../screens/MyProfile/Account/Email";
 import Certificate from "../screens/MyProfile/Profile/Certificate";
 import RegisterCompletePage from "../screens/Register/RegisterComplete";
@@ -19,6 +18,12 @@ import HelperProfile from "../screens/HelperProfile";
 import Filter from "../screens/Filter";
 import MyHeartList from "../screens//MyInfo/MyHeartList";
 import SearchResult from "../screens/SearchResult";
+import EachModify from "../screens/MyProfile/Profile/Modify/EachModify";
+import SelectModifyPage from "../screens/MyProfile/Profile/SelectModifyPage";
+import ChatRoom from "../screens/ChatRoom";
+import SelectCarePeriod from "../components/SecondRegister/Protector/SelectCarePeriod";
+import { TouchableHighlight } from "react-native";
+import PatientInfo from "../screens/PatientInfo";
 
 const Stack = createStackNavigator();
 
@@ -241,13 +246,110 @@ export function StackNavigation() {
                         left: 10
                     },
                     headerLeft: () => (
-                        <BackBtn navigation={navigation} type = 'default' />
+                        <BackBtn navigation={navigation} type='default' />
                     )
                 })}
             />
 
-            <Stack.Screen name="searchResultPage" component={SearchResult}/>
+            <Stack.Screen name="searchResultPage" component={SearchResult} />
+            <Stack.Screen
+                name="profileModifySelectPage"
+                component={SelectModifyPage}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '프로필 수정',
+                    headerTitleAlign: 'left',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 16 : 19,
+                        marginLeft: 5
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <BackBtn navigation={navigation} type='default' />
+                    )
+                })}
+            />
 
+            <Stack.Screen
+                name="profileModifyPage"
+                component={EachModify}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '',
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <CloseBtn navigation={navigation} type='secondRegisterReset' />
+                    )
+                })}
+            />
+
+            <Stack.Screen
+                name="ChatPage"
+                component={ChatRoom}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '',
+                    headerTitleAlign: 'left',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 14 : 18,
+                        marginLeft: 5
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <BackBtn navigation={navigation} type='default' />
+                    )
+                })}
+            />
+            <Stack.Screen
+                name="selectCarePeriodPage"
+                component={SelectCarePeriod}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '기간 선택',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 14 : 18,
+                        marginLeft: 5
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10,
+                    },
+                    headerRightContainerStyle: {
+                        right: 20,
+                    },
+                    headerLeft: () => (
+                        <CloseBtn navigation={navigation} type='default' />
+                    )
+                })}
+            />
+            <Stack.Screen
+                name="patientInfoPage"
+                component={PatientInfo}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '기간 선택',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 14 : 18,
+                        marginLeft: 5
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10,
+                    },
+                    headerRightContainerStyle: {
+                        right: 20,
+                    },
+                    headerLeft: () => (
+                        <CloseBtn navigation={navigation} type='default' />
+                    )
+                })}
+            />
         </Stack.Navigator>
     );
 }

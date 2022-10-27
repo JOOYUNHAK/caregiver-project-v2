@@ -12,7 +12,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import requestSearchResult from '../../api/Search/requestSearchResult.js';
 import * as MyPhoneStorage from '../../functions/Search.js';
-import { refreshSearchProfileList, saveSearchValue, setSearchNoData } from '../../redux/action/search/searchAction.js';
+import { refreshSearchProfileList, saveIsBlocked, saveSearchValue, setSearchNoData } from '../../redux/action/search/searchAction.js';
 import Icon from '../Icon.jsx';
 
 export default function SearchHeader() {
@@ -29,22 +29,28 @@ export default function SearchHeader() {
         route.name === 'searchPage' ?
             (Platform.OS === 'ios'
                 ? inputRef.current.focus()
-                : setTimeout(() => 
+                : setTimeout(() =>
                     inputRef.current.focus(), 100)
             )
             : null
     }, [])
 
     const storeSearchValue = async () => {
-        if (searchValue.length)
-            MyPhoneStorage.storeSearchValue(searchValue);
         route.name === 'searchPage' ?
             navigation.dispatch(
                 StackActions.push('searchResultPage')
-        ) :
+            ) :
             navigation.dispatch(
                 StackActions.replace('searchResultPage')
             )
+
+        if (searchValue.length) {
+            if (!MyPhoneStorage.searchValueCheck(searchValue)) {
+                dispatch(saveIsBlocked(true));
+                return;
+            }
+            MyPhoneStorage.storeSearchValue(searchValue);
+        }
         dispatch(setSearchNoData(false));
         dispatch(refreshSearchProfileList()); //새로 입력했으므로 요청 번호 처음부터
         requestSearchResult(); // 요청 api

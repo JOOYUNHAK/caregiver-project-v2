@@ -39,7 +39,8 @@ export default function SecondRegister({ navigation }) {
                 showsVerticalScrollIndicator={false} >
                 {purpose === '간병인' ? 
                     <CareGiver navigation={navigation}/> : 
-                        (purpose === '활동보조사' ? <Assistatnt navigation={navigation}/> : <Protector navigation={navigation}/>)}
+                        (purpose === '활동보조사' ? 
+                            <Assistatnt navigation={navigation}/> : <Protector navigation={navigation}/>)}
             </KeyboardAwareScrollView>
         </SafeAreaView>
     )

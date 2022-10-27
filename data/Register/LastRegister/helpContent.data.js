@@ -2,7 +2,7 @@ const helpContentData = [
     {
         id: 1,
         title: '석션',
-        question: 'Q. 기침이 많고 가래가 많은신가요?',
+        question: 'Q. 기침이 잦으시고 가래가 많은신가요?',
         placeholder: 'Ex) 가래가 자주, 많이 나오는 편이에요.'
     },
     {

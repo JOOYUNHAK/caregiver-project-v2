@@ -6,6 +6,7 @@ import loginReducer from "./reducer/login/loginReducer";
 import userReducer from "./reducer/user/userReducer";
 import profileReducer from "./reducer/profile/profileReducer";
 import searchReducer from "./reducer/search/searchReducer";
+import chatReducer from "./reducer/chat/chatReducer";
 const store = configureStore ({
     reducer: {
         //register: registerSlice.reducer
@@ -15,7 +16,8 @@ const store = configureStore ({
         login: loginReducer,
         user: userReducer,
         profile: profileReducer,
-        search: searchReducer
+        search: searchReducer,
+        chat: chatReducer
     }
 });
 

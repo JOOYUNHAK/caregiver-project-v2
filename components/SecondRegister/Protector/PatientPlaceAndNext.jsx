@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import resetArrayData from "../../../functions/resetArrayData";
 import { saveIsNext, savePlace } from "../../../redux/action/register/secondRegisterAction";
 import isNextData from "../../../data/Register/SecondRegister/isNext.data";
@@ -14,18 +14,17 @@ import Icon from "../../Icon";
 
 export default function PatientPlaceAndNext() {
     const [isNextHospital, setIsNextHospital] = useState(isNextData);
-
+    const [address, setAddress] = useState('');
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const route = useRoute();
-    let address;
-
-   if (route?.params) {
-        address = route.params.address;
-    }
 
     useEffect(() => {
-        dispatch(savePlace(address));
+        if(route?.params?.address) {
+            const address = route.params.address;
+            setAddress(route.params.address);
+            dispatch(savePlace(address));
+        }
     }, [route])
 
     useEffect(() => {
@@ -49,13 +48,13 @@ export default function PatientPlaceAndNext() {
         <View style={styles.patientPlaceAndNext}>
             <View style={styles.columnStyle}>
                 <Text>
-                    간병하게 될 장소
+                    케어하게 될 장소
                 </Text>
 
                 {address ?
                     <TouchableHighlight
-                        style = {{marginTop :12}}
-                        underlayColor = 'none'
+                        style={{ marginTop: 12 }}
+                        underlayColor='none'
                         onPress={() => navigation.dispatch(
                             StackActions.push('findAddressPage')
                         )}>
@@ -63,18 +62,22 @@ export default function PatientPlaceAndNext() {
                             {address}
                         </Text>
                     </TouchableHighlight> :
-                    
+
                     <TouchableHighlight
-                        style={{ marginTop: 20 }}
+                        style={styles.searchAddress}
                         underlayColor='none'
                         onPress={() => navigation.dispatch(
                             StackActions.push('findAddressPage')
                         )}
                     >
                         <View style={{ flexDirection: 'row' }}>
-                            <Icon props={['antdesign', 'search1', 18, '#0c2461']} />
-                            <Text style={{ color: '#0c2461' }}>
-                                주소검색
+                            <Icon props={['antdesign', 'search1', 17, 'darkgray']} />
+                            <Text style={{ 
+                                color: 'darkgray', 
+                                marginLeft: 5, 
+                                fontSize: 13 
+                            }}>
+                                주소를 입력해주세요
                             </Text>
                         </View>
                     </TouchableHighlight>
@@ -136,5 +139,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginTop: 12
+    },
+
+    searchAddress: {
+        marginTop: 11,
+        borderRadius: 15,
+        paddingLeft: 6,
+        paddingVertical: 6,
+        width: '85%',
+        borderColor: 'darkgray',
+        borderWidth: 0.6
     }
 })

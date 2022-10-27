@@ -9,7 +9,6 @@ import { backToPreviousSearchFilter } from "../../redux/action/search/searchActi
 
 export default function CloseBtn({ navigation, type }) {
     const dispatch = useDispatch();
-    const { previousName } = useRoute().params;
     const onPressCloseBtn = () => {
         if (type === 'firstRegisterReset') {
             dispatch(firstRegisterReset());
@@ -20,6 +19,7 @@ export default function CloseBtn({ navigation, type }) {
             navigation.pop();
         }
         else if (type === 'filter') {
+            const { previousName } = useRoute().params;
             setTimeout(() => {
                 previousName === 'searchResultPage' ?
                 dispatch(backToPreviousSearchFilter()) :

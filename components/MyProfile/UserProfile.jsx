@@ -1,9 +1,7 @@
 /* 내 정보 내 프로필 수정 프로필 부분 */
 
 import { StackActions } from "@react-navigation/native";
-import { useState } from "react";
 import { StyleSheet } from "react-native";
-import { Switch } from "react-native";
 import { TouchableHighlight } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
@@ -13,11 +11,11 @@ import Icon from "../Icon";
 import PrivateSetting from "./Profile/PrivateSetting";
 
 export default function UserProfile({ navigation }) {
-    
+
     const { purpose, isCertified } = useSelector(state => ({
         purpose: state.user.purpose,
         isCertified: state.user.isCertified
-    })) 
+    }))
 
     return (
         <View style={{ paddingHorizontal: 10 }}>
@@ -30,33 +28,42 @@ export default function UserProfile({ navigation }) {
                 </Text>
             </View>
 
-            <PrivateSetting navigation = {navigation}/>
-
-            <View style={styles.eachPart}>
-                <Text style={{ fontSize: 16, fontWeight: '400' }}>
-                    프로필 수정
-                </Text>
-                <View style={styles.nextIcon}>
-                    <Icon props={['material', 'navigate-next', 33, 'silver']} />
-                </View>
-            </View>
-
-            {purpose === '보호자' ? null :
+            <PrivateSetting navigation={navigation} />
+            
             <TouchableHighlight
-                underlayColor='whitesmoke'
+                underlayColor='none'
                 onPress={() => navigation.dispatch(
-                    StackActions.push('certificatePage')
+                    StackActions.push(
+                        'profileModifySelectPage'
+                    )
                 )}
             >
                 <View style={styles.eachPart}>
                     <Text style={{ fontSize: 16, fontWeight: '400' }}>
-                        자격증 관리
+                        프로필 수정
                     </Text>
                     <View style={styles.nextIcon}>
                         <Icon props={['material', 'navigate-next', 33, 'silver']} />
                     </View>
                 </View>
             </TouchableHighlight>
+
+            {purpose === '보호자' ? null :
+                <TouchableHighlight
+                    underlayColor='whitesmoke'
+                    onPress={() => navigation.dispatch(
+                        StackActions.push('certificatePage')
+                    )}
+                >
+                    <View style={styles.eachPart}>
+                        <Text style={{ fontSize: 16, fontWeight: '400' }}>
+                            자격증 관리
+                        </Text>
+                        <View style={styles.nextIcon}>
+                            <Icon props={['material', 'navigate-next', 33, 'silver']} />
+                        </View>
+                    </View>
+                </TouchableHighlight>
             }
         </View>
     )

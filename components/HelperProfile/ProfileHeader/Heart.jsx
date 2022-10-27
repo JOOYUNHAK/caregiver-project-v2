@@ -10,9 +10,6 @@ import { shallowEqual, useSelector } from "react-redux";
 import RegisterHeart from "../../../api/Profile/registerHeart";
 import { requestRefreshToken } from "../../../functions/Token";
 import Icon from "../../Icon";
-import * as Animatable from 'react-native-animatable';
-import { heightPercentageToDP, widthPercentageToDP } from "react-native-responsive-screen";
-
 import Dialog from "react-native-dialog";
 
 export default function Heart() {

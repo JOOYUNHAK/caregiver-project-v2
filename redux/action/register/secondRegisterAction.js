@@ -16,7 +16,8 @@ export const secondRegisterReset = createAction('secondRegister/secondRegisterRe
 
 export const savePatientSex = createAction('secondRegister/savePatientSex');
 export const saveDiagnosis = createAction('secondRegister/saveDiagnosis');
-export const savePeriod = createAction('secondRegister/savePeriod');
+export const saveStartPeriod = createAction('secondRegister/saveStartPeriod');
+export const saveEndPeriod = createAction('secondRegister/saveEndPeriod');
 export const savePlace = createAction('secondRegister/savePlace');
 export const saveIsNext = createAction('secondRegister/saveIsNext');
 export const savePatientState = createAction('secondRegister/savePatientState');

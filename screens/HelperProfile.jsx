@@ -48,11 +48,12 @@ export default function HelperProfile({ navigation, route }) {
             else
                 setLoading(false);
         }
-        const unsubscribe = navigation.addListener('focus', async() => {
+        getUserProfile();
+        /* const unsubscribe = navigation.addListener('focus', async() => {
             await getUserProfile();
         });
-        return unsubscribe
-    }, [navigation])
+        return unsubscribe */
+    }, [])
 
     //dialog 확인 버튼 눌렀을 때
     const pressDialog = () => {

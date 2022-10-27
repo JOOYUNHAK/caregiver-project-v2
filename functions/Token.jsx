@@ -1,6 +1,6 @@
 /* 토큰 관련 함수들 */
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { CommonActions, StackActions, useNavigation } from "@react-navigation/native";
+import { StackActions } from "@react-navigation/native";
 import store from "../redux/store";
 import api from "../config/CustomAxios";
 import { logout, saveUser } from "../redux/action/user/userAction";

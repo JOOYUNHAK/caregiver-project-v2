@@ -6,8 +6,8 @@ const selectStyle = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        height: 'auto',
         paddingLeft: 20,
+        paddingVertical: 5,
     },
 
     content: {

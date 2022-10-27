@@ -16,7 +16,6 @@ import { getLoginState, validateToken } from '../functions/Token';
 import Loading from './Loading';
 
 export default function MyInfo({ navigation }) {
-
     const [loading, setLoading] = useState(true);
     useLayoutEffect(() => {
         async function getState() {

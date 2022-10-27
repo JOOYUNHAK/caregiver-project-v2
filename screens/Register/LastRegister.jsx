@@ -1,6 +1,6 @@
 /* 회원가입 마지막 페이지 */
 
-import {  StyleSheet,} from "react-native";
+import {  ScrollView, StyleSheet,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StatusBarComponent from "../../components/StatusBarComponent";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -32,10 +32,8 @@ export default function LastRegister({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBarComponent />
-            <KeyboardAwareScrollView
+            <ScrollView
                 keyboardShouldPersistTaps='handled'
-                extraHeight={70}
-                extraScrollHeight={120}
                 enableOnAndroid={true}
                 scrollEnabled={true}
                 enableAutomaticScroll={true}
@@ -43,7 +41,7 @@ export default function LastRegister({ navigation }) {
             {purpose === '간병인' ? 
                     <CareGiver navigation={navigation}/> : 
                         (purpose === '활동보조사' ? <Assistant navigation={navigation}/> : <Protector navigation={navigation}/>)}
-            </KeyboardAwareScrollView>
+            </ScrollView>
         </SafeAreaView>
     )
 }

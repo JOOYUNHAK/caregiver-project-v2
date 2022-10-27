@@ -7,7 +7,8 @@ import {
     SafeAreaView,
     StyleSheet,
 }
-from 'react-native';
+    from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useDispatch } from 'react-redux';
 import AuthId from '../components/Login/AuthId';
 import SubBtn from '../components/Login/SubBtn';
@@ -33,8 +34,13 @@ export default function Login({ navigation }) {
     return (
         <SafeAreaView style={styles.container} >
             <StatusBarComponent />
-            <AuthId navigation={navigation}/>
-            <SubBtn navigation={navigation}/>
+            <KeyboardAwareScrollView
+                keyboardShouldPersistTaps = 'handled'
+                enableOnAndroid = {true}
+            >
+                <AuthId navigation={navigation} />
+                <SubBtn navigation={navigation} />
+            </KeyboardAwareScrollView>
         </SafeAreaView>
     );
 }

@@ -2,13 +2,15 @@
 'use strict'
 
 import api from "../../config/CustomAxios";
-import { saveResultProfile, saveSearchLastListNo, searchLoading, setSearchNoData } from "../../redux/action/search/searchAction";
+import { saveIsBlocked, saveMostKeyWord, saveResultProfile, saveSearchLastListNo, searchLoading, setSearchNoData, } from "../../redux/action/search/searchAction";
 import store from "../../redux/store";
 import { getAgeFilterValue, getAreaFilterValue, getLicenseFilterValue, getMainFilterValue, getPayFilterValue, getStartDateFilterValue } from "../Profile/requestProfileList";
 
 export default async function requestSearchResult() {
     //사용자가 밑으로 스크롤 중 더이상 스크롤해도 받아오는 데이터가 없을 땐 그냥 return
-    let { searchValue, searchLastListNo, searchNoData} = store.getState().search;
+    let { searchValue, searchLastListNo, 
+            searchNoData, mostKeyWord} = store.getState().search;
+    
     if( searchNoData ) return;
     
     let { mainFilter, payFilter, startDateFilter,sexFilter, ageFilter, 
@@ -23,10 +25,11 @@ export default async function requestSearchResult() {
     licenseFilter = getLicenseFilterValue(licenseFilter);
     warningFilter = warningFilter ? true : undefined;
     strengthFilter = strengthFilter ? true : undefined;
-    
+    mostKeyWord = mostKeyWord ? true : undefined;
+
     try {
         searchLastListNo == 0 ? store.dispatch(searchLoading(true)) : null;
-        const start = Date.now()
+        store.dispatch(saveIsBlocked(false));
         const res = await api.get('search', {
             params: {
                 mainFilter: mainFilter,
@@ -39,13 +42,13 @@ export default async function requestSearchResult() {
                 warningFilter: warningFilter,
                 strengthFilter: strengthFilter,
                 keyWord: searchValue,
-                start: searchLastListNo
+                start: searchLastListNo,
+                mostKeyWord: mostKeyWord
             }
         })
-        const end = Date.now()
-        console.log(end - start)
         const searchResult = res.data;
         searchLastListNo == 0 ? store.dispatch(searchLoading(false)) : null;
+        store.dispatch(saveMostKeyWord(false)); 
         //더이상 데이터가 없는 경우 그 이후부턴 요청 x
         if( !searchResult[0].length ) {
             store.dispatch(setSearchNoData(true));

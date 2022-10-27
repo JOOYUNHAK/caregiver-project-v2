@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
 
     eachPart: {
         paddingVertical: 5,
+        marginVertical: 4,
         paddingHorizontal: 15,
         fontSize: 14,
         color: '#5d5d5d',
@@ -73,7 +74,7 @@ const styles = StyleSheet.create({
 
     noListText: {
         marginTop: 15,
-        fontSize: 15,
+        fontSize: 14,
         color: '#a1a1a1',
     }
 })

@@ -8,8 +8,6 @@ import {
   StyleSheet,
   Platform
 } from 'react-native';
-
-import * as Animatable from 'react-native-animatable';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 import Icon from '../components/Icon';
 

@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
 
     inputId: {
         flex: 1,
+        marginTop: 20,
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
@@ -246,6 +247,7 @@ const styles = StyleSheet.create({
 
     reSendText: {
         paddingHorizontal: 30,
+        marginTop: 10,
         marginLeft: 10,
         paddingVertical: 15,
         color: 'rgba(65, 92, 118, 0.85)',
@@ -263,11 +265,12 @@ const getAuthBtn = (id, isSend, authCode, infoMessage) => StyleSheet.create({
         ((id.length == 10 || id.length == 11) && !isSend) ||
             (authCode.length == 6 && isSend) ? 'rgba(65, 92, 118, 0.85)' :  'rgba(65, 92, 118, 0.25)',
     borderRadius: 10,
-    marginTop: isSend && !infoMessage ? 15 : 0
+    marginTop: isSend && !infoMessage ? 15 : 10
 })
 
 const inputPlaceHolderText = (type) => StyleSheet.create({
     paddingLeft: 10,
+    marginTop: 10,
     paddingVertical: 11,
     borderRadius: 5,
     fontSize: type === 'auth' ?

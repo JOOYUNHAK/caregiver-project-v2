@@ -27,3 +27,13 @@ export const savePreviousSearchFilter =createAction('search/savePreviousSearchFi
 export const backToPreviousSearchFilter = createAction('search/backToPreviousSearchFilter');
 export const resetSearchMainFilters = createAction('search/resetSearchMainFilters');
 export const resetPreviousSearchFilters = createAction('search/resetPreviousSearchFilters');
+
+// Most Searched
+export const saveMostSearchedKeyWords = createAction('search/saveMostSearchedKeyWords');
+export const saveMostKeyWordsLoading = createAction('search/saveMostKeyWordsLoading');
+export const saveMostKeyWord = createAction('search/saveMostKeyWord'); //가장 많이 검색중인 단어에서 검색했는지
+
+// Most Viewed
+export const saveMostViewedProfiles = createAction('search/saveMostViewedProfiles');
+export const saveMostViewedLoading = createAction('search/saveMostViewedLoading');
+export const saveMostViewed = createAction('search/saveMostViewed');

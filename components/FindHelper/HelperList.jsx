@@ -12,7 +12,6 @@ import Icon from '../Icon';
 import SelectFilter from './SelectFilter';
 import { useDispatch, useSelector } from 'react-redux';
 import requestProfileList from '../../api/Profile/requestProfileList';
-import { useLayoutEffect } from 'react';
 import Loading from '../../screens/Loading';
 import { refreshProfileList, setNoData } from '../../redux/action/profile/profileAction';
 
@@ -57,20 +56,6 @@ export default function HelperList({ purpose }) {
         await requestProfileList(purpose);
         setRefreshing(false);
     }
-
-    /* useEffect(() => {
-        if (sortStandard === 'normal')
-            setUserProfile(UserProfile.sort((a, b) => a.listNo - b.listNo));
-        else if (sortStandard === 'highGrade')
-            setUserProfile(UserProfile.sort((a, b) => b.grade - a.grade));
-        else if (sortStandard === 'viewHigh')
-            setUserProfile(UserProfile.sort((a, b) => b.view - a.view));
-        else if (sortStandard === 'ageLow')
-            setUserProfile(UserProfile.sort((a, b) => a.age - b.age));
-        else if (sortStandard === 'ageHigh')
-            setUserProfile(UserProfile.sort((a, b) => b.age - a.age));
-        setReRender(!reRender);
-    }, [sortStandard]) */
 
     return (
         <>

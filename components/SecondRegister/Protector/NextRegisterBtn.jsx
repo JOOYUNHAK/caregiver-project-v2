@@ -7,12 +7,12 @@ import { shallowEqual, useSelector } from "react-redux";
 
 export default function NextRegisterBtn({ navigation }) {
     const [isFill, setIsFill] = useState(false);
-    console.log('render')
-    const {weight, patientSex, diagnosis, place, isNext, patientState} = useSelector(
+    const {weight, patientSex, diagnosis, startPeriod, place, isNext, patientState} = useSelector(
         state => ({
             weight: state.secondRegister.weight,
             patientSex: state.secondRegister.protector.patientSex,
             diagnosis: state.secondRegister.protector.diagnosis,
+            startPeriod: state.secondRegister.protector.startPeriod,
             place: state.secondRegister.protector.place,
             isNext: state.secondRegister.protector.isNext,
             patientState: state.secondRegister.protector.patientState,
@@ -21,9 +21,9 @@ export default function NextRegisterBtn({ navigation }) {
     );
 
     useEffect(() => {
-        weight && patientSex && diagnosis && place 
+        weight && patientSex && diagnosis && place && startPeriod
             && isNext && patientState ? setIsFill(true) : setIsFill(false)
-    },[ weight, patientSex, diagnosis, place, isNext, patientState ])
+    },[ weight, patientSex, diagnosis, startPeriod, place, isNext, patientState ])
 
     return (
         <View style={{ height: hp('10%') }}>

@@ -25,7 +25,7 @@ export default function KeyWords() {
     return (
         <View style={styles.keyWords}>
             <Text style={{ paddingLeft: 20 }}>
-                검색 시 회원님이 노출되는 키워드 3가지를 적어주세요
+                회원님만의 키워드 3가지를 적어주세요
             </Text>
             <View style={styles.eachKeyWords}>
                 {keyWordData.map((content) => {

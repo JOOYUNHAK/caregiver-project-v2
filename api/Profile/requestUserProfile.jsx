@@ -1,20 +1,26 @@
 import { useSelector } from "react-redux";
 import api from "../../config/CustomAxios";
 import { saveUserProfile } from "../../redux/action/profile/profileAction";
+import { saveMostViewed } from "../../redux/action/search/searchAction";
 import store from "../../redux/store";
-
 
 export default async function requestUserProfile(purpose, profileId) {
     const userId = store.getState().user.id;
+    let { mostViewed } = store.getState().search;
+    mostViewed = mostViewed ? true : undefined;
     try {
+        //const start = Date.now();
         const res = await api.get(`user/profile/${purpose}`, {
             params: {
                 userId: userId,
-                profileId: profileId
+                profileId: profileId,
+                mostViewed: mostViewed
             }
         })
+        //const end = Date.now();
+        //console.log(end - start)
         store.dispatch(saveUserProfile(res.data));
-        console.log(res.data)
+        store.dispatch(saveMostViewed(false));
         return 'true';
     }
     catch (err) {
