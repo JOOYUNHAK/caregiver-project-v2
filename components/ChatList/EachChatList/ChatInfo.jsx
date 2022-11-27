@@ -4,25 +4,25 @@ import { StyleSheet, View } from "react-native"
 import ContactPerson from './ChatInfo/ContactPerson'
 import ProfileCheck from './ChatInfo/ProfileCheck';
 import LastMessage from './ChatInfo/LastMessage'
-export default function ChatInfo() {
-
+export default function ChatInfo({ info }) {
     return (
         <View style={styles.chatInfo}>
             <View style={styles.contactInfo}>
-                <ContactPerson />
-                <ProfileCheck />
+                <ContactPerson members ={info.members}/>
+                <ProfileCheck state = {info.state}/>
             </View>
-            <LastMessage />
+            <LastMessage message = {info.content} messageType = {info.type}/>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     chatInfo: {
+        alignItems: 'flex-start',
         flexDirection: 'column',
         paddingTop: 20,
         paddingBottom: 15,
-        width: '57%',
+        width: '60%',
         height: '100%',
     },
 

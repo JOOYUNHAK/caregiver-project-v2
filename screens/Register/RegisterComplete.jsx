@@ -16,15 +16,15 @@ export default function RegisterCompletePage() {
     const dispatch = useDispatch();
 
     const completeRegister = () => {
-        dispatch(firstRegisterReset());
-        dispatch(secondRegisterReset());
-        dispatch(lastRegisterReset());
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
                 routes: [{name: 'tabNavigator'}]
             })
         )
+        dispatch(firstRegisterReset());
+        dispatch(secondRegisterReset());
+        dispatch(lastRegisterReset());
     }
 
     return (

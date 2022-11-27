@@ -6,13 +6,13 @@ import PatientProfileButton from "./Policy/PatientProfileButton";
 import PolicyHeader from "./Policy/PolicyHeader";
 import PolicyList from "./Policy/PolicyList";
 
-export default function Policy() {
-
+export default function Policy({ protectorId, roomId, messageContent }) {
     return (
         <View style={styles.policyModal}>
             <PolicyHeader />
             <PolicyList />
-            <PatientProfileButton />
+            <PatientProfileButton 
+                protectorId = {protectorId} roomId = {roomId} messageContent = {messageContent}/>
         </View>
     )
 }
@@ -20,8 +20,7 @@ export default function Policy() {
 const styles = StyleSheet.create({
     policyModal: {
         marginHorizontal: 50,
-        marginTop: 15,
-        marginBottom: 30,
+        marginBottom: 15,
         paddingTop: 20,
         borderRadius: 20,
         backgroundColor: 'white',

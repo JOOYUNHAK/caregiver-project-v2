@@ -9,13 +9,13 @@ export default function PolicyList() {
 
     return (
         <View style={styles.policyList}>
-            <View>
                 <View style={styles.eachPolicy}>
                     <View style={styles.icon}>
                         <Icon props={['entypo', 'dot-single', 10, '#564d4f']} />
                     </View>
-                    <Text style={styles.policyText}>
-                        간병인분께서 거절을 할 시 보호자분에게 약 70%의 포인트를 돌려드리고 있어요.
+                    <Text 
+                        style={styles.policyText}>
+                        간병인분께서 거절을 할 시 보호자분에게 약 70%의 포인트를 돌려드리고 있어요
                     </Text>
                 </View>
 
@@ -41,7 +41,6 @@ export default function PolicyList() {
 
                     </Text>
                 </View>
-            </View>
         </View>
     )
 }
@@ -49,13 +48,13 @@ export default function PolicyList() {
 const styles = StyleSheet.create({
 
     policyList: {
-        alignItems: 'center'
+        alignItems: 'center',
     },
     
     eachPolicy: {
-        flexDirection: 'row',
         marginTop: 15,
-        justifyContent: 'center'
+        flexDirection: 'row',
+        justifyContent: 'center',
     },
 
     icon: {

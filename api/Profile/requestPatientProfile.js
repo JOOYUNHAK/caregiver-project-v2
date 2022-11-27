@@ -1,7 +1,7 @@
 /* 환자 정보 요청 */
 
 import api from "../../config/CustomAxios"
-import { ProtectorProfileLoading, savePatientProfile } from "../../redux/action/chat/chatAction"
+import { savePatientProfile } from "../../redux/action/chat/chatAction"
 import store from "../../redux/store"
 
 export default async function requestPatientProfile(protectorId) {
@@ -14,7 +14,6 @@ export default async function requestPatientProfile(protectorId) {
                 id: protectorId
             }
         })
-
         store.dispatch(
             savePatientProfile(
                 res.data

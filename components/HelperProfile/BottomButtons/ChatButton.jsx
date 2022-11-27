@@ -4,26 +4,25 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import Dialog from "react-native-dialog";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import careApplication from "../../../api/Profile/careApplicationApi";
-import { socket } from "../../../module/socket";
+import { socket, socketEvent } from "../../../module/socket";
+import { addRoomList, saveMessage } from "../../../redux/action/chat/chatAction";
 
 export default function ChatButton() {
-
-    const { loginId, opponentId, profileId, name } = useSelector(state => ({
+    const { loginId, opponentId, name } = useSelector(state => ({
         loginId: state.user.id,
         opponentId: state.profile.userProfile.user.id,
-        profileId: state.profile.userProfile.id,
         name: state.profile.userProfile.user.name
     }))
-
+    const dispatch = useDispatch();
     const navigation = useNavigation();
     const [visible, setVisible] = useState(false);
     const [errMessage, setErrMessage] = useState('');
 
     //로그인 되어 있는지 아닌지
     const validateId = () => {
-        if ( !loginId.length ) {
+        if (!loginId.length) {
             navigation.dispatch(
                 StackActions.push(
                     'loginPage'
@@ -46,19 +45,40 @@ export default function ChatButton() {
             }, 300);
             return;
         }
-
-        navigation.dispatch(
-            StackActions.push(
-                'ChatPage',
-                {
-                    loginId,
-                    opponentId,
-                    profileId,
-                    name
-                }
+        
+        //새로운 방 생성하면 상대방에게 알리고 자신에게 저장
+        socket.emit('newroom', {
+            protectorId: loginId,
+            careGiverId: opponentId
+        }, (roomInfo) => {
+            navigation.dispatch(
+                StackActions.push(
+                    'chatPage',
+                    {
+                        roomId: roomInfo.roomId ?
+                             roomInfo.roomId : roomInfo.roomInfo.room.roomId,
+                        protectorId: loginId,
+                        opponentId,
+                        name
+                    }
+                )
             )
-        )
-        socket.emit('NEW_ROOM', `${loginId}:${opponentId}`);
+
+            //이미 존재하는 방이면
+            if( roomInfo.roomId ) {
+                socketEvent(socket, 'join', {
+                    loginId,
+                    roomId: roomInfo.roomId
+                });
+                return;
+            }
+            dispatch(
+                saveMessage(roomInfo.roomInfo.message)
+            )
+            dispatch(
+                addRoomList(roomInfo)
+            )
+        });
     }
 
     const pressConfirm = () => {

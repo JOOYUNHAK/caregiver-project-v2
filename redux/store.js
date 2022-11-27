@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import firstRegisterReducer from "./reducer/register/firstRegisterReducer";
 import secondRegisterReducer from './reducer/register/secondRegisterReducer';
 import lastRegisterReducer from './reducer/register/lastRegisterReducer';
@@ -18,7 +18,10 @@ const store = configureStore ({
         profile: profileReducer,
         search: searchReducer,
         chat: chatReducer
-    }
+    },
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+        serializableCheck: false
+    })
 });
 
 export default store; 

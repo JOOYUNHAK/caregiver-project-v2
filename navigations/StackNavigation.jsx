@@ -288,7 +288,7 @@ export function StackNavigation() {
             />
 
             <Stack.Screen
-                name="ChatPage"
+                name="chatPage"
                 component={ChatRoom}
                 options={({ navigation }) => ({
                     headerShown: 'true',

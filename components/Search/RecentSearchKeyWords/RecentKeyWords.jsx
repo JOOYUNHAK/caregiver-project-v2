@@ -77,6 +77,7 @@ export default function RecentKeywords() {
                 </View>
             }
             data={recentSearchKeywords}
+            extraData={recentSearchKeywords}
             renderItem={renderItem}
             showsHorizontalScrollIndicator={false}
         />

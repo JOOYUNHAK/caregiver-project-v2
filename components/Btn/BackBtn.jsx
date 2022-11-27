@@ -26,7 +26,7 @@ export default function BackBtn ({ navigation, type }) {
                 break;
             case 'default':
                 navigation.dispatch(
-                    CommonActions.goBack()
+                    StackActions.pop()
                 )
                 break;
             

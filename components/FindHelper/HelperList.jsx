@@ -66,7 +66,7 @@ export default function HelperList({ purpose }) {
                         <NoListPage code={'noBoardList'} />
                     }
                     data={profile}
-                    renderItem={({ item }) => <HelperProfile item={item} key={item.id} />}
+                    renderItem={({ item, index }) => <HelperProfile item={item} key={index} />}
                     windowSize={1}
                     style={{ height: '100%', paddingTop: 10, backgroundColor: 'white' }} //수정
                     onScrollEndDrag={showButton}

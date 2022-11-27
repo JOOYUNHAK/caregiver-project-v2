@@ -15,7 +15,8 @@ export default function ChatProfile() {
 
 const styles = StyleSheet.create({
     profileIcon: {
-        width: '18%',
+        paddingLeft: 3,
+        width: '20%',
         alignItems: 'flex-start'
     }
 })

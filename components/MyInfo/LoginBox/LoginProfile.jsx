@@ -27,11 +27,7 @@ export default function LoginProfile({ navigation }) {
             )}
             style={{ height: '49%' }}>
             <View style={styles.myLoginState}>
-
-                <View style={{ width: '15%', justifyContent: 'center' }}>
                     <Icon props={['material', 'account-circle', 60, '#eaebe8']} />
-                </View>
-
                 <View style={styles.userNameAndPurpose}>
                     
                     <Text style={styles.myLoginBoxText}>

@@ -8,7 +8,6 @@ import store from "../../redux/store";
 
 export default async function requestCreateUser(RegisterData, navigation) {
     try {
-        console.log(RegisterData)
         const res = await api.post('auth/register', {
             firstRegister: RegisterData.firstRegister,
             secondRegister: RegisterData.secondRegister,

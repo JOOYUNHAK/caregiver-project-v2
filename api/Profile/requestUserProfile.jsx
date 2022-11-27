@@ -9,7 +9,7 @@ export default async function requestUserProfile(purpose, profileId) {
     let { mostViewed } = store.getState().search;
     mostViewed = mostViewed ? true : undefined;
     try {
-        //const start = Date.now();
+        //const start = new Date().getTime();
         const res = await api.get(`user/profile/${purpose}`, {
             params: {
                 userId: userId,
@@ -17,7 +17,7 @@ export default async function requestUserProfile(purpose, profileId) {
                 mostViewed: mostViewed
             }
         })
-        //const end = Date.now();
+        //const end = new Date().getTime();
         //console.log(end - start)
         store.dispatch(saveUserProfile(res.data));
         store.dispatch(saveMostViewed(false));

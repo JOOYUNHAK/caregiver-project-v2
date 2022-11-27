@@ -1,59 +1,91 @@
 /* 환자 분 정보 확인하는 버튼 */
 
-import { StackActions, useNavigation } from "@react-navigation/native";
-import { useEffect } from "react";
 import { useState } from "react";
 import { Text } from "react-native";
 import { ScrollView } from "react-native";
-import { ActivityIndicator } from "react-native";
 import { StyleSheet } from "react-native";
 import { TouchableHighlight } from "react-native";
 import { View } from "react-native";
 import Modal from 'react-native-modal';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
-import { shallowEqual, useSelector } from "react-redux";
+import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import requestPatientProfile from "../../../api/Profile/requestPatientProfile";
+import { socket, socketEvent } from "../../../module/socket";
+import { saveMessage, stateUpdate } from "../../../redux/action/chat/chatAction";
 import Icon from "../../Icon";
 
-export default function PatientProfileButton() {
-
-    let { patientProfile, protectorId } = useSelector(state => ({
+export default function PatientProfileButton({ protectorId, roomId, messageContent }) {
+    const dispatch = useDispatch();
+    let { patientProfile, id } = useSelector(state => ({
+        id: state.user.id,
         patientProfile: state.chat.patientProfile,
-        protectorId: state.chat.protectorId,
     }),
         shallowEqual
-    );
+    )
     const [visible, setVisible] = useState(false);
     const [header, setHeader] = useState('');
 
-    
-    /* useEffect(() => {
-        if( !visible )
-            return;
-        setPeriod(getPeriod())
-    }, [visible])
-
-    function getPeriod() {
-        if( !visible )
-            return;
-        const startDate = patientProfile.start.split(' ');
-        const startYear = startDate[0].slice(0, -1);
-        const startMonth = startDate[1].slice(0, -1);
-        const startDay = startDate[2].slice(0, -1);
-
-        const endDate = patientProfile.end.split(' ');
-        const endYear = endDate[0].slice(0, -1);
-        const endMonth = endDate[1].slice(0, -1);
-        const endDay = endDate[2].slice(0, -1);
-        const period = (new Date(endYear, endMonth - 1, endDay)
-            - new Date(startYear, startMonth - 1, startDay)) / (1000 * 3600 * 24) + 1
-        console.log(period)
-        return period;
-    } */
-
     const pressPatientInfo = () => {
         setVisible(true);
+
         requestPatientProfile(protectorId);
+        //간병인이 프로필을 확인했을 경우에만 업데이트
+        if( protectorId === id || messageContent )
+            return;
+        socket.emit('check_application', {
+            protectorId,
+            roomId,
+            state: 1
+        });
+        dispatch(
+            stateUpdate([roomId, 1])
+        );
+    }
+
+    const responseApplication = (response) => {
+        setVisible(false);
+        const responseMessage = {
+            roomId,
+            sendId: id,
+            content: response,
+            visible: null,
+            type: response === 'reject' ? -1 : 2,
+            time: new Date(),
+        }
+        //응답 거절일경우
+        if (response === 'reject') {
+            dispatch(
+                saveMessage(responseMessage)
+            )
+            dispatch(
+                stateUpdate([roomId, -1, response])
+            );
+
+            socket.emit('response_application', {
+                responseMessage,
+                protectorId,
+                state: -1,
+                response
+            },)
+
+            return;
+        }
+
+        //응답 수락일경우
+        dispatch(
+            saveMessage(responseMessage)
+        )
+        dispatch(
+            stateUpdate([roomId, 2, response])
+        );
+
+        socket.emit('response_application', {
+            responseMessage,
+            protectorId,
+            state: 2,
+            response
+        })
+
     }
 
     const onScrollHandler = (e) => {
@@ -91,9 +123,7 @@ export default function PatientProfileButton() {
                 <View style={{
                     backgroundColor: 'white',
                     height: hp('80%'),
-                    borderWidth: 1,
                     width: wp('100%'),
-                    paddingHorizontal: 20,
                     borderTopLeftRadius: 15,
                     borderTopRightRadius: 15,
                 }}>
@@ -101,11 +131,13 @@ export default function PatientProfileButton() {
                     <View
                         onStartShouldSetResponder={() => true}
                         style={{
+
                             width: '100%',
                             height: '100%'
                         }}
                     >
                         <View style={{
+                            paddingHorizontal: 20,
                             flexDirection: 'row',
                             alignItems: 'flex-end',
                             marginBottom: 15
@@ -137,8 +169,12 @@ export default function PatientProfileButton() {
                         <ScrollView
                             onScroll={onScrollHandler}
                             showsVerticalScrollIndicator={false}
+                            style={{
+                                paddingHorizontal: 20,
+                            }}
                         >
                             <View style={{
+
                                 marginTop: '3%'
                             }}>
                                 <Text style={{
@@ -344,27 +380,61 @@ export default function PatientProfileButton() {
 
                             </View>
                         </ScrollView>
-                        <View style={styles.bottomButtons}>
+                        {
+                            messageContent ?
+                                <View style={styles.bottomButtons}>
+                                    <TouchableHighlight
+                                        underlayColor='none'
+                                        disabled={true}
+                                        style={styles.protectorButton}
+                                    >
+                                        <Text style={styles.protectorText}>
+                                            이미 마감된 신청이에요.
+                                        </Text>
+                                    </TouchableHighlight>
+                                </View>
+                                :
 
-                            <TouchableHighlight
-                                underlayColor='none'
-                                style={styles.reviewButton}
-                            >
-                                <Text style={styles.reviewText}>
-                                    거절할게요
-                                </Text>
-                            </TouchableHighlight>
+                                (protectorId === id ?
+                                <View style={styles.bottomButtons}>
+                                    <TouchableHighlight
+                                        underlayColor='none'
+                                        disabled={true}
+                                        style={styles.protectorButton}
+                                    >
+                                        <Text style={styles.protectorText}>
+                                            응답을 기다리는 중이에요
+                                        </Text>
+                                    </TouchableHighlight>
+                                </View>
 
-                            <TouchableHighlight
-                                underlayColor='none'
-                                style={styles.chatButton}
-                            >
-                                <Text style={styles.chatText}>
-                                    수락할게요
-                                </Text>
-                            </TouchableHighlight>
+                                :
+                                <View style={styles.bottomButtons}>
 
-                        </View>
+                                    <TouchableHighlight
+                                        underlayColor='none'
+                                        onPress={() => responseApplication('reject')}
+                                        style={styles.reviewButton}
+                                    >
+                                        <Text style={styles.reviewText}>
+                                            거절할게요
+                                        </Text>
+                                    </TouchableHighlight>
+
+                                    <TouchableHighlight
+                                        underlayColor='none'
+                                        onPress={() => responseApplication('accept')}
+                                        style={styles.chatButton}
+                                    >
+                                        <Text style={styles.chatText}>
+                                            수락할게요
+                                        </Text>
+                                    </TouchableHighlight>
+
+                                </View>
+                                )
+                        }
+
                     </View>
                 </View>
             </Modal>
@@ -445,16 +515,33 @@ const styles = StyleSheet.create({
     },
 
     bottomButtons: {
+
+        borderTopColor: 'lightgray',
+        borderTopWidth: 0.2,
+        elevation: 5,
+        paddingHorizontal: 15,
         height: 65,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         width: '100%',
         backgroundColor: 'white',
-        borderTopColor: 'silver',
-        borderTopWidth: 0.3,
         paddingVertical: 10,
-        paddingHorizontal: 10
+    },
+
+    protectorButton: {
+        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(65, 92, 118, 0.25)',
+        height: '100%',
+        borderRadius: 5,
+    },
+
+    protectorText: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: 'white'
     },
 
     chatButton: {

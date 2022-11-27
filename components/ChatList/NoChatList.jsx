@@ -2,7 +2,7 @@
 
 import { StyleSheet } from "react-native";
 import { Text, View } from "react-native";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 export default function NoChatList() {
     return (
@@ -16,7 +16,7 @@ export default function NoChatList() {
 
 const styles = StyleSheet.create({
     page: {
-        height: '100%',
+        height: hp('80%'),
         width: wp('100%'),
         alignItems: 'center',
         justifyContent: 'center'
