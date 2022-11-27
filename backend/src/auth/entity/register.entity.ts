@@ -53,7 +53,8 @@ export class CareGiver {
     extraFee: string;
 
     @OneToOne(() => User, (user) => user.id, {
-        cascade: ['insert']
+        cascade: ['insert'],
+        onDelete: 'CASCADE'
     })
     @JoinColumn({
         name: 'user_id',

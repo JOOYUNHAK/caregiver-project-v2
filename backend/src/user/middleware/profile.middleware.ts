@@ -21,7 +21,7 @@ export class ProfileMiddleWare implements NestMiddleware {
             const _userid = this.jwtService.decode(_accessToken)['userid'];
             const { id, purpose } = await this.userService.findId(_userid);
             const { profileId } = req.query;
-            if ( purpose === '간병인' )
+            if ( purpose === '보호자' )
                 this.userService.countViewProfile( id, profileId );
         }
         next();

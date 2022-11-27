@@ -37,7 +37,7 @@ export class User {
     token_index: number
 
     @OneToOne(() => Token, (token) => token.index, {
-        cascade: ['insert', 'update', 'remove'],
+        cascade: ['insert', 'update']
     })
     @JoinColumn({
         name: 'token_index',

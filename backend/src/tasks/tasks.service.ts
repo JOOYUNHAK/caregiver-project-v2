@@ -1,8 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { RedisClientType } from 'redis';
 import { CareGiver } from 'src/auth/entity/register.entity';
+import * as fs from 'fs'
 @Injectable()
 export class TasksService {
     constructor(
@@ -10,6 +11,8 @@ export class TasksService {
         private redis: RedisClientType,
         @Inject('CAREGIVER_REPOSITORY')
         private careGiverRepository: Repository<CareGiver>,
+        @Inject('DATA_SOURCE')
+        private dataSource: DataSource,
         private schedulerRegistry: SchedulerRegistry
     ) { }
 
@@ -87,14 +90,14 @@ export class TasksService {
                     'user.name as name',
                     'cg.keywords as keywords'
                 ])
-                .where('cg.id IN (:...ids)', { ids: _mostViewedList})
+                .where('cg.id IN (:...ids)', { ids: _mostViewedList })
                 .getRawMany();
-            
+
             //순위대로 배열 다시 셋팅
             let rank = [];
-            for(let i = 0; i < _mostViewedList.length; i++) {
-                for(let j = 0; j < _findUser.length; j++) {
-                    if( _mostViewedList[i] == _findUser[j].profileId ) {
+            for (let i = 0; i < _mostViewedList.length; i++) {
+                for (let j = 0; j < _findUser.length; j++) {
+                    if (_mostViewedList[i] == _findUser[j].profileId) {
                         rank.push(_findUser[j]);
                         continue;
                     }
@@ -113,4 +116,33 @@ export class TasksService {
         //지금까지 어떤 사용자가 어떤 프로필을 조회했는지 삭제
         await this.redis.UNLINK('user.viewed');
     }
+
+   /*  @Cron(CronExpression.EVERY_10_HOURS, {
+        name: 'loadMessageData',
+        timeZone: 'Asia/Seoul'
+    })
+    async loadMessageToMysql() {
+
+        try {
+            await this.dataSource.query(
+                `LOAD DATA INFILE 
+                'C:/Users/user/backend/backend/chat_files/messages.txt' 
+                INTO TABLE message 
+                FIELDS TERMINATED BY '    ' 
+                LINES TERMINATED BY '\r\n' 
+                IGNORE 1 LINES
+                (room_id, type, content, send_date, send_id)
+                `
+            );
+            fs.unlink('./chat_files/messages.txt', (err) => {
+                if( err )
+                    console.log('unlink error: ', err);
+            });
+        }
+
+        catch(err) {
+            console.log('load data infile error: ', err);
+            return;
+        }
+    } */
 }

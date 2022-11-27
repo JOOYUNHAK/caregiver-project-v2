@@ -61,7 +61,7 @@ export class UserController {
 
     //보호자 프로필 얻기
     @Get('profile')
-    async getProfileOne(
+    async getPatientProfile(
         @Query() requestPatientProfileDto: RequestPatientProfileDto
         ): Promise<PatientProfileDto> {
         return await this.userService.getPatientProfile(requestPatientProfileDto);

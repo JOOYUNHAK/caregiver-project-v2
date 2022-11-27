@@ -361,7 +361,7 @@ export class UserService {
                 'pt.meal as meal',
                 'pt.bathChair as bathChair',
             ])
-            .where('user.id = :id', { id: id})
+            .where('user.id = :id', { id: id })
             .getRawOne();
     }
 
