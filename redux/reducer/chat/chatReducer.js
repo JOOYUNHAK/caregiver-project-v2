@@ -57,11 +57,7 @@ const chatReducer = createReducer(initialState, (builder) => {
                 state.roomList = action.payload
                 return;
             }
-            roomList.sort((a, b) => new Date(b.time) - new Date(a.time))
-                /* console.log(dayjs(a.time).format('YYYY년 M월 DD일 A H:mm'))
-                console.log(dayjs().format('YYYY-MM-DD HH:mm:ss'))
-                console.log(new Date(a.time)) */
-            state.roomList = roomList
+            state.roomList = roomList.sort((a, b) => (dayjs(b.time).isAfter(dayjs(a.time)) ? 1 : -1 ))
         })
         .addCase(saveLookUp, (state, action) => {
             state.isLookUpedList = action.payload;
@@ -71,14 +67,17 @@ const chatReducer = createReducer(initialState, (builder) => {
         })
         .addCase(saveMessage, (state, action) => {
             state.messages.unshift(action.payload);
-            state.roomList.map( roomList => {
+            state.roomList.map( (roomList, index) => {
                 if( roomList.roomId == action.payload.roomId ) {
                     roomList.sendId = action.payload.sendId;
                     roomList.content = action.payload.content;
                     roomList.type = action.payload.type;
                     roomList.time = action.payload.time
+                    state.roomList.splice(index, 1);
+                    state.roomList.unshift(roomList);
                 }   
             })
+
         })
         .addCase(deleteNewMessageCount, (state, action) => {
             state.roomList.map( roomList => {
