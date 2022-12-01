@@ -1,4 +1,5 @@
 /* 로그인박스 포인트 */
+import { StackActions, useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
     View,
@@ -10,8 +11,14 @@ import {
 import Icon from '../../Icon';
 
 export default function MyPoint() {
+    const navigation = useNavigation();
     return (
-        <TouchableHighlight style={{ width: '33%' }}>
+        <TouchableHighlight 
+            onPress={() => navigation.dispatch(
+                StackActions.push('myPointPage')
+            )}
+            underlayColor='none'
+            style={{ width: '33%' }}>
             <View style={styles.pointBox}>
                 <View>
                     <Icon props={['font-awesome-5', 'coins', 28, '#94c6ad']} />

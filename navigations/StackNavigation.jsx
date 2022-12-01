@@ -24,6 +24,7 @@ import ChatRoom from "../screens/ChatRoom";
 import SelectCarePeriod from "../components/SecondRegister/Protector/SelectCarePeriod";
 import { TouchableHighlight } from "react-native";
 import PatientInfo from "../screens/PatientInfo";
+import { MyPointHistory } from "../screens/MyInfo/MyPointHistory";
 
 const Stack = createStackNavigator();
 
@@ -347,6 +348,26 @@ export function StackNavigation() {
                     },
                     headerLeft: () => (
                         <CloseBtn navigation={navigation} type='default' />
+                    )
+                })}
+            />
+
+            <Stack.Screen
+                name="myPointPage"
+                component={MyPointHistory}
+                options={({ navigation }) => ({
+                    headerShown: 'true',
+                    title: '포인트',
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                        fontSize: Platform.OS === 'ios' ? 14 : 18,
+                        marginLeft: 5
+                    },
+                    headerLeftContainerStyle: {
+                        left: 10
+                    },
+                    headerLeft: () => (
+                        <BackBtn navigation={navigation} type='default' />
                     )
                 })}
             />
