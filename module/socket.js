@@ -2,7 +2,7 @@ import { io } from "socket.io-client";
 import { addRoomList, deleteNewMessageCount, receiveNewMessage, saveMessage, saveMessageList, stateUpdate } from "../redux/action/chat/chatAction";
 import store from "../redux/store";
 
-export const socket = io('http://172.30.1.34:8800/chat', {
+export const socket = io('http://172.30.1.32:8800/chat', {
     transports: ['websocket']
 })
 
