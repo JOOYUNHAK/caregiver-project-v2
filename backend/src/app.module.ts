@@ -7,6 +7,7 @@ import { SearchModule } from './search/search.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ProfileModule } from './profile/profile.module';
 import { ChatModule } from './Chat/chat.module';
+import { PaymentModule } from './payment/payment.module';
 
 
 @Module({
@@ -20,7 +21,8 @@ import { ChatModule } from './Chat/chat.module';
     SearchModule,
     TasksModule,
     ProfileModule,
-    ChatModule
+    ChatModule,
+    PaymentModule
   ],
   controllers: [],
   providers: [],
