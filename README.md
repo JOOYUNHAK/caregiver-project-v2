@@ -1,6 +1,8 @@
 # 간병인 중개 플랫폼 '믿음케어' 
-> 개발 인원: 1명 개발 기간: 2022.08 ~ 2022.11
-
+```javascript
+개발 인원: 1명 
+개발 기간: 2022.08 ~ 2022.11
+```
 ## Introduce
 대학교 졸업작품을 진행할 당시 개발하였던 간병인 중개 플랫폼입니다.
 
@@ -19,6 +21,10 @@
 ```
 ### FrontEnd
 Expo환경에서 진행하다 Eject하여 안드로이드 플랫폼만 진행하였습니다.
+
+#### 추가
+ios환경과 필요없는 라이브러리를 정리하고자 Eject한 프로젝트를 삭제하고 기존 코드를 새로운 프로젝트로 옮겼습니다.
+
 <p>
 <img src="https://img.shields.io/badge/React Native-61DAFB?style=flat-square&logo=React&logoColor=white"/></a>&nbsp 
 <img src="https://img.shields.io/badge/Android Studio-3DDC84?style=flat-square&logo=Android Studio&logoColor=white"/></a>&nbsp 
@@ -26,10 +32,9 @@ Expo환경에서 진행하다 Eject하여 안드로이드 플랫폼만 진행하
 </p>
 
 ```sh
-# React-Native-Cli Verwinoi 2.0.1 #
 # React-Native Version  0.68.2 #
-# Gradle-Plugin 7.0.4 #
-# Gradle Versinon 7.3.3 #
+# Gradle Version 7.5.1 #
+# openjdk Version 11.0.19 #
 ```
 ### BackEnd
 <p>
