@@ -1,20 +1,20 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import configurationYaml from '../config/configuration.yaml';
 import { UserModule } from './user/user.module';
 import { SearchModule } from './search/search.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ProfileModule } from './profile/profile.module';
 import { ChatModule } from './Chat/chat.module';
 import { PaymentModule } from './payment/payment.module';
-
+import databaseConfiguration from 'config/database.configuration';
+import serviceConfiguration from 'config/service.configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [configurationYaml]
+      load: [databaseConfiguration, serviceConfiguration]
     }),
     AuthModule,
     UserModule,
@@ -22,7 +22,7 @@ import { PaymentModule } from './payment/payment.module';
     TasksModule,
     ProfileModule,
     ChatModule,
-    PaymentModule
+    PaymentModule 
   ],
   controllers: [],
   providers: [],
