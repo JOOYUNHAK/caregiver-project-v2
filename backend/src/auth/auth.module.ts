@@ -1,48 +1,24 @@
-import { Module, forwardRef } from '@nestjs/common';
-import { DatabaseModule } from '../database/database.module';
-import { AuthController } from './auth.controller';
-import { userRepository } from './user.repository';
-import { AuthService } from './auth.service';
-import { UserService } from './user.service';
-import { SendService } from './send.service';
-import { assistantRepository, careGiverRepository, protectorRepository } from './register.repository';
-import { RedisModule } from 'src/redis/redis.module';
-import { JwtModule } from '@nestjs/jwt';
-import { PassportModule } from '@nestjs/passport';
-import { ConfigModule } from '@nestjs/config';
-import { JwtStrategy } from './security/strategy/jwt.strategy';
-import { tokenRepository } from './token.repository';
-import { UserModule } from 'src/user/user.module';
+import { Module } from '@nestjs/common';
+import { RedisModule } from 'src/common/shared/database/redis/redis.module';
+import { AuthService } from './application/service/auth.service';
+import { AuthController } from './interface/controller/auth.controller';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Phone } from 'src/user-auth-common/domain/entity/user-phone.entity';
+import { PhoneRepositoryProvider } from 'src/user-auth-common/domain/repository/user-phone.repository';
+import { SmsService } from 'src/notification/sms/infra/service/sms.service';
+import { NaverSmsService } from 'src/notification/sms/infra/service/naver-sms.service';
 
 @Module({
   imports: [
-    ConfigModule,
-    DatabaseModule,
     RedisModule,
-    PassportModule,
-    JwtModule,
-    forwardRef(() => UserModule)
+    TypeOrmModule.forFeature([Phone])
   ],
   controllers: [AuthController],
   providers: [
-    ...userRepository,
-    ...protectorRepository,
-    ...careGiverRepository,
-    ...assistantRepository,
-    ...tokenRepository,
     AuthService,
-    UserService,
-    SendService,
-    JwtStrategy
+    PhoneRepositoryProvider,
+    SmsService,
+    NaverSmsService
   ],
-  exports: [
-    JwtStrategy, 
-    PassportModule, 
-    JwtModule, 
-    UserService,
-    ...userRepository,
-    ...careGiverRepository,
-    ...tokenRepository
-  ]
 })
 export class AuthModule {}

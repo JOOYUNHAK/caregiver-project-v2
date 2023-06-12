@@ -1,7 +1,6 @@
-# 간병인 중개 플랫폼 '믿음케어' 
+# 간병인 중개 플랫폼 '믿음케어' 리팩토링
 ```javascript
-개발 인원: 1명 
-개발 기간: 2022.08 ~ 2022.11
+기간: 2023.06 ~
 ```
 ## Introduce
 대학교 졸업작품을 진행할 당시 개발하였던 간병인 중개 플랫폼입니다.
@@ -20,10 +19,10 @@
 # Npm Version 8.19.2 #
 ```
 ### FrontEnd
-Expo환경에서 진행하다 Eject하여 안드로이드 플랫폼만 진행하였습니다.
+새로운 프로젝트를 생성하여 Expo관련 라이브러리를 지우고 npx를 활용하여 진행하고 있습니다.
 
-#### 추가
-ios환경과 필요없는 라이브러리를 정리하고자 Eject한 프로젝트를 삭제하고 기존 코드를 새로운 프로젝트로 옮겼습니다.
+### BackEnd
+객체지향프그래밍과 파일구조, 데이터베이스 테이블구조를 중점적으로 진행하고 있습니다.
 
 <p>
 <img src="https://img.shields.io/badge/React Native-61DAFB?style=flat-square&logo=React&logoColor=white"/></a>&nbsp 

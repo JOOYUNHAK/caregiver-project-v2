@@ -30,34 +30,28 @@ export default function AuthId() {
     const requestAuthNumber = async () => {
         setAuthCode('');
         try {
-            const res = await api.get(`/auth/register/${id}`);
-            const status = res.data['status'];
-            const message = res.data['message'];
-            switch (status) {
-                case 'duplicate':
-                    setInfoMessage(message);
-                    break;
-                case 'newuser':
-                    setInfoMessage(message);
-                    setBtnText('인증하기');
-                    setIsSend(true);
-                    break;
-            }
+            await api.post(`/auth/register`, { phoneNumber: id });
+            setInfoMessage('인증번호를 1분 30초안에 입력해주세요');
+            setBtnText('인증하기');
+            setIsSend(true);
+            // switch (status) {
+            //     case 'duplicate':
+            //         setInfoMessage(message);
+            //         break;
+            //     case 'newuser':
+            //         setInfoMessage(message);
+            //         setBtnText('인증하기');
+            //         setIsSend(true);
+            //         break;
+            // }
         }
         catch (err) {
             const statusCode = err.response.data.statusCode;
             const message = err.response.data.message;
-            switch(statusCode) {
-                //네이버와 통신 불가
-                case 500:
-                    setInfoMessage(message);
-                    break;
-                //하루 인증횟수 초과
-                case 403:
-                    setInfoMessage(message);
-                    setIsSend(false);
-                    setIsExceed(true);
-                    break;
+            setInfoMessage(message);
+            if(statusCode == 403) {
+                setIsSend(false);
+                setIsExceed(true);
             }
         }
     }

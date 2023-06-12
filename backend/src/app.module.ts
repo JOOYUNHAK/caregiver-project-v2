@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
-import { UserModule } from './user/user.module';
-import { SearchModule } from './search/search.module';
-import { TasksModule } from './tasks/tasks.module';
-import { ProfileModule } from './profile/profile.module';
-import { ChatModule } from './Chat/chat.module';
-import { PaymentModule } from './payment/payment.module';
 import databaseConfiguration from 'config/database.configuration';
 import serviceConfiguration from 'config/service.configuration';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmOptions } from './common/shared/database/mysql/typeorm.option';
+import { RedisModule } from './common/shared/database/redis/redis.module';
 
 @Module({
   imports: [
@@ -16,13 +13,9 @@ import serviceConfiguration from 'config/service.configuration';
       isGlobal: true,
       load: [databaseConfiguration, serviceConfiguration]
     }),
+    TypeOrmModule.forRootAsync(TypeOrmOptions),
+    RedisModule,
     AuthModule,
-    UserModule,
-    SearchModule,
-    TasksModule,
-    ProfileModule,
-    ChatModule,
-    PaymentModule 
   ],
   controllers: [],
   providers: [],

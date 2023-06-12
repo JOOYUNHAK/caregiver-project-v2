@@ -30,6 +30,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-socket.io": "^9.1.4",
     "@nestjs/schedule": "^2.1.0",
+    "@nestjs/testing": "^9.0.0",
     "@nestjs/typeorm": "^9.0.0",
     "@nestjs/websockets": "^9.1.4",
     "@socket.io/redis-adapter": "^7.2.0",
@@ -53,7 +54,6 @@
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
-    "@nestjs/testing": "^9.0.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cache-manager": "^4.0.1",
     "@types/cache-manager-ioredis": "^2.0.2",
@@ -85,7 +85,10 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": "./",
+    "modulePaths": [
+      "<rootDir>"
+    ],
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
