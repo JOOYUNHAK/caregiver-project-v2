@@ -1,5 +1,7 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Post, UsePipes } from "@nestjs/common";
 import { AuthService } from "src/auth/application/service/auth.service";
+import { PhoneValidatorPipe } from "src/user-auth-common/interface/pipe/phone-validator.pipe";
+import { RegisterDto } from "../dto/register.dto";
 
 @Controller('auth')
 export class AuthController {
@@ -7,8 +9,9 @@ export class AuthController {
         private readonly authService: AuthService
     ) {}
     /* 휴대폰으로 회원가입 */
+    @UsePipes(PhoneValidatorPipe)
     @Post('register')
-    async register(@Body('phoneNumber') phoneNumber: string) {
-        return await this.authService.register(phoneNumber);
+    async register(@Body() registerDto: RegisterDto) {
+        return await this.authService.register(registerDto.phoneNumber);
     }
-}
+} 

@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -32,11 +32,6 @@ describe('인증 서비스(AuthService) Test', () => {
         authService = module.get(AuthService);
     })
     describe('register()', () => {
-        it('잘못된 전화번호 형식이 주어지면 400에러를 던진다', async () => {
-            const result = async () => await authService.register('018')
-            await expect(result).rejects.toThrowError(new BadRequestException(ErrorMessage.PhoneNumberFormat));
-        });
-
         it('이미 가입되어 있는 전화번호인 경우 409에러를 던진다', async () => {
             const result = async () => await authService.register('01011111111');
             await expect(result).rejects.toThrowError(new ConflictException(ErrorMessage.DuplicatedPhoneNumber));

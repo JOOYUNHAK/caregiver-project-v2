@@ -15,7 +15,6 @@ export class AuthService {
     ) {}
 
     async register(phoneNumber: string) {
-        Phone.validate(phoneNumber); // 휴대폰 형식 체크
         await this.checkExistingUserByPhone(phoneNumber); // 가입되어있는 유저인지
         await this.smsService.send(new AuthenticationCodeMessage(phoneNumber)); // 인증코드 발송
     }

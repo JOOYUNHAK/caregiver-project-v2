@@ -1,0 +1,1 @@
+export class RegisterDto { readonly phoneNumber: string; };
