@@ -21,8 +21,8 @@
 </p>
 
 ```sh
-# React-Native Version  0.68.2 #
-# Gradle Version 7.5.1 #
+# React-Native Version  0.69.2 #
+# Gradle Version 7.1.1 #
 # openjdk Version 11.0.19 #
 ```
 ### BackEnd
