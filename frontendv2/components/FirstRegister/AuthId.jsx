@@ -19,13 +19,13 @@ export default function AuthId() {
     const [id, setId] = useState('');
     const [isExceed, setIsExceed] = useState(false);
     const [btnText, setBtnText] = useState(
-            auth ? '인증에 성공했습니다.' : '인증번호 받기');
+        auth ? '인증에 성공했습니다.' : '인증번호 받기');
     const [infoMessage, setInfoMessage] = useState('');
     const [isAuthed, setIsAuthed] = useState(auth); //인증 여부
     const [isSend, setIsSend] = useState(false); //인증번호를 보냈는지
     const [authCode, setAuthCode] = useState(''); //인증번호
     const dispatch = useDispatch();
-    
+
     //인증번호 얻기
     const requestAuthNumber = async () => {
         setAuthCode('');
@@ -49,7 +49,7 @@ export default function AuthId() {
             const statusCode = err.response.data.statusCode;
             const message = err.response.data.message;
             setInfoMessage(message);
-            if(statusCode == 403) {
+            if (statusCode == 403) {
                 setIsSend(false);
                 setIsExceed(true);
             }
@@ -59,26 +59,20 @@ export default function AuthId() {
     //인증번호검사
     const checkAuthCode = async () => {
         try {
-            const res = await api.post('/auth/sms', {
-                id: id,
-                userInputCode: authCode,
-                path: 'register'
+            const res = await api.post('/auth/code/sms', {
+                phoneNumber: id,
+                code: authCode,
             });
-            const status = res.data.status;
-            
-            switch (status) {
-                case 'success':
-                    setBtnText('인증에 성공하였습니다.');
-                    setInfoMessage('');
-                    setIsAuthed(true);
-                    dispatch(saveIsAuthed(true));
-                    break;
-            }
+
+            setBtnText('인증에 성공하였습니다.');
+            setInfoMessage('');
+            setIsAuthed(true);
+            dispatch(saveIsAuthed(true));
         }
         catch (err) {
             const statusCode = err.response.data.statusCode;
             const message = err.response.data.message;
-            switch(statusCode) {
+            switch (statusCode) {
                 //인증번호 불일치(로그인 실패)
                 case 401:
                     setInfoMessage(message);
@@ -135,21 +129,21 @@ export default function AuthId() {
             </View>
 
             {!isExceed ?
-            <View style={getAuthBtn(id, isSend, authCode, isAuthed)}>
-                <TouchableHighlight
-                    disabled={ //인증번호를 보내기전, 인증번호를 보낸 후, 인증이 완료되었을 때 버튼 비활성
-                        (id.length == 10 || id.length == 11 && !isSend) ||
-                            (authCode.length == 6 && isSend && !isAuthed) ? false : true}
-                    underlayColor='none'
-                    onPress={() => {
-                        (isSend && !isAuthed) ? checkAuthCode() : requestAuthNumber()
-                    }}
-                >
-                    <Text style={styles.btnText}>
-                        {btnText}
-                    </Text>
-                </TouchableHighlight>
-            </View> : null }
+                <View style={getAuthBtn(id, isSend, authCode, isAuthed)}>
+                    <TouchableHighlight
+                        disabled={ //인증번호를 보내기전, 인증번호를 보낸 후, 인증이 완료되었을 때 버튼 비활성
+                            (id.length == 10 || id.length == 11 && !isSend) ||
+                                (authCode.length == 6 && isSend && !isAuthed) ? false : true}
+                        underlayColor='none'
+                        onPress={() => {
+                            (isSend && !isAuthed) ? checkAuthCode() : requestAuthNumber()
+                        }}
+                    >
+                        <Text style={styles.btnText}>
+                            {btnText}
+                        </Text>
+                    </TouchableHighlight>
+                </View> : null}
         </>
     )
 }
