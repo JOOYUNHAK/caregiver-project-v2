@@ -1,10 +1,10 @@
-import { CreateColumnEntity } from "src/common/shared/entity/base-time.entity";
+import { Time } from "src/common/shared/type/time.type";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { SEX } from "src/user-auth-common/domain/enum/user.enum";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('user_profile')
-export class UserProfile extends CreateColumnEntity {
+export class UserProfile {
     @PrimaryGeneratedColumn('increment')
     private id: number;
 
@@ -18,11 +18,7 @@ export class UserProfile extends CreateColumnEntity {
     @Column({ type: 'tinyint' })
     private sex: SEX;
 
-    constructor(id: number, userId: number, birth: number, sex: SEX) {
-        super();
-        this.id = id;
-        this.userId = userId;
-        this.birth = birth;
-        this.sex = sex;
-    }
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+    private updatedAt: Time;
+
 }

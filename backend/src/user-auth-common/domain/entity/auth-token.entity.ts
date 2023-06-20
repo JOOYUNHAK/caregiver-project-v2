@@ -1,3 +1,4 @@
+import { Time } from "src/common/shared/type/time.type";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -14,5 +15,5 @@ export class Token {
     private refreshToken: string;
 
     @Column({ name: 'refreshed_at', type: 'timestamp' })
-    private refreshedAt: Date;
+    private refreshedAt: Time;
 }
