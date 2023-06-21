@@ -1,9 +1,9 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { User } from "./user.entity";
-import { UpdateColumnEntity } from "src/common/shared/entity/base-time.entity";
+import { Time } from "src/common/shared/type/time.type";
 
 @Entity('user_email')
-export class Email extends UpdateColumnEntity {
+export class Email {
     @PrimaryGeneratedColumn('increment')
     private id: number;
 
@@ -14,10 +14,6 @@ export class Email extends UpdateColumnEntity {
     @Column({ type: 'varchar', length: 50 })
     private email: string;
 
-    constructor(id: number, userId: number, email: string) {
-        super();
-        this.id = id;
-        this.userId = userId;
-        this.email = email;
-    };
+    @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
+    private updatedAt: Time;
 }

@@ -1,9 +1,10 @@
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Email } from "./user-email.entity";
+import { Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { LOGIN_TYPE, ROLE } from "../enum/user.enum";
 import { Phone } from "./user-phone.entity";
 import { UserProfile } from "./user-profile.entity";
 import { Token } from "src/user-auth-common/domain/entity/auth-token.entity";
+import { Time } from "src/common/shared/type/time.type";
+import { Email } from "./user-email.entity";
 
 @Entity('user')
 export class User {
@@ -18,6 +19,9 @@ export class User {
 
     @Column({ type: 'tinyint' })
     private loginType: LOGIN_TYPE;
+
+    @CreateDateColumn({ name: 'registered_at', type: 'timestamp' })
+    private registeredAt: Time;
 
     @OneToOne(() => Email, (email) => email.userId, { cascade: ['insert', 'update']})
     private email: Promise<Email>;

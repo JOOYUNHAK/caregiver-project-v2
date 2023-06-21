@@ -6,7 +6,7 @@ import { TouchableHighlight } from "react-native";
 import { Text, StyleSheet, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
-import { saveDiagnosis } from "../../../redux/action/register/secondRegisterAction";
+import { saveDiagnosis } from "../../../redux/action/register/patientInfoAction";
 import inputStyle from "../../../styles/Register/inputStyle";
 import Icon from "../../Icon";
 

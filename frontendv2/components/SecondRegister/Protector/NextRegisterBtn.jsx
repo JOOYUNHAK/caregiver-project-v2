@@ -1,5 +1,4 @@
 /* 보호자용 2번째 회원가입 페이지 다음으로 가는 버튼 */
-
 import { useEffect, useState } from "react";
 import { Text, TouchableHighlight, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -9,20 +8,20 @@ export default function NextRegisterBtn({ navigation }) {
     const [isFill, setIsFill] = useState(false);
     const {weight, patientSex, diagnosis, startPeriod, place, isNext, patientState} = useSelector(
         state => ({
-            weight: state.secondRegister.weight,
-            patientSex: state.secondRegister.protector.patientSex,
-            diagnosis: state.secondRegister.protector.diagnosis,
-            startPeriod: state.secondRegister.protector.startPeriod,
-            place: state.secondRegister.protector.place,
-            isNext: state.secondRegister.protector.isNext,
-            patientState: state.secondRegister.protector.patientState,
+            weight: state.patientInfo.weight,
+            patientSex: state.patientInfo.patientSex,
+            diagnosis: state.patientInfo.diagnosis,
+            startPeriod: state.patientInfo.startPeriod,
+            place: state.patientInfo.place,
+            isNext: state.patientInfo.isNext,
+            patientState: state.patientInfo.patientState,
         }),
         shallowEqual
     );
 
     useEffect(() => {
         weight && patientSex && diagnosis && place && startPeriod
-            && isNext && patientState ? setIsFill(true) : setIsFill(false)
+            && (isNext == false || isNext == true) && patientState ? setIsFill(true) : setIsFill(false)
     },[ weight, patientSex, diagnosis, startPeriod, place, isNext, patientState ])
 
     return (

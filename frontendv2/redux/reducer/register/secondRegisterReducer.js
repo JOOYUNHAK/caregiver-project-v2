@@ -12,13 +12,6 @@ import {
     secondRegisterReset,
     saveTime,
     saveTraining,
-    savePatientSex,
-    saveDiagnosis,
-    savePlace,
-    saveIsNext,
-    savePatientState,
-    saveStartPeriod,
-    saveEndPeriod
 } from '../../action/register/secondRegisterAction';
 
 const initialState = {
@@ -35,21 +28,12 @@ const initialState = {
         time: '',
         training: ''
     },
-    protector: {
-        patientSex: '',
-        diagnosis: '',
-        startPeriod: '',
-        endPeriod: '',
-        place: '',
-        isNext: '',
-        patientState: ''
-    }
 }
 
 const secondRegisterReducer = createReducer(initialState, (builder) => {
     builder
         .addCase(saveWeight, (state, action) => { // 3명 공통 입력칸인 몸무게 저장
-            state.weight = action.payload
+            state.weight = Number(action.payload)
         })
         .addCase(saveCareer, (state, action) => { // 간병인, 활동보조사 경력 저장
             state.career = action.payload
@@ -83,27 +67,6 @@ const secondRegisterReducer = createReducer(initialState, (builder) => {
         })
         .addCase(secondRegisterReset, (state) => { // 두번째 회원가입 페이지 초기화
             Object.assign(state, initialState)
-        })
-        .addCase(savePatientSex, (state, action) => { // 보호자용 환자의 성별 저장
-            state.protector.patientSex = action.payload
-        })
-        .addCase(saveDiagnosis, (state, action) => { //보호자용 환자가 받은 진단명 저장
-            state.protector.diagnosis = action.payload
-        })
-        .addCase(saveStartPeriod, (state, action) => {
-            state.protector.startPeriod = action.payload;
-        })
-        .addCase(saveEndPeriod, (state, action) => {
-            state.protector.endPeriod = action.payload;
-        })
-        .addCase(savePlace, (state, action) => { // 보호자용 환자 케어 장소 저장
-            state.protector.place = action.payload
-        })
-        .addCase(saveIsNext, (state, action) => { // 보호자용 환자가 다음 병원 예정되어있는지 저장
-            state.protector.isNext = action.payload
-        })
-        .addCase(savePatientState, (state, action) => { // 보호자용 환자 현재 상태 저장
-            state.protector.patientState = action.payload
         })
 })
 

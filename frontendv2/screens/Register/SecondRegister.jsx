@@ -11,13 +11,16 @@ import Protector from "./SecondRegister/Protector";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { secondRegisterReset } from "../../../frontendv2/redux/action/register/secondRegisterAction";
+import { patientInfoReset } from "../../redux/action/register/patientInfoAction";
 
 export default function SecondRegister({ navigation }) {
     
     const purpose = useSelector((state) => state.firstRegister.user.purpose); //가입목적
     const dispatch = useDispatch();
     const backAction = () => {
-        dispatch(secondRegisterReset());
+        /* 가입 목적에 따른 양식 초기화 달리 */
+        purpose === 'protector' ? 
+            dispatch(patientInfoReset()) : dispatch(secondRegisterReset());
         navigation.goBack();
         return true;
     }

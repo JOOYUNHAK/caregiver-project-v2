@@ -1,4 +1,4 @@
-/* 회원가입 완료 버튼 */
+/* 보호자용 회원가입 완료 버튼 */
 
 import { Platform } from "react-native";
 import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
@@ -7,11 +7,11 @@ import { useSelector, shallowEqual } from "react-redux";
 import requestCreateUser from "../../../functions/Register/requestCreateUser";
 
 export default function CompleteRegisterBtn({ navigation }) {
-    const { firstRegister, secondRegister, lastRegister } = useSelector(
+    const { firstRegister, patientInfo, patientHelpList } = useSelector(
         state => ({
             firstRegister: state.firstRegister.user,
-            secondRegister: state.secondRegister,
-            lastRegister: state.lastRegister
+            patientInfo: state.patientInfo,
+            patientHelpList: state.patientHelpList
         }),
         shallowEqual
     )
@@ -31,8 +31,8 @@ export default function CompleteRegisterBtn({ navigation }) {
                     await requestCreateUser(
                         {
                             firstRegister,
-                            secondRegister,
-                            lastRegister
+                            patientInfo,
+                            patientHelpList
                         },
                         navigation
                     )

@@ -31,13 +31,14 @@ const firstRegisterReducer = createReducer(initialState, (builder) => {
             state.user.name = action.payload
         })
         .addCase(saveBirth, (state, action) => {
-            state.user.birth = action.payload
+            state.user.birth = Number(action.payload)
         })
         .addCase(saveSex, (state, action) => {
             state.user.sex = action.payload
         })
         .addCase(savePurpose, (state, action) => {
-            state.user.purpose = action.payload
+            state.user.purpose = 
+                action.payload === '간병인' ? 'caregiver' : 'protector'
         })
         .addCase(saveIsAuthed, (state, action) => {
             state.isAuthed = action.payload

@@ -2,13 +2,12 @@
 
 import { useEffect } from "react";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, TouchableHighlight, View } from "react-native";
+import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import resetArrayData from "../../../functions/resetArrayData";
-import { saveIsNext, savePlace } from "../../../redux/action/register/secondRegisterAction";
+import { saveIsNext, savePlace } from "../../../redux/action/register/patientInfoAction";
 import isNextData from "../../../data/Register/SecondRegister/isNext.data";
-import inputStyle from "../../../styles/Register/inputStyle";
 import { useNavigation, StackActions, useRoute } from "@react-navigation/native";
 import Icon from "../../Icon";
 
