@@ -8,10 +8,12 @@ import store from "../../redux/store";
 
 export default async function requestCreateUser(RegisterData, navigation) {
     try {
-        const res = await api.post('auth/register', {
-            firstRegister: RegisterData.firstRegister,
-            secondRegister: RegisterData.secondRegister,
-            lastRegister: RegisterData.lastRegister
+        const firstRegister = RegisterData.firstRegister;
+        /* 가입목적에 따른 Api Body 다르게 요청 */
+        const res = await api.post(`user/register/${firstRegister.purpose}`, {
+            firstRegister,
+            secondRegister: RegisterData.patientInfo,
+            lastRegister: RegisterData.patientHelpList
         });
 
         const accessToken = res.data.accessToken;
