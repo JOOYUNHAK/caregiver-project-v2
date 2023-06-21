@@ -1,12 +1,11 @@
 /* 보호자용 2번째 회원가입 환자 성별 입력 */
-
 import { useEffect } from "react";
 import { useState } from "react";
 import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
 import resetArrayData from "../../../functions/resetArrayData";
-import { savePatientSex } from "../../../redux/action/register/secondRegisterAction";
+import { savePatientSex } from "../../../redux/action/register/patientInfoAction";
 import sexData from "../../../data/Register/sex.data";
 
 export default function PatientSex() {

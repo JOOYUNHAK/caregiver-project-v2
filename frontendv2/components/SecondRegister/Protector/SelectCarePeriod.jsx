@@ -1,10 +1,8 @@
 /* 케어 기간 날짜 고르기 */
-
 import { StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { CalendarList, LocaleConfig } from 'react-native-calendars'
 import StatusBarComponent from "../../StatusBarComponent";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Icon from "../../Icon";
 import { useState } from "react";
 import { Text } from "react-native";
@@ -13,7 +11,7 @@ import { useEffect } from "react";
 import { TouchableHighlight } from "react-native";
 import { CommonActions } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
-import { saveEndPeriod, saveStartPeriod } from "../../../redux/action/register/secondRegisterAction";
+import { saveEndPeriod, saveStartPeriod, saveTotalPeriod } from "../../../redux/action/register/patientInfoAction";
 
 LocaleConfig.locales['fr'] = {
     monthNames: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
@@ -74,9 +72,10 @@ export default function SelectCarePeriod({ navigation }) {
         );
         dispatch(
             saveEndPeriod(
-                !!end ? end : null
+                !!end ? end : start
             ),
-        )
+        );
+        dispatch(saveTotalPeriod(period));
     }
 
     const pressDay = (day) => {
