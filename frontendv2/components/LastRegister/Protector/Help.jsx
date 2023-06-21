@@ -2,9 +2,16 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
-import { saveBathChair, saveBedSore, saveMeal, saveSuction, saveToilet, saveWashing } from '../../../redux/action/register/lastRegisterAction'; 
 import helpContentData from "../../../data/Register/LastRegister/helpContent.data";
 import RegisterHelpText from "../../RegisterHelpText";
+import { 
+    saveBathChair, 
+    saveBedSore, 
+    saveMeal, 
+    saveSuction, 
+    saveToilet, 
+    saveWashing 
+} from "../../../redux/action/register/patientHelpListAction";
 
 export default function Help() {
     const dispatch = useDispatch();
