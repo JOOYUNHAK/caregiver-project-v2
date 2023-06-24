@@ -15,13 +15,9 @@ export default async function requestCreateUser(RegisterData, navigation) {
             secondRegister: RegisterData.patientInfo,
             lastRegister: RegisterData.patientHelpList
         });
-
-        const accessToken = res.data.accessToken;
-        const user = res.data.user;
-        const refreshToken = res.data.user.token_index;
+        const { accessToken, ...user } = res.data;
         store.dispatch(saveUser(user));
-        await AsyncStorage.
-            multiSet([['accessToken', accessToken], ['refreshToken', refreshToken.toString()]]);
+        await AsyncStorage.setItem('accessToken', accessToken)
         navigation.dispatch(
             StackActions.push('registerCompletePage')
         );

@@ -6,6 +6,9 @@ import serviceConfiguration from 'config/service.configuration';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmOptions } from './common/shared/database/mysql/typeorm.option';
 import { RedisModule } from './common/shared/database/redis/redis.module';
+import { UserModule } from './user/user.module';
+import { CoreModule } from './auth/core/core.module';
+import { UserAuthCommonModule } from './user-auth-common/user-auth-common.module';
 
 @Module({
   imports: [
@@ -13,12 +16,13 @@ import { RedisModule } from './common/shared/database/redis/redis.module';
       isGlobal: true,
       load: [databaseConfiguration, serviceConfiguration]
     }),
+    CoreModule,
     TypeOrmModule.forRootAsync(TypeOrmOptions),
     RedisModule,
     AuthModule,
-  ],
-  controllers: [],
-  providers: [],
+    UserAuthCommonModule,
+    UserModule
+  ]
 })
 export class AppModule {}
 

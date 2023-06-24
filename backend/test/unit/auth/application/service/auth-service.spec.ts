@@ -22,7 +22,7 @@ describe('인증 서비스(AuthService) Test', () => {
                 {
                     provide: getRepositoryToken(Phone),
                     useValue: {
-                        findByPhoneNumber: jest.fn().mockReturnValueOnce(new Phone(1, '01011111111'))
+                        findByPhoneNumber: jest.fn().mockReturnValueOnce(new Phone('01011111111'))
                     }
                 },
                 {
