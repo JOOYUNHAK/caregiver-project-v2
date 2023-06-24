@@ -17,9 +17,7 @@ export class Phone {
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
     private updatedAt: Time;
 
-    constructor(userId: number, phoneNumber: string) {
-        this.userId = userId;
-        this.phoneNumber = phoneNumber;
-    };
+    constructor(phoneNumber: string) { this.phoneNumber = phoneNumber; };
+    
     getPhoneNumber(): string { return this.phoneNumber; };
 }
