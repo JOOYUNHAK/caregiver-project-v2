@@ -9,12 +9,12 @@ import {
 } from "../../action/register/patientHelpListAction";
 
 const initialState = {
-    suction: '',
-    toilet: '',
-    bedsore: '',
-    washing: '',
-    meal: '',
-    bathChair: ''
+    suction: undefined,
+    toilet: undefined,
+    bedsore: undefined,
+    washing: undefined,
+    meal: undefined,
+    bathChair: undefined
 };
 
 const patientHelpListReducer = createReducer(initialState, (builder) => {
