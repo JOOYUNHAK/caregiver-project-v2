@@ -1,6 +1,6 @@
 import { Time } from "src/common/shared/type/time.type";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('auth_token')
 export class Token {
@@ -14,6 +14,15 @@ export class Token {
     @Column({ type: 'varchar', name: 'refresh_token' })
     private refreshToken: string;
 
-    @Column({ name: 'refreshed_at', type: 'timestamp' })
+    @UpdateDateColumn({ name: 'refreshed_at', type: 'timestamp'})
     private refreshedAt: Time;
+
+    private accessToken: string;
+
+    constructor(accessToken: string, refreshToken: string) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    };
+
+    getAccessToken(): string { return this.accessToken; };
 }
