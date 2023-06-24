@@ -36,10 +36,10 @@ const patientInfoReducer = createReducer(initialState, (builder) => {
             state.diagnosis = action.payload
         })
         .addCase(saveStartPeriod, (state, action) => {
-            state.startPeriod = action.payload;
+            state.startPeriod = new Date(action.payload);
         })
         .addCase(saveEndPeriod, (state, action) => {
-            state.endPeriod = action.payload;
+            state.endPeriod = new Date(action.payload);
         })
         .addCase(saveTotalPeriod, (state, action) => {
             state.totalPeriod = Number(action.payload);
