@@ -9,6 +9,8 @@ import { RedisModule } from './common/shared/database/redis/redis.module';
 import { UserModule } from './user/user.module';
 import { CoreModule } from './auth/core/core.module';
 import { UserAuthCommonModule } from './user-auth-common/user-auth-common.module';
+import { GlobalScopedExceptionFilter } from './common/exception/all-exception.filter';
+import { GlobalScopedValidationPipe } from './common/pipe/global-scoped.pipe';
 
 @Module({
   imports: [
@@ -22,6 +24,10 @@ import { UserAuthCommonModule } from './user-auth-common/user-auth-common.module
     AuthModule,
     UserAuthCommonModule,
     UserModule
+  ],
+  providers: [
+    GlobalScopedValidationPipe,
+    GlobalScopedExceptionFilter
   ]
 })
 export class AppModule {}
