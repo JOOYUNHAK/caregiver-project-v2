@@ -4,6 +4,7 @@ import { JwtService } from "@nestjs/jwt";
 import { RedisClientType } from "redis";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { NewUserAuthentication } from "src/user-auth-common/domain/interface/new-user-authentication.interface";
+import { JwtPayload } from "../type/jwt-payload.type";
 
 @Injectable()
 export class TokenService {
@@ -31,14 +32,14 @@ export class TokenService {
     };
 
     async generateAccessToken(user: User): Promise<string> {
-        return await this.jwtService.signAsync({ phoneNumber: (await user.getPhone()).getPhoneNumber(), createdAt: Date.now() }, {
+        return await this.jwtService.signAsync( this.generateJwtPayload(user), {
             secret: this.accessTokenSecret,
             expiresIn: this.accessTokenExpiresIn
         });
     };
 
     async generateRefreshToken(user: User): Promise<string> {
-        return await this.jwtService.signAsync({ phoneNumber: (await user.getPhone()).getPhoneNumber(), createdAt: Date.now() }, {
+        return await this.jwtService.signAsync( this.generateJwtPayload(user), {
             secret: this.refreshTokenSecret,
             expiresIn: this.refreshTokenExpiresIn
         });
@@ -48,5 +49,14 @@ export class TokenService {
     async addAccessTokenToSessionList(id: number, accessToken: string): Promise<void> {
         await this.redis.HSET('user:session:list', id, accessToken);
     };
+
+    /* JwtToken의 Payload 생성 */
+    private generateJwtPayload(user: User): JwtPayload {
+        return {
+            userId: user.getId(),
+            role: user.getRole(),
+            createdAt: new Date()
+        };
+    }
 
 }
