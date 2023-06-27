@@ -29,10 +29,7 @@ export class ProtectorMapper {
 
     async toDto(protector: Protector): Promise<ClientDto> {
         return {
-            id: protector.getId(),
-            phoneNumber: (await protector.getUser().getPhone()).getPhoneNumber(),
             accessToken: (await protector.getUser().getAuthentication()).getAccessToken(),
-            role: protector.getUser().getRole()
         };
     }
 

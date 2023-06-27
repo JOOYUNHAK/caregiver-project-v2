@@ -7,10 +7,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmOptions } from './common/shared/database/mysql/typeorm.option';
 import { RedisModule } from './common/shared/database/redis/redis.module';
 import { UserModule } from './user/user.module';
-import { CoreModule } from './auth/core/core.module';
 import { UserAuthCommonModule } from './user-auth-common/user-auth-common.module';
 import { GlobalScopedExceptionFilter } from './common/exception/all-exception.filter';
 import { GlobalScopedValidationPipe } from './common/pipe/global-scoped.pipe';
+import { CoreModule } from './core/core.module';
 
 @Module({
   imports: [
