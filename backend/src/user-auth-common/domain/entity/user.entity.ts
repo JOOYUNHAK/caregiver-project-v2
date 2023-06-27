@@ -46,9 +46,11 @@ export class User {
         this.authentication = Promise.resolve(authentication);
     };
 
+    getId(): number { return this.id; };
+    getRole(): ROLE { return this.role; };
+
     async getPhone(): Promise<Phone> { return await this.phone; };
     async getAuthentication(): Promise<Token> { return await this.authentication; };
-    getRole(): ROLE { return this.role; };
     
     /* 회원가입시 새로 발급된 인증 */
     setAuthentication(newUserAuthentication: NewUserAuthentication) { 
