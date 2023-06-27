@@ -24,6 +24,7 @@ export class RegisterService {
         protector.setAuthentication(authentication);
         /* DB에 저장하고 Client용 데이터에 맞게 전달 */
         const savedProtector = await this.protectorRepository.save(protector);
+        await this.tokenService.addAccessTokenToSessionList(savedProtector.getId(), authentication.accessToken);
         return await this.protectorMapper.toDto(savedProtector);
     }
 }
