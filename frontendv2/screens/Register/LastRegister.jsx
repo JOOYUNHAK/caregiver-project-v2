@@ -38,9 +38,10 @@ export default function LastRegister({ navigation }) {
                 scrollEnabled={true}
                 enableAutomaticScroll={true}
                 showsVerticalScrollIndicator={false} >
-            {purpose === '간병인' ? 
+            {purpose === 'caregiver' ? 
                     <CareGiver navigation={navigation}/> : 
-                        (purpose === '활동보조사' ? <Assistant navigation={navigation}/> : <Protector navigation={navigation}/>)}
+                        <Protector navigation={navigation}/>
+            }
             </ScrollView>
         </SafeAreaView>
     )

@@ -40,10 +40,10 @@ export default function SecondRegister({ navigation }) {
                 scrollEnabled={true}
                 enableAutomaticScroll={true}
                 showsVerticalScrollIndicator={false} >
-                {purpose === '간병인' ? 
+                {purpose === 'caregiver' ? 
                     <CareGiver navigation={navigation}/> : 
-                        (purpose === '활동보조사' ? 
-                            <Assistatnt navigation={navigation}/> : <Protector navigation={navigation}/>)}
+                        <Protector navigation={navigation}/>
+                }
             </KeyboardAwareScrollView>
         </SafeAreaView>
     )
