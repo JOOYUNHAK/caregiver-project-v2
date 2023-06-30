@@ -3,14 +3,14 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch, useSelector } from "react-redux";
-import { saveCareer, saveWeight } from "../../redux/action/register/secondRegisterAction";
+import { saveCareer, saveWeight } from "../../redux/action/register/caregiverInfoAction";
 import inputStyle from "../../styles/Register/inputStyle";
 
 export default function WeightAndCareer() {
     const dispatch = useDispatch();
     const { weight, career } = useSelector(state => ({
-        weight: state.secondRegister.weight,
-        career: state.secondRegister.career
+        weight: state.caregiverInfo.weight,
+        career: state.caregiverInfo.career
     }))
 
     return (

@@ -2,7 +2,7 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch, useSelector } from "react-redux";
-import { saveFirstPay, saveStartDate } from "../../../redux/action/register/secondRegisterAction";
+import { saveFirstPay, saveStartDate } from "../../../redux/action/register/caregiverInfoAction";
 import inputStyle from "../../../styles/Register/inputStyle";
 import { useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
@@ -11,8 +11,8 @@ import { useEffect } from "react";
 export default function PayAndStartDate() {
     const dispatch = useDispatch();
     const { firstPay, startDate } = useSelector(state => ({
-        firstPay: state.secondRegister.careGiver.firstPay,
-        startDate: state.secondRegister.startDate
+        firstPay: state.caregiverInfo.pay,
+        startDate: state.caregiverInfo.possibleDate
     }))
 
     useEffect(() => {
