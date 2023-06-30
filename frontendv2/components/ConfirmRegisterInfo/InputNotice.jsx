@@ -1,9 +1,8 @@
 /* 보호자들께 한줄로 하고 싶은 말 */
 
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import Icon from "../Icon";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import { saveNotice } from '../../redux/action/register/lastRegisterAction';
+import { saveNotice } from '../../redux/action/register/caregiverLastRegisterAction';
 import { useDispatch } from "react-redux";
 import RegisterHelpText from "../RegisterHelpText";
 

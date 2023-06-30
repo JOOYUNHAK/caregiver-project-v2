@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
-import { saveStrength1, saveStrength2} from '../../../redux/action/register/lastRegisterAction'; 
+import { saveStrength1, saveStrength2} from '../../../redux/action/register/caregiverThirdRegisterAction'; 
 import RegisterHelpText from "../../RegisterHelpText";
 
 export default function Strength() {

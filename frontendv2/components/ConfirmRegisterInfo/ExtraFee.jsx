@@ -3,7 +3,7 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
-import { saveExtraFee } from "../../redux/action/register/lastRegisterAction";
+import { saveExtraFee } from "../../redux/action/register/caregiverLastRegisterAction";
 import RegisterHelpText from "../RegisterHelpText";
 
 export default function ExtraFee() {
