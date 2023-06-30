@@ -3,10 +3,10 @@ import React from 'react';
 import {TouchableHighlight} from 'react-native';
 import Icon from '../Icon';
 import { useDispatch, useSelector } from 'react-redux';
-import { secondRegisterReset } from '../../redux/action/register/secondRegisterAction';
 import { confirmRegisterInfoReset, lastRegisterReset } from '../../redux/action/register/lastRegisterAction';
 import { StackActions } from '@react-navigation/native';
 import { patientInfoReset } from '../../redux/action/register/patientInfoAction';
+import { caregiverInfoReset } from '../../redux/action/register/caregiverInfoAction';
 
 export default function BackBtn ({ navigation, type }) {
     const dispatch = useDispatch();
@@ -17,7 +17,7 @@ export default function BackBtn ({ navigation, type }) {
     const onPressBackBtn = () => {
         switch(type) {
             case 'secondRegisterReset' :        //2번째 페이지에서 뒤로가기 버튼( 2번째 작성 전부 리셋 )
-                purpose === 'protector' ? dispatch(patientInfoReset()) : dispatch(secondRegisterReset());
+                purpose === 'protector' ? dispatch(patientInfoReset()) : dispatch(caregiverInfoReset());
             case 'lastRegisterReset' :
                 dispatch(lastRegisterReset());
             case 'confirmRegisterInfoReset' :

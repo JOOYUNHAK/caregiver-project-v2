@@ -5,13 +5,12 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useSelector } from "react-redux"
 import StatusBarComponent from "../../components/StatusBarComponent";
-import Assistatnt from "./SecondRegister/Assistant";
 import CareGiver from "./SecondRegister/CareGiver";
 import Protector from "./SecondRegister/Protector";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { secondRegisterReset } from "../../../frontendv2/redux/action/register/secondRegisterAction";
 import { patientInfoReset } from "../../redux/action/register/patientInfoAction";
+import { caregiverInfoReset } from "../../redux/action/register/caregiverInfoAction";
 
 export default function SecondRegister({ navigation }) {
     
@@ -20,7 +19,7 @@ export default function SecondRegister({ navigation }) {
     const backAction = () => {
         /* 가입 목적에 따른 양식 초기화 달리 */
         purpose === 'protector' ? 
-            dispatch(patientInfoReset()) : dispatch(secondRegisterReset());
+            dispatch(patientInfoReset()) : dispatch(caregiverInfoReset());
         navigation.goBack();
         return true;
     }
