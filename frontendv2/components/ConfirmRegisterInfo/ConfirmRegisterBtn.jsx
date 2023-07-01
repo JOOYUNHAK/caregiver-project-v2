@@ -18,7 +18,7 @@ export default function ConfirmRegisterBtn({ navigation }) {
         }),
         shallowEqual
     );
-    const { notice, additionalChargeCase }  = lastRegister;
+    const { notice, additionalChargeCase }  = caregiverLastRegister;
 
      useEffect(() => {
         notice && additionalChargeCase ? setIsFill(true) : setIsFill(false)

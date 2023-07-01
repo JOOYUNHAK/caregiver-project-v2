@@ -14,8 +14,8 @@ export default async function requestCreateUser(RegisterData, navigation) {
         const res = await api.post(`user/register/${purpose}`, {
             firstRegister,
             secondRegister: purpose === 'protector' ? RegisterData.patientInfo : RegisterData.caregiverInfo,
-            thirdRegister: purpose === 'protector' ? undefined : RegisterData.caregiverThirdRegister,
-            lastRegister: purpose === 'protector' ? RegisterData.patientHelpList : RegisterData.caregiverLastRegister,
+            thirdRegister: purpose === 'protector' ? undefined : convertCaregiverThirdRegister(RegisterData.caregiverThirdRegister),
+            lastRegister: purpose === 'protector' ? returnObjectOrUndefined(RegisterData.patientHelpList) : RegisterData.caregiverLastRegister,
 
         });
         const { accessToken, ...user } = res.data;
@@ -35,9 +35,18 @@ export default async function requestCreateUser(RegisterData, navigation) {
 /* 간병인 세번째 회원가입양식 api에 맞춰 변경 */
 function convertCaregiverThirdRegister(thirdRegisterData) {
     const { experience, strengths, tags } = thirdRegisterData;
+
     return { 
-        experience,
-        strengths: [...Object.values(strengths)],
-        tags: [...Object.values(tags)]
+        experience: returnObjectOrUndefined(experience),
+        strengths: returnArrayOrUndefined(Object.values(strengths)),
+        tags: returnArrayOrUndefined(Object.values(tags))
     };
 };
+
+function returnArrayOrUndefined(inputArray) {
+    return inputArray.length ? inputArray : undefined; 
+};
+
+function returnObjectOrUndefined(inputObject) {
+    return Object.values(inputObject).length ? inputObject : undefined;
+}
