@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Text, TouchableHighlight, View } from "react-native";
 import { useDispatch } from "react-redux";
 import resetArrayData from "../../functions/resetArrayData";
-import { deletePossibleArea, savePossibleArea } from "../../redux/action/register/secondRegisterAction";
+import { deletePossibleArea, savePossibleArea } from "../../redux/action/register/caregiverInfoAction";
 import areaData from "../../data/Register/area.data";
 import selectStyle from "../../styles/Register/selectStyle";
 

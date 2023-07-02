@@ -47,9 +47,13 @@ export class PatientInfoForm {
     @IsString()
     readonly diagnosis: string; // 환자 진단명
 
+    @Transform(({ value }) => new Date(value))
+    @IsNotEmpty()
     @IsDate()
     readonly startPeriod: Time; // 간병 시작일
 
+    @Transform(({ value }) => new Date(value))
+    @IsNotEmpty()
     @IsDate()
     readonly endPeriod: Time; // 간병 마무리
 

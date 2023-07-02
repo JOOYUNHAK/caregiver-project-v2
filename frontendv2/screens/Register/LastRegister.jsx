@@ -3,22 +3,20 @@
 import {  ScrollView, StyleSheet,} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import StatusBarComponent from "../../components/StatusBarComponent";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useSelector } from "react-redux";
 import CareGiver from "./LastRegister/CareGiver";
 import Protector from "./LastRegister/Protector";
-import Assistant from "./LastRegister/Assistant";
-import { lastRegisterReset } from "../../../frontendv2/redux/action/register/lastRegisterAction";
 import { useEffect } from "react";
 import { BackHandler } from "react-native";
 import { useDispatch } from "react-redux";
+import { thirdRegisterReset } from "../../redux/action/register/caregiverThirdRegisterAction";
 
 export default function LastRegister({ navigation }) {
     const purpose = useSelector((state) => state.firstRegister.user.purpose);
     const dispatch = useDispatch();
 
     const backAction = () => {
-        dispatch(lastRegisterReset());
+        dispatch(thirdRegisterReset());
         navigation.goBack();
         return true;
     };
@@ -38,9 +36,10 @@ export default function LastRegister({ navigation }) {
                 scrollEnabled={true}
                 enableAutomaticScroll={true}
                 showsVerticalScrollIndicator={false} >
-            {purpose === '간병인' ? 
+            {purpose === 'caregiver' ? 
                     <CareGiver navigation={navigation}/> : 
-                        (purpose === '활동보조사' ? <Assistant navigation={navigation}/> : <Protector navigation={navigation}/>)}
+                        <Protector navigation={navigation}/>
+            }
             </ScrollView>
         </SafeAreaView>
     )

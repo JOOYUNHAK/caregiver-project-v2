@@ -11,12 +11,12 @@ export default function NextRegisterBtn({ navigation }) {
     
     const {weight, career, firstPay, startDate, nextHospital, possibleArea} = useSelector(
         state => ({
-            weight: state.secondRegister.weight,
-            career: state.secondRegister.career,
-            firstPay: state.secondRegister.careGiver.firstPay,
-            startDate: state.secondRegister.startDate,
-            nextHospital: state.secondRegister.careGiver.nextHospital,
-            possibleArea: state.secondRegister.possibleArea,
+            weight: state.caregiverInfo.weight,
+            career: state.caregiverInfo.career,
+            firstPay: state.caregiverInfo.pay,
+            startDate: state.caregiverInfo.possibleDate,
+            nextHospital: state.caregiverInfo.nextHospital,
+            possibleArea: state.caregiverInfo.possibleAreaList,
         }),
         shallowEqual
     );

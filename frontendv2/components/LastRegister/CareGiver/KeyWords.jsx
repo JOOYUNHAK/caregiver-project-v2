@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useDispatch } from "react-redux";
-import { saveKeyWord1, saveKeyWord2, saveKeyWord3} from '../../../redux/action/register/lastRegisterAction'; 
+import { saveKeyWord1, saveKeyWord2, saveKeyWord3} from '../../../redux/action/register/caregiverThirdRegisterAction'; 
 import keyWordData from "../../../data/Register/LastRegister/keyWord.data";
 
 export default function KeyWords() {

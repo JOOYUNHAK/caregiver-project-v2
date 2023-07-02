@@ -11,7 +11,7 @@ import MyCertificate from "../../../components/MyProfile/Profile/MyCertificate";
 import StatusBarComponent from "../../../components/StatusBarComponent";
 import api from "../../../config/CustomAxios";
 import { requestRefreshToken } from "../../../functions/Token";
-import { saveLicense, secondRegisterReset } from "../../../../frontendv2/redux/action/register/secondRegisterAction";
+import { saveLicense } from "../../../../frontendv2/redux/action/register/caregiverInfoAction";
 import Loading from "../../Loading";
 
 export default function Certificate({ navigation }) {
@@ -53,7 +53,7 @@ export default function Certificate({ navigation }) {
 
         function backAction() {
             setTimeout(() => {
-                dispatch(secondRegisterReset());                
+                dispatch(caregiverInfoReset());                
             }, 100);
         }
 

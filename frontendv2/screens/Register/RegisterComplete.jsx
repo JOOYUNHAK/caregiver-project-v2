@@ -6,25 +6,40 @@ import { TouchableHighlight } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { firstRegisterReset } from "../../../frontendv2/redux/action/register/firstRegisterAction";
-import { lastRegisterReset } from "../../../frontendv2/redux/action/register/lastRegisterAction";
-import { secondRegisterReset } from "../../../frontendv2/redux/action/register/secondRegisterAction";
+import { lastRegisterReset } from "../../../frontendv2/redux/action/register/caregiverLastRegisterAction";
+import { caregiverInfoReset } from "../../redux/action/register/caregiverInfoAction";
+import { patientInfoReset } from "../../redux/action/register/patientInfoAction";
+import { helpListReset } from "../../redux/action/register/patientHelpListAction";
+import { thirdRegisterReset } from "../../redux/action/register/caregiverThirdRegisterAction";
 
 export default function RegisterCompletePage() {
     const navigation = useNavigation();
     const dispatch = useDispatch();
+    const { purpose } = useSelector(
+        state => ({
+            purpose: state.firstRegister.user.purpose
+        })
+    )
 
     const completeRegister = () => {
         navigation.dispatch(
             CommonActions.reset({
                 index: 0,
-                routes: [{name: 'tabNavigator'}]
+                routes: [{ name: 'tabNavigator' }]
             })
         )
         dispatch(firstRegisterReset());
-        dispatch(secondRegisterReset());
-        dispatch(lastRegisterReset());
+        if (purpose === 'protector') {
+            dispatch(patientInfoReset()); //환자 정보
+            dispatch(helpListReset()); // 환자 도움리스트
+            return;
+        }
+        dispatch(caregiverInfoReset()); // 간병인 정보 
+        dispatch(thirdRegisterReset()); // 간병인 세번째 회원가입 양식
+        dispatch(lastRegisterReset()) // 간병인 마지막 회원가입 양식
+
     }
 
     return (
@@ -45,7 +60,7 @@ export default function RegisterCompletePage() {
             </Text>
 
             <TouchableHighlight style={styles.btn}
-                underlayColor = 'none'
+                underlayColor='none'
                 onPress={() => completeRegister()}
             >
                 <Text style={{

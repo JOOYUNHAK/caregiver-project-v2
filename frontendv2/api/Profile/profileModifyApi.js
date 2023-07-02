@@ -2,7 +2,7 @@
 
 import api from "../../config/CustomAxios";
 import { requestRefreshToken } from "../../functions/Token";
-import { saveCareer, saveFirstPay, saveNextHospital, saveStartDate, saveWeight } from "../../redux/action/register/secondRegisterAction";
+import { saveCareer, saveFirstPay, saveNextHospital, saveStartDate, saveWeight } from "../../redux/action/register/caregiverInfoAction";
 import { logout } from "../../redux/action/user/userAction";
 import store from "../../redux/store";
 
