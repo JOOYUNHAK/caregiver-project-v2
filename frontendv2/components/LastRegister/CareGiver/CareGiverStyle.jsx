@@ -3,7 +3,7 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import careGiverStyleData from "../../../data/Register/LastRegister/careGiverStyle.data"
 import { useDispatch } from "react-redux";
-import { saveBedSore, saveSuction, saveToilet, saveWashing } from '../../../redux/action/register/lastRegisterAction'; 
+import { saveBedSore, saveSuction, saveToilet, saveWashing } from '../../../redux/action/register/caregiverThirdRegisterAction'; 
 
 export default function CareGiverStyle() {
     const dispatch = useDispatch();

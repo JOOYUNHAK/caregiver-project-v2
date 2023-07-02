@@ -1,5 +1,6 @@
 import { createReducer } from "@reduxjs/toolkit";
 import { 
+    helpListReset,
     saveBathChair, 
     saveBedSore, 
     saveMeal, 
@@ -36,6 +37,9 @@ const patientHelpListReducer = createReducer(initialState, (builder) => {
         })
         .addCase(saveBathChair, (state, action) => {
             state.bathChair = action.payload
+        })
+        .addCase(helpListReset, (state) => {
+            Object.assign(state, initialState)
         })
 });
 

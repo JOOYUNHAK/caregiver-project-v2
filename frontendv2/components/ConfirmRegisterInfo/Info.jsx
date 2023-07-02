@@ -2,7 +2,6 @@
 
 import { StyleSheet, View } from "react-native";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import CommonInfo from "./Info/CommonInfo";
 import HelperInfo from "./Info/HelperInfo";
 
 export default function Info() {

@@ -10,13 +10,13 @@ export default function CompleteRegisterBtn({ navigation }) {
     const [isFill, setIsFill] = useState(false);
     const { suction, toilet, bedsore, washing, keyWord1, keyWord2, keyWord3 } = useSelector(
         state => ({
-            suction: state.lastRegister.suction,
-            toilet: state.lastRegister.toilet,
-            bedsore: state.lastRegister.bedsore,
-            washing: state.lastRegister.washing,
-            keyWord1: state.lastRegister.careGiver.keyWord1,
-            keyWord2: state.lastRegister.careGiver.keyWord2,
-            keyWord3: state.lastRegister.careGiver.keyWord3,
+            suction: state.caregiverThirdRegister.experience.suction,
+            toilet: state.caregiverThirdRegister.experience.toilet,
+            bedsore: state.caregiverThirdRegister.experience.bedsore,
+            washing: state.caregiverThirdRegister.experience.washing,
+            keyWord1: state.caregiverThirdRegister.tags.keyWord1,
+            keyWord2: state.caregiverThirdRegister.tags.keyWord2,
+            keyWord3: state.caregiverThirdRegister.tags.keyWord3,
         }),
         shallowEqual
     );

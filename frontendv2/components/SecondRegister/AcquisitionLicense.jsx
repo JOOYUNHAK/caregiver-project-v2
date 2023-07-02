@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Text, TouchableHighlight, View } from "react-native";
 import { useDispatch } from "react-redux";
 import resetArrayData from "../../functions/resetArrayData";
-import { deleteLicense, saveLicense } from "../../redux/action/register/secondRegisterAction";
+import { deleteLicense, saveLicense } from "../../redux/action/register/caregiverInfoAction";
 import licenseData from "../../data/Register/license.data";
 import selectStyle from "../../styles/Register/selectStyle";
 

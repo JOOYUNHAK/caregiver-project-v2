@@ -9,11 +9,14 @@ import store from "../../redux/store";
 export default async function requestCreateUser(RegisterData, navigation) {
     try {
         const firstRegister = RegisterData.firstRegister;
+        const purpose  = firstRegister.purpose;
+
         /* 가입목적에 따른 Api Body 다르게 요청 */
-        const res = await api.post(`user/register/${firstRegister.purpose}`, {
+        const res = await api.post(`user/register/${purpose}`, {
             firstRegister,
-            secondRegister: RegisterData.patientInfo,
-            lastRegister: RegisterData.patientHelpList
+            secondRegister: purpose === 'protector' ? RegisterData.patientInfo : RegisterData.secondRegister,
+            thirdRegister: purpose === 'protector' ? undefined : convertCaregiverThirdRegister(RegisterData.thirdRegister),
+            lastRegister: purpose === 'protector' ? RegisterData.patientHelpList : RegisterData.lastRegister,
         });
         const { accessToken, ...user } = res.data;
         store.dispatch(saveUser(user));
@@ -28,3 +31,14 @@ export default async function requestCreateUser(RegisterData, navigation) {
         console.log(err.response)
     }
 }
+
+/* 간병인 세번째 회원가입양식 api에 맞춰 변경 */
+function convertCaregiverThirdRegister(thirdRegisterData) {
+    const { experience, strengths, tags } = thirdRegisterData;
+
+    return { 
+        experience: experience,
+        strengths: Object.values(strengths),
+        tags: Object.values(tags)
+    };
+};
