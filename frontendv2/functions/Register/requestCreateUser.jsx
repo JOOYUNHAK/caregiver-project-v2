@@ -9,14 +9,14 @@ import store from "../../redux/store";
 export default async function requestCreateUser(RegisterData, navigation) {
     try {
         const firstRegister = RegisterData.firstRegister;
-        const { purpose } = firstRegister
+        const purpose  = firstRegister.purpose;
+
         /* 가입목적에 따른 Api Body 다르게 요청 */
         const res = await api.post(`user/register/${purpose}`, {
             firstRegister,
-            secondRegister: purpose === 'protector' ? RegisterData.patientInfo : RegisterData.caregiverInfo,
-            thirdRegister: purpose === 'protector' ? undefined : convertCaregiverThirdRegister(RegisterData.caregiverThirdRegister),
-            lastRegister: purpose === 'protector' ? returnObjectOrUndefined(RegisterData.patientHelpList) : RegisterData.caregiverLastRegister,
-
+            secondRegister: purpose === 'protector' ? RegisterData.patientInfo : RegisterData.secondRegister,
+            thirdRegister: purpose === 'protector' ? undefined : convertCaregiverThirdRegister(RegisterData.thirdRegister),
+            lastRegister: purpose === 'protector' ? RegisterData.patientHelpList : RegisterData.lastRegister,
         });
         const { accessToken, ...user } = res.data;
         store.dispatch(saveUser(user));
@@ -37,16 +37,8 @@ function convertCaregiverThirdRegister(thirdRegisterData) {
     const { experience, strengths, tags } = thirdRegisterData;
 
     return { 
-        experience: returnObjectOrUndefined(experience),
-        strengths: returnArrayOrUndefined(Object.values(strengths)),
-        tags: returnArrayOrUndefined(Object.values(tags))
+        experience: experience,
+        strengths: Object.values(strengths),
+        tags: Object.values(tags)
     };
 };
-
-function returnArrayOrUndefined(inputArray) {
-    return inputArray.length ? inputArray : undefined; 
-};
-
-function returnObjectOrUndefined(inputObject) {
-    return Object.values(inputObject).length ? inputObject : undefined;
-}
