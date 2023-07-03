@@ -13,17 +13,17 @@ import {
 } from "../../action/register/caregiverThirdRegisterAction";
 
 const initialState = {
-    experience: {
+    helpExperience: {
         suction: undefined,
         toilet: undefined,
-        bedsore: undefined,
+        movement: undefined,
         washing: undefined,
     },
-    strengths: {
+    strengthList: {
         first: '',
         second: ''
     },
-    tags: {
+    tagList: {
         keyWord1: '',
         keyWord2: '',
         keyWord3: '',
@@ -33,31 +33,31 @@ const initialState = {
 const caregiverThirdRegisterReducer = createReducer(initialState, (builder) => {
     builder
         .addCase(saveSuction, (state, action) => {
-            state.experience.suction = action.payload
+            state.helpExperience.suction = action.payload
         })
         .addCase(saveToilet, (state, action) => {
-            state.experience.toilet = action.payload
+            state.helpExperience.toilet = action.payload
         })
         .addCase(saveBedSore, (state, action) => {
-            state.experience.bedsore = action.payload
+            state.helpExperience.movement = action.payload
         })
         .addCase(saveWashing, (state, action) => {
-            state.experience.washing = action.payload
+            state.helpExperience.washing = action.payload
         })
         .addCase(saveStrength1, (state, action) => {
-            state.strengths.first = action.payload
+            state.strengthList.first = action.payload
         })
         .addCase(saveStrength2, (state, action) => {
-            state.strengths.second = action.payload
+            state.strengthList.second = action.payload
         })
         .addCase(saveKeyWord1, (state, action) => {
-            state.tags.keyWord1 = action.payload
+            state.tagList.keyWord1 = action.payload
         })
         .addCase(saveKeyWord2, (state, action) => {
-            state.tags.keyWord2 = action.payload
+            state.tagList.keyWord2 = action.payload
         })
         .addCase(saveKeyWord3, (state, action) => {
-            state.tags.keyWord3 = action.payload
+            state.tagList.keyWord3 = action.payload
         })
         .addCase(thirdRegisterReset, (state) => {
             Object.assign(state, initialState )
