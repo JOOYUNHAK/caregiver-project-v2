@@ -3,7 +3,6 @@ import { validate } from "class-validator"
 import { ROLE, SEX } from "src/user-auth-common/domain/enum/user.enum"
 import { ProtectorRegisterDto } from "src/user/interface/dto/protector-register.dto"
 import { CommonRegisterForm, PatientHelpListForm, PatientInfoForm } from "src/user/interface/dto/register-page"
-import 'reflect-metadata';
 
 describe('보호자 회원가입 전체 Dto Validator Test', () => {
     
