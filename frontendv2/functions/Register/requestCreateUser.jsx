@@ -18,8 +18,8 @@ export default async function requestCreateUser(RegisterData, navigation) {
             thirdRegister: purpose === 'protector' ? undefined : convertCaregiverThirdRegister(RegisterData.thirdRegister),
             lastRegister: purpose === 'protector' ? RegisterData.patientHelpList : RegisterData.lastRegister,
         });
-        const { accessToken, ...user } = res.data;
-        store.dispatch(saveUser(user));
+        const { accessToken, id } = res.data;
+        store.dispatch(saveUser(id));
         await AsyncStorage.setItem('accessToken', accessToken)
         navigation.dispatch(
             StackActions.push('registerCompletePage')
@@ -34,11 +34,11 @@ export default async function requestCreateUser(RegisterData, navigation) {
 
 /* 간병인 세번째 회원가입양식 api에 맞춰 변경 */
 function convertCaregiverThirdRegister(thirdRegisterData) {
-    const { experience, strengths, tags } = thirdRegisterData;
+    const { helpExperience, strengthList, tagList } = thirdRegisterData;
 
     return { 
-        experience: experience,
-        strengths: Object.values(strengths),
-        tags: Object.values(tags)
+        helpExperience,
+        strengthList: Object.values(strengthList),
+        tagList: Object.values(tagList)
     };
 };

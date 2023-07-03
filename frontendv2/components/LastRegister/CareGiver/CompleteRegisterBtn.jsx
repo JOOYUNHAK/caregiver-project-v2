@@ -8,23 +8,23 @@ import { useSelector, shallowEqual } from "react-redux";
 export default function CompleteRegisterBtn({ navigation }) {
 
     const [isFill, setIsFill] = useState(false);
-    const { suction, toilet, bedsore, washing, keyWord1, keyWord2, keyWord3 } = useSelector(
+    const { suction, toilet, movement, washing, keyWord1, keyWord2, keyWord3 } = useSelector(
         state => ({
-            suction: state.caregiverThirdRegister.experience.suction,
-            toilet: state.caregiverThirdRegister.experience.toilet,
-            bedsore: state.caregiverThirdRegister.experience.bedsore,
-            washing: state.caregiverThirdRegister.experience.washing,
-            keyWord1: state.caregiverThirdRegister.tags.keyWord1,
-            keyWord2: state.caregiverThirdRegister.tags.keyWord2,
-            keyWord3: state.caregiverThirdRegister.tags.keyWord3,
+            suction: state.caregiverThirdRegister.helpExperience.suction,
+            toilet: state.caregiverThirdRegister.helpExperience.toilet,
+            movement: state.caregiverThirdRegister.helpExperience.movement,
+            washing: state.caregiverThirdRegister.helpExperience.washing,
+            keyWord1: state.caregiverThirdRegister.tagList.keyWord1,
+            keyWord2: state.caregiverThirdRegister.tagList.keyWord2,
+            keyWord3: state.caregiverThirdRegister.tagList.keyWord3,
         }),
         shallowEqual
     );
 
     useEffect(() => {
-        suction && toilet && bedsore && washing
+        suction && toilet && movement && washing
             && keyWord1 && keyWord2 && keyWord3 ? setIsFill(true) : setIsFill(false)
-    }, [suction, toilet, bedsore, washing, keyWord1, keyWord2, keyWord3])
+    }, [suction, toilet, movement, washing, keyWord1, keyWord2, keyWord3])
 
     return (
         <View style={completeBtnStyle(isFill)}>
