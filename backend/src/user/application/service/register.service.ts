@@ -5,7 +5,7 @@ import { TokenService } from "src/auth/application/service/token.service";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Protector } from "src/user/domain/entity/protector/protector.entity";
 import { Repository } from "typeorm";
-import { ClientDto } from "src/user-auth-common/interface/client.interface";
+import { ClientDto } from "src/user-auth-common/interface/client.dto";
 
 @Injectable()
 export class RegisterService {

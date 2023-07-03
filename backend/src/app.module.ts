@@ -11,6 +11,7 @@ import { UserAuthCommonModule } from './user-auth-common/user-auth-common.module
 import { GlobalScopedExceptionFilter } from './common/exception/all-exception.filter';
 import { GlobalScopedValidationPipe } from './common/pipe/global-scoped.pipe';
 import { CoreModule } from './core/core.module';
+import { MongodbModule } from './common/shared/database/mongodb/mongodb.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { CoreModule } from './core/core.module';
     CoreModule,
     TypeOrmModule.forRootAsync(TypeOrmOptions),
     RedisModule,
+    MongodbModule,
     AuthModule,
     UserAuthCommonModule,
     UserModule

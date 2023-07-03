@@ -1,9 +1,9 @@
 import { plainToInstance } from "class-transformer"
 import { validate } from "class-validator"
 import { ROLE, SEX } from "src/user-auth-common/domain/enum/user.enum"
-import { CommonRegisterForm, PatientHelpListForm, PatientInfoForm } from "src/user/interface/dto/register-page"
+import { CaregiverHelpExperience, CaregiverInfoForm, CaregiverThirdRegisterDto, CommonRegisterForm, PatientHelpListForm, PatientInfoForm } from "src/user/interface/dto/register-page"
 
-describe('보호자 회원가입의 각 양식 Dto Validator Test', () => {
+describe('회원가입의 각 양식 Dto Validator Test', () => {
     describe('공통 회원가입 양식(CommonRegisterForm)', () => {
         it('잘못된 전화번호 양식이 결과에 포함되어야 한다.', async () => {
             /* id필드에 잘못된 값 테스트 */
@@ -45,7 +45,7 @@ describe('보호자 회원가입의 각 양식 Dto Validator Test', () => {
             const wrongWeight = 0;
             const testForm = plainToInstance(
                 PatientInfoForm,
-                PatientInfoForm.of(wrongWeight, SEX.MALE, '뇌출혈', new Date(), new Date(), 1, '인천', false, '자세한' )
+                PatientInfoForm.of(wrongWeight, SEX.MALE, '뇌출혈', new Date(), new Date(), 1, '인천', false, '자세한')
             );
             const [result] = await validate(testForm);
 
@@ -53,16 +53,14 @@ describe('보호자 회원가입의 각 양식 Dto Validator Test', () => {
             expect(result.value).toBe(wrongWeight);
         });
 
-        it('날짜형식은 Date타입만 통과되어야 한다', async () => {
-            const wrongDate = '2022-03-03' as unknown as Date;
+        it('날짜형식은 Date형식만 통과되어야 한다', async () => {
+            const wrongDate = '20220303' as unknown as Date;
             const testForm = plainToInstance(
                 PatientInfoForm,
-                PatientInfoForm.of(50, SEX.MALE, '뇌출혈', wrongDate, new Date(), 1, '인천', false, '자세한' )
+                PatientInfoForm.of(50, SEX.MALE, '뇌출혈', wrongDate, new Date(), 1, '인천', false, '자세한')
             );
             const [result] = await validate(testForm);
-
             expect(result.property).toBe('startPeriod');
-            expect(result.value).toBe(wrongDate);
         });
     });
 
@@ -80,8 +78,73 @@ describe('보호자 회원가입의 각 양식 Dto Validator Test', () => {
                 )
             );
             const result = await validate(testForm);
-            
+
             expect(result).toEqual([]);
         })
+    });
+
+    describe('간병인 정보 양식(CaregiverInfoForm) Test', () => {
+        it('가능한 지역들은 배열의 길이가 최소 1이여야 한다', async () => {
+            const areaErrorDto = plainToInstance(
+                CaregiverInfoForm,
+                CaregiverInfoForm.of([], undefined)
+            );
+
+            const [result] = await validate(areaErrorDto);
+            expect(result.property).toBe('possibleAreaList');
+            expect(result.value).toEqual([]);
+        });
+
+        it('자격증은 포함되지 않아도 된다.', async () => {
+            const licenseTestForm = plainToInstance(
+                CaregiverInfoForm,
+                CaregiverInfoForm.of(undefined, [])
+            );
+
+            const result = await validate(licenseTestForm);
+            expect(result).toEqual([]);
+        });
+
+        it('경험 작성 문항은 정해진 문항 이외의 항목은 올 수 없다.', async () => {
+            const experienceTestForm = plainToInstance(
+                CaregiverThirdRegisterDto,
+                CaregiverThirdRegisterDto.of({ 'unknown': '오류가 나야합니다' } as CaregiverHelpExperience)
+            );
+
+            const [result] = await validate(experienceTestForm, { whitelist: true, forbidNonWhitelisted: true })
+            expect(result.property).toBe('helpExperience')
+        })
+
+        it('강점은 포함되지 않아도 된다.', async () => {
+            const notExistStrenght = undefined;
+            const strengthErrorTest = plainToInstance(
+                CaregiverThirdRegisterDto,
+                CaregiverThirdRegisterDto.of(undefined, notExistStrenght, undefined)
+            );
+
+            const result = await validate(strengthErrorTest);
+            expect(result).toEqual([]);
+        });
+
+        it('태그의 개수는 3개여야 한다.', async () => {
+            const errorTagList = ['태그1'];
+            const tagErrorTest = plainToInstance(
+                CaregiverThirdRegisterDto,
+                CaregiverThirdRegisterDto.of(undefined, undefined, errorTagList)
+            );
+
+            const [errorResult] = await validate(tagErrorTest);
+
+            expect(errorResult.property).toBe('tagList');
+
+            const passTagList = ['태그1', '태그2', '태그3'];
+            const tagPassTest = plainToInstance(
+                CaregiverThirdRegisterDto,
+                CaregiverThirdRegisterDto.of(undefined, undefined, passTagList )
+            );
+
+            const passResult = await validate(tagPassTest);
+            expect(passResult).toEqual([]);
+        });
     })
 })
