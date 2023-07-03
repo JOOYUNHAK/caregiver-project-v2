@@ -5,6 +5,7 @@ import { AuthController } from './interface/controller/auth.controller';
 import { SmsService } from 'src/notification/sms/infra/service/sms.service';
 import { NaverSmsService } from 'src/notification/sms/infra/service/naver-sms.service';
 import { UserAuthCommonModule } from 'src/user-auth-common/user-auth-common.module';
+import { TokenService } from './application/service/token.service';
 
 @Module({
   imports: [
@@ -15,7 +16,11 @@ import { UserAuthCommonModule } from 'src/user-auth-common/user-auth-common.modu
   providers: [
     AuthService,
     SmsService,
-    NaverSmsService
+    NaverSmsService,
+    TokenService
   ],
+  exports: [
+    TokenService
+  ]
 })
 export class AuthModule {}
