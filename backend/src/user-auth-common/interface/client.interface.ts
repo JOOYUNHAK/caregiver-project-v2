@@ -1,1 +1,0 @@
-export interface ClientDto { accessToken: string; };
