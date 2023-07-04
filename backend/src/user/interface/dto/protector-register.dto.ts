@@ -1,6 +1,6 @@
 import { IsObject, ValidateNested } from "class-validator";
 import { Type } from 'class-transformer';
-import { CommonRegisterForm, PatientHelpListForm, PatientInfoForm } from "./register-page";
+import { CommonRegisterForm, PatientHelpList, PatientInfoForm } from "./register-page";
 
 export class ProtectorRegisterDto {
     @IsObject()
@@ -14,13 +14,13 @@ export class ProtectorRegisterDto {
     secondRegister: PatientInfoForm;
 
     @IsObject()
-    @Type(() => PatientHelpListForm)
-    lastRegister: PatientHelpListForm;
+    @Type(() => PatientHelpList)
+    lastRegister: PatientHelpList;
 
     static of( 
         firstRegister: CommonRegisterForm, 
         secondRegister: PatientInfoForm,
-        lastRegister: PatientHelpListForm
+        lastRegister: PatientHelpList
     ) {
         return {firstRegister, secondRegister, lastRegister};
     }

@@ -75,20 +75,17 @@ export class PatientInfoForm {
     @IsString()
     readonly patientState: string; // 자세한 환자 정보
 
-    static of(
-        weight: number, patientSex: SEX, diagnosis: string, startDate: Time,
-        endDate: Time, totalPeriod: number, place: string, isNext: boolean, condition: string
-    ) {
+    static of(startDate: Time = new Date(), endDate: Time = new Date(), totalPeriod: number, weight: number = 60) {
         return {
             weight,
-            patientSex,
-            diagnosis,
+            patientSex: SEX.MALE,
+            diagnosis: '뇌출혈',
             startPeriod: startDate,
             endPeriod: endDate,
             totalPeriod,
-            place,
-            isNext,
-            patientState: condition
+            place: '인천광역시 테스트구',
+            isNext: false,
+            patientState: '환자의 자세한 몸상태입니다.'
         };
     };
 }
@@ -113,7 +110,7 @@ export class CommomHelpList {
 };
 
 /* 보호자 두번째 회원가입 페이지( 환자가 필요로 하는 도움 ) */
-export class PatientHelpListForm extends CommomHelpList {
+export class PatientHelpList extends CommomHelpList {
 
     @IsOptional()
     @IsString()
