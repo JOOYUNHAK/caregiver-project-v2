@@ -1,7 +1,7 @@
 import { plainToInstance } from "class-transformer"
 import { validate } from "class-validator"
 import { ROLE, SEX } from "src/user-auth-common/domain/enum/user.enum"
-import { CaregiverHelpExperience, CaregiverInfoForm, CaregiverThirdRegisterDto, CommonRegisterForm, PatientHelpListForm, PatientInfoForm } from "src/user/interface/dto/register-page"
+import { CaregiverHelpExperience, CaregiverInfoForm, CaregiverThirdRegisterDto, CommonRegisterForm, PatientHelpList, PatientInfoForm } from "src/user/interface/dto/register-page"
 
 describe('회원가입의 각 양식 Dto Validator Test', () => {
     describe('공통 회원가입 양식(CommonRegisterForm)', () => {
@@ -45,7 +45,7 @@ describe('회원가입의 각 양식 Dto Validator Test', () => {
             const wrongWeight = 0;
             const testForm = plainToInstance(
                 PatientInfoForm,
-                PatientInfoForm.of(wrongWeight, SEX.MALE, '뇌출혈', new Date(), new Date(), 1, '인천', false, '자세한')
+                PatientInfoForm.of(new Date(), new Date(), 1, wrongWeight)
             );
             const [result] = await validate(testForm);
 
@@ -57,7 +57,7 @@ describe('회원가입의 각 양식 Dto Validator Test', () => {
             const wrongDate = '20220303' as unknown as Date;
             const testForm = plainToInstance(
                 PatientInfoForm,
-                PatientInfoForm.of(50, SEX.MALE, '뇌출혈', wrongDate, new Date(), 1, '인천', false, '자세한')
+                PatientInfoForm.of(wrongDate, new Date(), 1)
             );
             const [result] = await validate(testForm);
             expect(result.property).toBe('startPeriod');
@@ -67,8 +67,8 @@ describe('회원가입의 각 양식 Dto Validator Test', () => {
     describe('환자의 도움 리스트 양식(PatientHelpListForm) Test', () => {
         it('모든 문항이 채워져 있지 않아도 된다', async () => {
             const testForm = plainToInstance(
-                PatientHelpListForm,
-                PatientHelpListForm.of(
+                PatientHelpList,
+                PatientHelpList.of(
                     '석션 도움 리스트',
                     undefined,
                     undefined,

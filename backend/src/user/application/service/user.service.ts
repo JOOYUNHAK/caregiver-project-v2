@@ -9,6 +9,7 @@ import { TokenService } from "src/auth/application/service/token.service";
 import { ROLE } from "src/user-auth-common/domain/enum/user.enum";
 import { CaregiverProfileService } from "./caregiver-profile.service";
 import { ProtectorRegisterDto } from "src/user/interface/dto/protector-register.dto";
+import { PatientProfileService } from "./patient-profile.service";
 
 @Injectable()
 export class UserService {
@@ -16,6 +17,7 @@ export class UserService {
         private readonly userMapper: UserMapper,
         private readonly tokenService: TokenService,
         private readonly caregiverProfileService: CaregiverProfileService,
+        private readonly patientProfileService: PatientProfileService,
         @InjectRepository(User)
         private readonly userRepository: Repository<User>
     ) {};
@@ -38,6 +40,7 @@ export class UserService {
     /* 가입 목적별 프로필 추가 */
     private async addProfile(userId: number, registerDto: CaregiverRegisterDto | ProtectorRegisterDto) {
         registerDto.firstRegister.purpose == ROLE.CAREGIVER ?
-            await this.caregiverProfileService.addProfile(userId, registerDto as CaregiverRegisterDto) : null
-    }
+            await this.caregiverProfileService.addProfile(userId, registerDto as CaregiverRegisterDto) : 
+                await this.patientProfileService.addProfile(userId, registerDto as ProtectorRegisterDto);
+    };
 }

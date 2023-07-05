@@ -1,9 +1,12 @@
-import { CaregiverHelpExperience } from "src/user/interface/dto/register-page";
+import { CaregiverHelpExperience, PatientHelpList } from "src/user/interface/dto/register-page";
 import { License } from "../entity/caregiver/license.entity";
 import { PossibleDate } from "../enum/possible-date.enum";
 import { ObjectId } from "mongodb";
 import { CaregiverProfile } from "../entity/caregiver/caregiver-profile.entity";
 import { Warning } from "../entity/caregiver/warning.entity";
+import { PatientProfile } from "../entity/protector/patient-profile.entity";
+import { SEX } from "src/user-auth-common/domain/enum/user.enum";
+import { CarePeriod } from "../entity/protector/care-period.entity";
 
 /* 간병인 회원가입 추가 정보 Builder */
 export class CaregiverProfileBuilder {
@@ -84,4 +87,60 @@ export class CaregiverProfileBuilder {
     }
 
     build(): CaregiverProfile { return this.caregiverProfile; };
+};
+
+/* 보호자 회원가입시 환자의 정보 Builder */
+export class PatientProfileBuilder {
+    private patientProfile: PatientProfile;
+
+    constructor(id: ObjectId) { 
+        this.patientProfile = new PatientProfile(id);
+    };
+
+    userId(userId: number): this {
+        this.patientProfile.setUserId(userId);
+        return this;
+    };
+
+    weight(weight: number): this {
+        this.patientProfile.setWeight(weight);
+        return this;
+    };
+
+    sex(sex: SEX): this {
+        this.patientProfile.setSex(sex);
+        return this;
+    };
+
+    diagnosis(name: string): this {
+        this.patientProfile.setDiagnosis(name);
+        return this;
+    };
+
+    carePlace(place: string): this {
+        this.patientProfile.setCarePlace(place);
+        return this;
+    };
+
+    carePeriod(carePeriod: CarePeriod): this {
+        this.patientProfile.setCarePeriod(carePeriod);
+        return this;
+    };
+
+    nextHospital(isNext: boolean): this {
+        this.patientProfile.setNextHospital(isNext);
+        return this;
+    };
+
+    detailedCondition(description: string): this {
+        this.patientProfile.setDetailedCondition(description);
+        return this;
+    };
+
+    helpList(list: PatientHelpList): this {
+        this.patientProfile.setHelpList(list);
+        return this;
+    };
+
+    build(): PatientProfile { return this.patientProfile; };
 }

@@ -8,8 +8,10 @@ import { LOGIN_TYPE, ROLE, SEX } from "src/user-auth-common/domain/enum/user.enu
 import { NewUserAuthentication } from "src/user-auth-common/domain/interface/new-user-authentication.interface"
 import { UserMapper } from "src/user/application/mapper/user.mapper"
 import { CaregiverProfileService } from "src/user/application/service/caregiver-profile.service"
+import { PatientProfileService } from "src/user/application/service/patient-profile.service"
 import { UserService } from "src/user/application/service/user.service"
 import { CaregiverRegisterDto } from "src/user/interface/dto/caregiver-register.dto"
+import { ProtectorRegisterDto } from "src/user/interface/dto/protector-register.dto"
 import { CommonRegisterForm } from "src/user/interface/dto/register-page"
 import { Repository } from "typeorm"
 
@@ -18,6 +20,7 @@ describe('UserService Test', () => {
         userMapper: UserMapper,
         tokenService: TokenService,
         caregiverProfileService: CaregiverProfileService,
+        patientProfileService: PatientProfileService,
         userRepository: Repository<User>;
 
     beforeAll(async() => {
@@ -45,6 +48,12 @@ describe('UserService Test', () => {
                     }
                 },
                 {
+                    provide: PatientProfileService,
+                    useValue: {
+                        addProfile: jest.fn().mockReturnValue(null)
+                    }
+                },
+                {
                     provide: getRepositoryToken(User),
                     useValue: {
                         save: jest.fn().mockResolvedValue(createTestUser())
@@ -58,6 +67,7 @@ describe('UserService Test', () => {
         tokenService = module.get(TokenService);
         userRepository = module.get(getRepositoryToken(User));
         caregiverProfileService = module.get(CaregiverProfileService);
+        patientProfileService = module.get(PatientProfileService);
     })
 
     describe('register()', () => {
@@ -91,7 +101,16 @@ describe('UserService Test', () => {
             await userService.register(testCaregiverRegisterDto as CaregiverRegisterDto);
 
             expect(profileSpy).toHaveBeenCalled();
-        })
+        });
+        
+        it('보호자 회원가입 진행할 때 환자 프로필 추가 함수 호출', async () => {
+            const profileSpy = jest.spyOn(patientProfileService, 'addProfile');
+
+            const testCaregiverRegisterDto = { firstRegister: { purpose: ROLE.PROTECTOR } };
+            await userService.register(testCaregiverRegisterDto as ProtectorRegisterDto);
+
+            expect(profileSpy).toHaveBeenCalled();
+        });
     })
 })
 
