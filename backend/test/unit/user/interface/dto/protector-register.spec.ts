@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { plainToInstance } from "class-transformer"
 import { validate } from "class-validator"
 import { ROLE, SEX } from "src/user-auth-common/domain/enum/user.enum"
