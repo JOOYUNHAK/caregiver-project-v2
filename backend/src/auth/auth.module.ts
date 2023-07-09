@@ -29,8 +29,8 @@ export class AuthModule implements NestModule{
     consumer
       .apply(phoneValidate)
       .forRoutes(
-        { path: 'register', 'method': RequestMethod.POST },
-        { path: 'login', 'method': RequestMethod.POST }
+        { path: 'auth/register', 'method': RequestMethod.POST },
+        { path: 'auth/login', 'method': RequestMethod.POST }
       )
   }
 }
