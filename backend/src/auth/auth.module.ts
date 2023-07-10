@@ -8,6 +8,7 @@ import { UserAuthCommonModule } from 'src/user-auth-common/user-auth-common.modu
 import { TokenService } from './application/service/token.service';
 import { phoneValidate } from 'src/common/middleware/phone-validator.middleware';
 import { PhoneAuthenticationSendGuard } from './application/guard/authentication-send.guard';
+import { PhoneVerificationRepository } from './infra/repository/phone-verification.repository';
 
 @Module({
   imports: [
@@ -20,7 +21,8 @@ import { PhoneAuthenticationSendGuard } from './application/guard/authentication
     SmsService,
     NaverSmsService,
     TokenService,
-    PhoneAuthenticationSendGuard
+    PhoneAuthenticationSendGuard,
+    PhoneVerificationRepository
   ],
   exports: [
     TokenService
