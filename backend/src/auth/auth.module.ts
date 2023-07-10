@@ -7,6 +7,7 @@ import { NaverSmsService } from 'src/notification/sms/infra/service/naver-sms.se
 import { UserAuthCommonModule } from 'src/user-auth-common/user-auth-common.module';
 import { TokenService } from './application/service/token.service';
 import { phoneValidate } from 'src/common/middleware/phone-validator.middleware';
+import { PhoneAuthenticationSendGuard } from './application/guard/authentication-send.guard';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { phoneValidate } from 'src/common/middleware/phone-validator.middleware'
     AuthService,
     SmsService,
     NaverSmsService,
-    TokenService
+    TokenService,
+    PhoneAuthenticationSendGuard
   ],
   exports: [
     TokenService
