@@ -9,6 +9,7 @@ import { TokenService } from './application/service/token.service';
 import { phoneValidate } from 'src/common/middleware/phone-validator.middleware';
 import { PhoneAuthenticationSendGuard } from './application/guard/authentication-send.guard';
 import { PhoneVerificationRepository } from './infra/repository/phone-verification.repository';
+import { VerificationUsageService } from './application/service/verification-usage.service';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { PhoneVerificationRepository } from './infra/repository/phone-verificati
     NaverSmsService,
     TokenService,
     PhoneAuthenticationSendGuard,
-    PhoneVerificationRepository
+    PhoneVerificationRepository,
+    VerificationUsageService
   ],
   exports: [
     TokenService
