@@ -13,7 +13,7 @@ export class PhoneVerificationRepository implements IPhoneVerificationRepository
         private readonly redis: RedisClientType,
         private readonly configService: ConfigService
     ) {
-        this.key = configService.get('redis.key.phone_verification_usage');
+        this.key = configService.get('db.redis.key.phone_verification_usage');
     }
 
     async save(phoneNumber: string, phoneVerificationUsage: PhoneVerificationUsage): Promise<void> {
