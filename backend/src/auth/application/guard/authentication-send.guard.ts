@@ -1,7 +1,8 @@
-import { CanActivate, ExecutionContext } from "@nestjs/common";
+import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { VerificationUsageService } from "../service/verification-usage.service";
 
 /* 휴대폰 인증 일일 발송 횟수 제한 */
+@Injectable()
 export class PhoneAuthenticationSendGuard implements CanActivate {
     constructor(
         private readonly verificationUsageService: VerificationUsageService
@@ -9,7 +10,6 @@ export class PhoneAuthenticationSendGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const { phoneNumber } = context.switchToHttp().getRequest().body;
-
         const phoneVerificationUsage = await this.verificationUsageService.getPhoneUsageHistory(phoneNumber);
 
         if( phoneVerificationUsage )
