@@ -17,12 +17,25 @@ describe('인증 사용 내역 서비스(VerificationUsageService) Test', () => 
             expect(testUsage.getDayAttemp()).toBe(3);
         });
 
-        it('기존 인증 사용내역이 null이면 새로 내역을 생성하여 저장한다',async () => {
+        it('기존 인증 사용내역이 null이면 새로 내역을 생성하여 횟수를 증가시킨 이후 저장한다',async () => {
+            const phoneNumber = '01012345678';
+            const testUsage = new PhoneVerificationUsage();
+            testUsage.addHistory();
+
             jest.spyOn(verificationUsageService, 'getPhoneUsageHistory').mockResolvedValue(null);
             const saveSpy = jest.spyOn(mockPhoneVerificationRepo, 'save').mockResolvedValue(null);
-            await verificationUsageService.addPhoneUsageHistory('01012345678');
+            await verificationUsageService.addPhoneUsageHistory(phoneNumber);
 
-            expect(saveSpy).toBeCalledWith('01012345678', { codeAttemp: 0, dayAttemp: 1 });
+            expect(saveSpy).toBeCalledWith(phoneNumber, testUsage);
         })
+    });
+
+    describe('addPhoneCodeAttemp()', () => {
+        it('각 인증번호당 시도횟수가 한번 증가해야된다.', () => {
+            const beforeCodeAttemp = 2;
+            const testPhoneVerificationUsage = new PhoneVerificationUsage(0, beforeCodeAttemp);
+            testPhoneVerificationUsage.addCodeAttemp();
+            expect(testPhoneVerificationUsage.getCodeAttemp()).toBe(3);
+        });
     })
 })
