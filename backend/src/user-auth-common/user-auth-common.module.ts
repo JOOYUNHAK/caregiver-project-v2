@@ -6,12 +6,13 @@ import { Email } from "./domain/entity/user-email.entity";
 import { Token } from "./domain/entity/auth-token.entity";
 import { UserProfile } from "./domain/entity/user-profile.entity";
 import { PhoneRepositoryProvider } from "./domain/repository/user-phone.repository";
+import { UserRepositoryProvider } from "./domain/repository/user.repository";
 
 @Module({
     imports: [
         TypeOrmModule.forFeature([User, Phone, Email, UserProfile, Token]),
     ],
-    providers: [PhoneRepositoryProvider],
-    exports: [TypeOrmModule, PhoneRepositoryProvider]
+    providers: [PhoneRepositoryProvider, UserRepositoryProvider],
+    exports: [TypeOrmModule, PhoneRepositoryProvider, UserRepositoryProvider]
 })  
 export class UserAuthCommonModule {}
