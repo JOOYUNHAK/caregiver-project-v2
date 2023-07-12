@@ -23,4 +23,10 @@ export class VerificationUsageService {
     async getPhoneUsageHistory(phoneNumber: string): Promise<PhoneVerificationUsage> {
         return await this.phoneVerificationRepository.findByPhoneNumber(phoneNumber);
     };
+
+    /* 휴대폰인증 코드 시도횟수 추가 */
+    async addPhoneCodeAttemp(phoneNumber: string, phoneVerificationUsage: PhoneVerificationUsage) {
+        phoneVerificationUsage.addCodeAttemp();
+        await this.phoneVerificationRepository.save(phoneNumber, phoneVerificationUsage);
+    }
 }
