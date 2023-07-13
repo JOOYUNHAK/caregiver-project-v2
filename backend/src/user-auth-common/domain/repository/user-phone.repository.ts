@@ -14,7 +14,7 @@ export const customPhoneRepositoryMethods: Pick<
     > = {
         async findByPhoneNumber(this: Repository<Phone>, phoneNumber: string)
         : Promise<Phone> {
-            return await this.findBy({ phoneNumber })[0];
+            return (await this.findBy({ phoneNumber }))[0];
         },
     }
 
