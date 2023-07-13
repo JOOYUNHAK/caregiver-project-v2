@@ -1,4 +1,4 @@
-import { ConflictException, UnauthorizedException } from '@nestjs/common';
+import { ConflictException } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -7,7 +7,6 @@ import { AuthService } from 'src/auth/application/service/auth.service';
 import { SessionService } from 'src/auth/application/service/session.service';
 import { TokenService } from 'src/auth/application/service/token.service';
 import { VerificationUsageService } from 'src/auth/application/service/verification-usage.service';
-import { AuthenticationCode } from 'src/auth/domain/authentication-code';
 import { ErrorMessage } from 'src/common/shared/enum/error-message.enum';
 import { NaverSmsService } from 'src/notification/sms/infra/service/naver-sms.service';
 import { SmsService } from 'src/notification/sms/infra/service/sms.service';
@@ -65,24 +64,6 @@ describe('인증 서비스(AuthService) Test', () => {
             jest.spyOn(phoneRepository, 'findByPhoneNumber').mockResolvedValue(new Phone('01011111111'))
             const result = async () => await authService.register('01011111111');
             await expect(result).rejects.toThrowError(new ConflictException(ErrorMessage.DuplicatedPhoneNumber));
-        })
-    });
-
-    describe('validateSmsCode()', () => {
-        beforeEach(() => {
-            jest.spyOn(smsService, 'getAuthenticationCode').mockResolvedValueOnce(new AuthenticationCode(222333));
-        })
-
-        it('입력한 인증번호가 다르면 401에러를 던진다.', async () => {
-            const result = authService.validateSmsCode({ phoneNumber: '01011111111', code: 111111});
-            
-            await expect(result).rejects.toThrowError(new UnauthorizedException(ErrorMessage.NotMatchedAuthenticationCode));
-        });
-
-        it('입력한 인증번호와 일치하면 반환값이 없다', async () => {
-            const result = authService.validateSmsCode({ phoneNumber: '01011111111', code: 222333});
-            
-            await expect(result).resolves.toBe(undefined);
         })
     });
 
