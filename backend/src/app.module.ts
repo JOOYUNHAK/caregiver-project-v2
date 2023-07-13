@@ -12,6 +12,7 @@ import { GlobalScopedExceptionFilter } from './common/exception/all-exception.fi
 import { GlobalScopedValidationPipe } from './common/pipe/global-scoped.pipe';
 import { CoreModule } from './core/core.module';
 import { MongodbModule } from './common/shared/database/mongodb/mongodb.module';
+import { NotificationModule } from './notification/notification.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { MongodbModule } from './common/shared/database/mongodb/mongodb.module';
     RedisModule,
     MongodbModule,
     AuthModule,
+    NotificationModule,
     UserAuthCommonModule,
     UserModule
   ],

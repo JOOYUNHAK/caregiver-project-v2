@@ -1,6 +1,5 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { AuthService } from "src/auth/application/service/auth.service";
-import { RegisterDto } from "../dto/register.dto";
 import { PhoneAuthenticationSendGuard } from "src/auth/application/guard/authentication-send.guard";
 import { PhoneAuthenticationCodeGuard } from "src/auth/application/guard/authentication-code.guard";
 import { ClientDto } from "src/user-auth-common/interface/client.dto";
@@ -13,9 +12,10 @@ export class AuthController {
         private readonly authService: AuthService
     ) {}
     /* 휴대폰으로 회원가입 */
+    @UseGuards(PhoneAuthenticationSendGuard)
     @Post('register')
-    async register(@Body() registerDto: RegisterDto) {
-        return await this.authService.register(registerDto.phoneNumber);
+    async register(@Body('phoneNumber') phoneNumber: string) {
+        return await this.authService.register(phoneNumber);
     }
 
     /* 휴대폰 인증코드 검사 */
