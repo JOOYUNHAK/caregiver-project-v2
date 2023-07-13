@@ -16,7 +16,7 @@ import { saveId, saveIsAuthed } from '../../redux/action/register/firstRegisterA
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { saveUser } from '../../redux/action/user/userAction';
-import { CommonActions, StackActions } from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 
 
 export default function AuthId({ navigation }) {
@@ -42,78 +42,50 @@ export default function AuthId({ navigation }) {
     const requestAuthNumber = async () => {
         setAuthCode('');
         try {
-            const res = await api.get(`/auth/login/${id}`);
-            const status = res.data['status'];
-            const message = res.data['message'];
-            switch (status) {
-                //기존 회원일 경우
-                case 'exist':
-                    setInfoMessage(message);
-                    setBtnText('인증하기') //인증번호 받기 버튼 => 인증하기
-                    setIsSend(true); //인증이 보내짐
-                    break;
-                //새로운 회원일 경우
-                case 'newuser':
-                    setInfoMessage(message);
-                    setBtnText('인증하기');
-                    setIsSend(true);
-                    setIsNewUser(true);
-                    break;
-            }
+            const res = await api.post(`auth/login`, { phoneNumber: id });
+            setInfoMessage('인증번호가 발송되었습니다. 1분30초안에 입력해주세요.');
+            setBtnText('인증하기') //인증번호 받기 버튼 => 인증하기
+            setIsSend(true); //인증이 보내짐
+
+            res.data === 'newuser' ? setIsNewUser(true) : setIsNewUser(false);
         }
         catch (err) {
             const statusCode = err.response.data.statusCode;
             const message = err.response.data.message;
-            switch (statusCode) {
-                //네이버와 통신 불가
-                case 500:
-                    setInfoMessage(message);
-                    break;
-                //하루 인증횟수 초과
-                case 403:
-                    setInfoMessage(message);
-                    setIsSend(false);
-                    setIsExceed(true);
-                    break;
-            }
+
+            setInfoMessage(message);
+            setIsSend(false);
+
+            if (statusCode == 403) setIsExceed(true);
         }
     }
 
     const checkAuthCode = async () => {
         try {
-            const res = await api.post('/auth/sms', {
-                id: id,
-                userInputCode: authCode,
-                path: 'login',
-                newUser: isNewUser ? true : false
+            const res = await api.post('auth/code/sms', {
+                phoneNumber: id,
+                code: authCode,
+                isNewUser: isNewUser ? true : false
             });
-            const status = res.data.status;
-            switch (status) {
-                case 'success':
-                    dispatch(saveIsAuthed(true));
-                    if (isNewUser) {
-                        setBtnText('인증번호 받기');
-                        setIsSend(false);
-                        setInfoMessage('');
-                        setId('');
-                        setAuthCode('')
-                        navigation.replace('firstRegisterPage');
-                        setTimeout(() => {
-                            reset();
-                        }, 200);
-                    }
-                    else {
-                        const accessToken = res.data.accessToken; //accessToken 저장
-                        const user = res.data.user;
-                        const refreshToken = res.data.user.token_index; //refreshToken index 저장
-                        dispatch(saveUser(user));
-                        await AsyncStorage.
-                            multiSet([['accessToken', accessToken], ['refreshToken', refreshToken.toString()]]);
-                        navigation.dispatch(
-                            StackActions.pop()
-                        )
-                        break;
-                    }
+
+            dispatch(saveIsAuthed(true));
+            if (isNewUser) {
+                setBtnText('인증번호 받기');
+                setIsSend(false);
+                setInfoMessage('');
+                setId('');
+                setAuthCode('')
+                navigation.replace('firstRegisterPage');
+                setTimeout(() => {
+                    reset();
+                }, 200);
+            } else {
+                const { accessToken, id } = res.data;  
+                dispatch(saveUser(id));
+                await AsyncStorage.setItem('accessToken', accessToken);
+                navigation.dispatch(
+                    StackActions.pop()
+                )
             }
         }
         catch (err) {
@@ -263,7 +235,7 @@ const getAuthBtn = (id, isSend, authCode, infoMessage) => StyleSheet.create({
     marginRight: 20,
     backgroundColor:
         ((id.length == 10 || id.length == 11) && !isSend) ||
-            (authCode.length == 6 && isSend) ? 'rgba(65, 92, 118, 0.85)' :  'rgba(65, 92, 118, 0.25)',
+            (authCode.length == 6 && isSend) ? 'rgba(65, 92, 118, 0.85)' : 'rgba(65, 92, 118, 0.25)',
     borderRadius: 10,
     marginTop: isSend && !infoMessage ? 15 : 10
 })
