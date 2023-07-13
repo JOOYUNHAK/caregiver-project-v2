@@ -1,8 +1,11 @@
 import { Body, Controller, Post, UseGuards } from "@nestjs/common";
 import { AuthService } from "src/auth/application/service/auth.service";
 import { RegisterDto } from "../dto/register.dto";
-import { ValidateSmsCodeDto } from "../dto/validate-code.dto";
 import { PhoneAuthenticationSendGuard } from "src/auth/application/guard/authentication-send.guard";
+import { PhoneAuthenticationCodeGuard } from "src/auth/application/guard/authentication-code.guard";
+import { ClientDto } from "src/user-auth-common/interface/client.dto";
+import { User } from "src/user-auth-common/domain/entity/user.entity";
+import { AuthenticatedUser } from "src/auth/application/decorator/user.decorator";
 
 @Controller('auth')
 export class AuthController {
@@ -16,9 +19,10 @@ export class AuthController {
     }
 
     /* 휴대폰 인증코드 검사 */
+    @UseGuards(PhoneAuthenticationCodeGuard)
     @Post('code/sms')
-    async validateSmsCode(@Body() validateSmsCodeDto: ValidateSmsCodeDto) {
-        return await this.authService.validateSmsCode(validateSmsCodeDto);
+    async validateSmsCode(@AuthenticatedUser() user: User): Promise<ClientDto | void> {
+        if( user ) return await this.authService.createAuthenticationToUser(user);
     }
 
     /* 로그인 */

@@ -10,6 +10,10 @@ import { phoneValidate } from 'src/common/middleware/phone-validator.middleware'
 import { PhoneAuthenticationSendGuard } from './application/guard/authentication-send.guard';
 import { PhoneVerificationRepository } from './infra/repository/phone-verification.repository';
 import { VerificationUsageService } from './application/service/verification-usage.service';
+import { PhoneAuthenticationCodeGuard } from './application/guard/authentication-code.guard';
+import { AuthMapper } from './application/mapper/auth.mapper';
+import { SessionService } from './application/service/session.service';
+import { AuthenticationCodeService } from './application/service/authentication-code.service';
 
 @Module({
   imports: [
@@ -24,7 +28,11 @@ import { VerificationUsageService } from './application/service/verification-usa
     TokenService,
     PhoneAuthenticationSendGuard,
     PhoneVerificationRepository,
-    VerificationUsageService
+    VerificationUsageService,
+    PhoneAuthenticationCodeGuard,
+    AuthMapper,
+    AuthenticationCodeService,
+    SessionService
   ],
   exports: [
     TokenService
