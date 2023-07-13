@@ -2,8 +2,6 @@ import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/c
 import { RedisModule } from 'src/common/shared/database/redis/redis.module';
 import { AuthService } from './application/service/auth.service';
 import { AuthController } from './interface/controller/auth.controller';
-import { SmsService } from 'src/notification/sms/infra/service/sms.service';
-import { NaverSmsService } from 'src/notification/sms/infra/service/naver-sms.service';
 import { UserAuthCommonModule } from 'src/user-auth-common/user-auth-common.module';
 import { TokenService } from './application/service/token.service';
 import { phoneValidate } from 'src/common/middleware/phone-validator.middleware';
@@ -14,17 +12,17 @@ import { PhoneAuthenticationCodeGuard } from './application/guard/authentication
 import { AuthMapper } from './application/mapper/auth.mapper';
 import { SessionService } from './application/service/session.service';
 import { AuthenticationCodeService } from './application/service/authentication-code.service';
+import { NotificationModule } from 'src/notification/notification.module';
 
 @Module({
   imports: [
     RedisModule,
     UserAuthCommonModule,
+    NotificationModule
   ],
   controllers: [AuthController],
   providers: [
     AuthService,
-    SmsService,
-    NaverSmsService,
     TokenService,
     PhoneAuthenticationSendGuard,
     PhoneVerificationRepository,
