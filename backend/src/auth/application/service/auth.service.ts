@@ -1,7 +1,6 @@
-import { ConflictException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { AuthenticationCodeMessage } from "src/auth/domain/authentication-code-message";
-import { ValidateSmsCodeDto } from "src/auth/interface/dto/validate-code.dto";
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
 import { SmsService } from "src/notification/sms/infra/service/sms.service";
 import { Phone } from "src/user-auth-common/domain/entity/user-phone.entity";
@@ -31,14 +30,12 @@ export class AuthService {
         /* 이미 가입된 전화번호 인지 확인 이후 인증번호 발송 */
         if (await this.checkExistingUserByPhone(phoneNumber))
             throw new ConflictException(ErrorMessage.DuplicatedPhoneNumber);
-        /* @Todo 수정 요망 */
-        await this.smsService.send(new AuthenticationCodeMessage(phoneNumber));
+        await this.sendPhoneAuthCode(phoneNumber);
     };
 
     /* 신규회원이면 인증에 성공하면 바로 회원가입창으로 이동 */
     async login(phoneNumber: string): Promise<'newuser' | 'exist'> {
         await this.sendPhoneAuthCode(phoneNumber); // 발송 이후 코드 저장
-        await this.verificationUsageService.addPhoneUsageHistory(phoneNumber); // 발송 내역 추가
         if (await this.checkExistingUserByPhone(phoneNumber)) return 'exist'; // 가입 사용자인지 체크
         return 'newuser';
     }
@@ -51,22 +48,16 @@ export class AuthService {
         return await this.authMapper.toDto(user);
     }
 
-    /* @Todo 수정 요망 */
-    async validateSmsCode(validateSmsCodeDto: ValidateSmsCodeDto): Promise<void> {
-        /* 전화번호에 해당하는 인증코드 */
-        const existAuthenticationCode = await this.smsService.getAuthenticationCode(validateSmsCodeDto.phoneNumber);
-        /* 비교 */
-        if (!existAuthenticationCode.isEqual(validateSmsCodeDto.code))
-            throw new UnauthorizedException(ErrorMessage.NotMatchedAuthenticationCode);
-    }
-
     /* 문자 발송 이후 발송된 코드 저장 */
     private async sendPhoneAuthCode(phoneNumber: string) {
         const authenticationCodeMessage = new AuthenticationCodeMessage(phoneNumber); // 메시지 생성
         await this.smsService.send(authenticationCodeMessage); // 문자 발송
-        await this.authenticationCodeService.addPhoneCode(
-            phoneNumber, authenticationCodeMessage.getAuthenticationCode().toString()
-        )
+        await Promise.all([
+            this.verificationUsageService.addPhoneUsageHistory(phoneNumber), // 일일 휴대폰인증 1회 추가
+            await this.authenticationCodeService.addPhoneCode( // 발송된 인증코드 저장
+                phoneNumber, authenticationCodeMessage.getAuthenticationCode().toString()
+            )
+        ]);
     }
 
     /* 가입된 휴대폰인지 여부 */
