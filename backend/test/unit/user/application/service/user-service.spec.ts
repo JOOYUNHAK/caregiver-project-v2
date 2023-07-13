@@ -1,5 +1,6 @@
 import { Test } from "@nestjs/testing"
 import { getRepositoryToken } from "@nestjs/typeorm"
+import { SessionService } from "src/auth/application/service/session.service"
 import { TokenService } from "src/auth/application/service/token.service"
 import { Phone } from "src/user-auth-common/domain/entity/user-phone.entity"
 import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.entity"
@@ -13,12 +14,14 @@ import { UserService } from "src/user/application/service/user.service"
 import { CaregiverRegisterDto } from "src/user/interface/dto/caregiver-register.dto"
 import { ProtectorRegisterDto } from "src/user/interface/dto/protector-register.dto"
 import { CommonRegisterForm } from "src/user/interface/dto/register-page"
+import { MockSessionService } from "test/unit/__mock__/auth/service.mock"
 import { Repository } from "typeorm"
 
 describe('UserService Test', () => { 
     let userService: UserService,
         userMapper: UserMapper,
         tokenService: TokenService,
+        sessionService: SessionService,
         caregiverProfileService: CaregiverProfileService,
         patientProfileService: PatientProfileService,
         userRepository: Repository<User>;
@@ -27,6 +30,7 @@ describe('UserService Test', () => {
         const module = await Test.createTestingModule({
             providers: [
                 UserService,
+                MockSessionService,
                 {
                     provide: UserMapper,
                     useValue: {
@@ -68,6 +72,7 @@ describe('UserService Test', () => {
         userRepository = module.get(getRepositoryToken(User));
         caregiverProfileService = module.get(CaregiverProfileService);
         patientProfileService = module.get(PatientProfileService);
+        sessionService = module.get(SessionService);
     })
 
     describe('register()', () => {
@@ -85,7 +90,7 @@ describe('UserService Test', () => {
         it('회원가입을 진행했을 때 DB저장, 세션추가 함수 호출', async () => {
             const [saveSpay, sessionSpy] = [
                 jest.spyOn(userRepository, 'save'),
-                jest.spyOn(tokenService, 'addAccessTokenToSessionList')
+                jest.spyOn(sessionService, 'addUserToList')
             ];
             const testRegisterDto = { firstRegister: { purpose: ROLE.CAREGIVER } };
             await userService.register(testRegisterDto as CaregiverRegisterDto);
