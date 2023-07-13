@@ -10,12 +10,14 @@ import { ROLE } from "src/user-auth-common/domain/enum/user.enum";
 import { CaregiverProfileService } from "./caregiver-profile.service";
 import { ProtectorRegisterDto } from "src/user/interface/dto/protector-register.dto";
 import { PatientProfileService } from "./patient-profile.service";
+import { SessionService } from "src/auth/application/service/session.service";
 
 @Injectable()
 export class UserService {
     constructor(
         private readonly userMapper: UserMapper,
         private readonly tokenService: TokenService,
+        private readonly sessionService: SessionService,
         private readonly caregiverProfileService: CaregiverProfileService,
         private readonly patientProfileService: PatientProfileService,
         @InjectRepository(User)
@@ -30,7 +32,7 @@ export class UserService {
 
         const savedUser = await this.userRepository.save(user); // DB에 저장된 User
         await Promise.all([
-            this.tokenService.addAccessTokenToSessionList(savedUser.getId(), authentication.accessToken), // 세션리스트에 사용자 토큰 추가
+            this.sessionService.addUserToList(savedUser.getId(), authentication.accessToken), // 세션리스트에 사용자 토큰 추가
             this.addProfile(savedUser.getId(), registerDto) // 가입목적별 프로필 추가
         ]); 
 

@@ -35,7 +35,8 @@ import { AuthenticationCodeService } from './application/service/authentication-
     SessionService
   ],
   exports: [
-    TokenService
+    TokenService,
+    SessionService
   ]
 })
 export class AuthModule implements NestModule{
