@@ -1,9 +1,8 @@
 import { ConfigService } from "@nestjs/config";
-import { Inject, Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import * as Crypto from 'crypto';
 import axios, { AxiosRequestHeaders } from "axios";
-import { RedisClientType } from "redis";
-import { AuthenticationCodeMessage } from "src/auth/domain/authentication-code-message";
+import { Message } from "../../domain/message";
 
 @Injectable()
 export class NaverSmsService {
@@ -15,8 +14,6 @@ export class NaverSmsService {
     private uri: string; // signature만들 때 필요
 
     constructor(
-        @Inject('REDIS_CLIENT')
-        private readonly redis: RedisClientType,
         private readonly configService: ConfigService,
     ) {
         this.accessKey = this.configService.get<string>('naver.sms.accessKey');
@@ -27,22 +24,17 @@ export class NaverSmsService {
         this.uri = `/sms/v2/services/${this.serviceId}/messages`;
     };
 
-    async send(message: AuthenticationCodeMessage) {
+    async send(message: Message) {
         this.requestNaverApi(message, Date.now().toString());
     };
 
     /* Naver Cloud Api */
-    private requestNaverApi(message: AuthenticationCodeMessage, timeStamp: string) {
+    private requestNaverApi(message: Message, timeStamp: string) {
         axios({
             method: 'POST',
             url: this.url,
             headers: this.setHeaders(timeStamp),
             data: this.setData(message)
-        })
-        .then(async (res) => {
-            await this.redis.SETEX(
-                `phone:${message.getReceiver()}:code`, 90, message.getAuthenticationCode().toString()
-            )
         })
         .catch(err => {
             throw new InternalServerErrorException('네트워크 오류로 문자 발송에 실패했습니다.')
@@ -60,7 +52,7 @@ export class NaverSmsService {
     };
 
     /* 요청에 보낼 Data 구성 */
-    private setData(message: AuthenticationCodeMessage): any {
+    private setData(message: Message): any {
         return {
             type: 'SMS',
             contentType: 'COMM',
