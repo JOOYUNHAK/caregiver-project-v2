@@ -45,6 +45,7 @@ describe('UserMapper Component Test', () => {
             const mapResult = await userMapper.toDto(testUser);
 
             expect(mapResult).toHaveProperty('id');
+            expect(mapResult).toHaveProperty('name');
             expect(mapResult).toHaveProperty('accessToken')
         })
     })
