@@ -9,7 +9,7 @@ export class PhoneVerificationUsage {
 
     private codeAttemp: number;
 
-    constructor(dayAttemp: number = 0, codeAttemp: number = 0, blockedAt: string = null) {
+    constructor(dayAttemp: number = 0, codeAttemp: number = 0) {
         this.dayAttemp = dayAttemp;
         this.codeAttemp = codeAttemp;
     }

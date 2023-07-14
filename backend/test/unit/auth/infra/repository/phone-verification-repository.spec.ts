@@ -1,20 +1,16 @@
-import { ConfigService } from "@nestjs/config";
 import { RedisClientType } from "redis";
 import { PhoneVerificationUsage } from "src/auth/domain/entity/phone-verification-usage.entity";
 import { PhoneVerificationRepository } from "src/auth/infra/repository/phone-verification.repository"
+import { DateTime } from "src/util/datetime.util";
 import { ConnectRedis, DisconnectRedis, getRedis } from "test/unit/common/database/datebase-setup.fixture"
 
 describe('휴대폰인증 횟수 내역 저장소(PhoneVerificationRepository) Test', () => {
     let repo: PhoneVerificationRepository, redis: RedisClientType;
     const phoneNumber = '01011111111', phoneVerificationUsage = new PhoneVerificationUsage();
 
-    const mockConfigService = {
-        get: jest.fn().mockReturnValue('test_phone_verification')
-    } as unknown as ConfigService;
-
     beforeAll(async () => {
         await ConnectRedis();
-        repo = new PhoneVerificationRepository(getRedis(), mockConfigService);
+        repo = new PhoneVerificationRepository(getRedis());
         redis = getRedis();
     });
 
@@ -26,7 +22,7 @@ describe('휴대폰인증 횟수 내역 저장소(PhoneVerificationRepository) T
 
         it('저장시 클래스의 메소드는 제외하고 필드만 저장되어야 한다.', async () => {
             await repo.save(phoneNumber, phoneVerificationUsage);
-            const findResult = await redis.HGET(mockConfigService.get(''), phoneNumber);
+            const findResult = await redis.HGET(`phone:auth:${DateTime.getToday()}:usage`, phoneNumber);
 
             expect(findResult).toEqual(phoneVerificationUsage.toSerializedString());
         });

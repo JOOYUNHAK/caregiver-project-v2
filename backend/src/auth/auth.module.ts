@@ -34,7 +34,8 @@ import { NotificationModule } from 'src/notification/notification.module';
   ],
   exports: [
     TokenService,
-    SessionService
+    SessionService,
+    PhoneVerificationRepository
   ]
 })
 export class AuthModule implements NestModule{
