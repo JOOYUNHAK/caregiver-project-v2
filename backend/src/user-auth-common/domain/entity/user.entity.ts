@@ -47,6 +47,7 @@ export class User {
     };
 
     getId(): number { return this.id; };
+    getName(): string { return this.name; };
     getRole(): ROLE { return this.role; };
 
     async getPhone(): Promise<Phone> { return await this.phone; };

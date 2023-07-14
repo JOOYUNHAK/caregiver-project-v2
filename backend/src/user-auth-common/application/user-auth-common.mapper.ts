@@ -5,6 +5,7 @@ export abstract class UserAuthCommonMapper {
     async toDto(user: User): Promise<ClientDto> {
         return {
             id: user.getId(),
+            name: user.getName(),
             accessToken: (await user.getAuthentication()).getAccessToken(),
         };
     }
