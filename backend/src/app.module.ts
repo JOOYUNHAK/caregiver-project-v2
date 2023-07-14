@@ -13,6 +13,7 @@ import { GlobalScopedValidationPipe } from './common/pipe/global-scoped.pipe';
 import { CoreModule } from './core/core.module';
 import { MongodbModule } from './common/shared/database/mongodb/mongodb.module';
 import { NotificationModule } from './notification/notification.module';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { NotificationModule } from './notification/notification.module';
     TypeOrmModule.forRootAsync(TypeOrmOptions),
     RedisModule,
     MongodbModule,
+    BatchModule,
     AuthModule,
     NotificationModule,
     UserAuthCommonModule,
