@@ -80,8 +80,8 @@ export default function AuthId({ navigation }) {
                     reset();
                 }, 200);
             } else {
-                const { accessToken, id } = res.data;  
-                dispatch(saveUser(id));
+                const { accessToken, ...user } = res.data;  
+                dispatch(saveUser(user));
                 await AsyncStorage.setItem('accessToken', accessToken);
                 navigation.dispatch(
                     StackActions.pop()

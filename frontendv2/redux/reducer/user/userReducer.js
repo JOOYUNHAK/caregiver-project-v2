@@ -3,15 +3,17 @@ import { saveUser, logout } from "../../action/user/userAction";
 
 const initialState = {
     id: '',
+    name: ''
 };
 
 const userReducer = createReducer(initialState, (builder) => {
     builder
         .addCase(saveUser, (state, action) => {
-            state.id = action.payload
+            Object.assign(state, action.payload)
         })
         .addCase(logout, (state) => {
             state.id = '';
+            state.name = '';
         })
 });
 
