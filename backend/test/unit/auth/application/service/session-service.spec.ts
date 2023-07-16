@@ -41,5 +41,22 @@ describe('토큰 서비스(TokenService) Test', () => {
             
             await redis.HDEL('user:session:list', '1');
         })
+    });
+
+    describe('getUserFromList()', () => {
+        it('찾는 유저가 없으면 Null값이 반환', async() => {
+            const result = await sessionService.getUserFromList(11);
+
+            expect(result).toBe(null);
+        });
+
+        it('현재 세션리스트에 사용자가 있으면 해당 토큰 반환', async() => {
+            await sessionService.addUserToList(40, 'testAccessToken');
+
+            const result = await sessionService.getUserFromList(40);
+            expect(result).toBe('testAccessToken');
+
+            await redis.HDEL('user:session:list', '40');
+        });
     })
 })
