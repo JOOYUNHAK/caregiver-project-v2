@@ -14,6 +14,7 @@ import { CoreModule } from './core/core.module';
 import { MongodbModule } from './common/shared/database/mongodb/mongodb.module';
 import { NotificationModule } from './notification/notification.module';
 import { BatchModule } from './batch/batch.module';
+import { GlobalScopedJwtGuard } from './auth/application/guard/jwt/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -33,7 +34,8 @@ import { BatchModule } from './batch/batch.module';
   ],
   providers: [
     GlobalScopedValidationPipe,
-    GlobalScopedExceptionFilter
+    GlobalScopedExceptionFilter,
+    GlobalScopedJwtGuard
   ]
 })
 export class AppModule {}

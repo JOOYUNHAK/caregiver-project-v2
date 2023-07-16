@@ -5,13 +5,16 @@ import { PhoneAuthenticationCodeGuard } from "src/auth/application/guard/authent
 import { ClientDto } from "src/user-auth-common/interface/client.dto";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { AuthenticatedUser } from "src/auth/application/decorator/user.decorator";
+import { Public } from "src/auth/application/decorator/public.decorator";
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private readonly authService: AuthService
     ) {}
+
     /* 휴대폰으로 회원가입 */
+    @Public()
     @UseGuards(PhoneAuthenticationSendGuard)
     @Post('register')
     async register(@Body('phoneNumber') phoneNumber: string) {
@@ -19,6 +22,7 @@ export class AuthController {
     }
 
     /* 휴대폰 인증코드 검사 */
+    @Public()
     @UseGuards(PhoneAuthenticationCodeGuard)
     @Post('code/sms')
     async validateSmsCode(@AuthenticatedUser() user: User): Promise<ClientDto | void> {
@@ -26,6 +30,7 @@ export class AuthController {
     }
 
     /* 로그인 */
+    @Public()
     @UseGuards(PhoneAuthenticationSendGuard)
     @Post('login')
     async login(@Body('phoneNumber') phoneNumber: string): Promise<'newuser' | 'exist'> {

@@ -14,5 +14,9 @@ export class SessionService {
 
     async addUserToList(userId: number, authentication: string) {
         await this.redis.HSET(this.key, userId, authentication);
+    };
+
+    async getUserFromList(userId: number) {
+        return await this.redis.HGET(this.key, userId.toString());
     }
 }

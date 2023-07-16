@@ -38,7 +38,8 @@ export const MockTokenService = {
 export const MockSessionService = {
     provide: SessionService,
     useValue: {
-        addUserToList: jest.fn()
+        addUserToList: jest.fn(),
+        getUserFromList: jest.fn()
     }
 };
 

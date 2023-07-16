@@ -13,6 +13,7 @@ import { AuthMapper } from './application/mapper/auth.mapper';
 import { SessionService } from './application/service/session.service';
 import { AuthenticationCodeService } from './application/service/authentication-code.service';
 import { NotificationModule } from 'src/notification/notification.module';
+import { JwtStrategy } from './application/guard/jwt/jwt.strategy';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { NotificationModule } from 'src/notification/notification.module';
     PhoneAuthenticationCodeGuard,
     AuthMapper,
     AuthenticationCodeService,
-    SessionService
+    SessionService,
+    JwtStrategy
   ],
   exports: [
     TokenService,
