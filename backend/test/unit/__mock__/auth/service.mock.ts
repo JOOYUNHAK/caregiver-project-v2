@@ -1,3 +1,4 @@
+import { JwtService } from "@nestjs/jwt";
 import { AuthService } from "src/auth/application/service/auth.service";
 import { AuthenticationCodeService } from "src/auth/application/service/authentication-code.service";
 import { SessionService } from "src/auth/application/service/session.service";
@@ -52,5 +53,13 @@ export const MockVerificationUsageService = {
         addPhoneCodeAttemp: jest.fn()
     }
 };
+
+export const MockJwtService = {
+    provide: JwtService,
+    useValue: {
+        signAsync: jest.fn(),
+        verify: jest.fn()
+    }
+}
 
 
