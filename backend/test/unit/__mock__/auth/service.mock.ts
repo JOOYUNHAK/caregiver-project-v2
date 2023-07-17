@@ -29,7 +29,7 @@ export const MockAuthService = {
 export const MockTokenService = {
     provide: TokenService,
     useValue: {
-        generateNewUserToken: jest.fn(),
+        generateNewUsersToken: jest.fn(),
         generateAccessToken: jest.fn(),
         generateRefreshToken: jest.fn()
     }
