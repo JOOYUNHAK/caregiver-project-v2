@@ -6,6 +6,7 @@ import { User } from "src/user-auth-common/domain/entity/user.entity";
 export const MockUserRepository = {
     provide: getRepositoryToken(User),
     useValue: {
+        save: jest.fn(),
         findByPhoneNumber: jest.fn()
     }
 };
