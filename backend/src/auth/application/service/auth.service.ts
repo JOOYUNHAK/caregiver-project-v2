@@ -37,6 +37,10 @@ export class AuthService {
         return 'newuser';
     }
 
+    async refreshToken(userId: number) {
+        const user = await this.userAuthCommonService.getUser(userId);
+    }
+
     /* 로그인에 성공한 사용자는 사용할 토큰 발급 */
     async createAuthenticationToUser(user: User): Promise<ClientDto> {
         const accessToken = await this.tokenService.generateAccessToken(user); // 새로운 AccessToken 발급
@@ -51,7 +55,7 @@ export class AuthService {
         await this.smsService.send(authenticationCodeMessage); // 문자 발송
         await Promise.all([
             this.verificationUsageService.addPhoneUsageHistory(phoneNumber), // 일일 휴대폰인증 1회 추가
-            await this.authenticationCodeService.addPhoneCode( // 발송된 인증코드 저장
+            this.authenticationCodeService.addPhoneCode( // 발송된 인증코드 저장
                 phoneNumber, authenticationCodeMessage.getAuthenticationCode().toString()
             )
         ]);
