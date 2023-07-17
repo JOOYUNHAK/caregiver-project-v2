@@ -4,6 +4,8 @@ import { JwtService } from "@nestjs/jwt";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { NewUserAuthentication } from "src/user-auth-common/domain/interface/new-user-authentication.interface";
 import { JwtPayload } from "../type/jwt-payload.type";
+import { RefreshToken } from "src/user-auth-common/domain/refresh-token";
+import { UUIDUtil } from "src/util/uuid.util";
 
 @Injectable()
 export class TokenService {
@@ -25,7 +27,7 @@ export class TokenService {
     /* 새로운 사용자의 인증(토큰) 발급 */
     async generateNewUsersToken(user: User): Promise<NewUserAuthentication> {
         const [accessToken, refreshToken] = await Promise.all([this.generateAccessToken(user), this.generateRefreshToken(user)])
-        return { accessToken, refreshToken };
+        return new NewUserAuthentication(accessToken, refreshToken);
     };
 
     async generateAccessToken(user: User): Promise<string> {
@@ -35,11 +37,15 @@ export class TokenService {
         });
     };
 
-    async generateRefreshToken(user: User): Promise<string> {
-        return await this.jwtService.signAsync( this.generateJwtPayload(user), {
-            secret: this.refreshTokenSecret,
-            expiresIn: this.refreshTokenExpiresIn
-        });
+    async generateRefreshToken(user: User): Promise<RefreshToken> {
+        const [uuid, refreshToken] = [
+            UUIDUtil.generatedUuidV1(),
+            await this.jwtService.signAsync( this.generateJwtPayload(user), {
+                secret: this.refreshTokenSecret,
+                expiresIn: this.refreshTokenExpiresIn
+            })
+        ];
+        return new RefreshToken(uuid, refreshToken);   
     };
 
     /* JwtToken의 Payload 생성 */
