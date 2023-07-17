@@ -31,4 +31,5 @@ export class Token {
     getAccessToken(): string { return this.accessToken; };
     getRefreshKey(): string { return this.refreshKey; };
     getRefreshToken(): string { return this.refreshToken; };
+    changeAccessToken(newAccessToken: string): void { this.accessToken = newAccessToken; };
 }
