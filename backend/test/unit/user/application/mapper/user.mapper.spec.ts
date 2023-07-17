@@ -39,12 +39,12 @@ describe('UserMapper Component Test', () => {
                 null,
                 null,
                 null,
-                new Token(null, null)
+                new Token(null, null, null)
             );
 
-            const mapResult = await userMapper.toDto(testUser);
+            const mapResult = userMapper.toDto(testUser);
 
-            expect(mapResult).toHaveProperty('id');
+            expect(mapResult).toHaveProperty('refreshKey');
             expect(mapResult).toHaveProperty('name');
             expect(mapResult).toHaveProperty('accessToken')
         })
