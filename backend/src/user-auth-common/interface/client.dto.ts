@@ -1,5 +1,5 @@
 export interface ClientDto { 
-    readonly id: number;
+    readonly refreshKey: string;
     readonly name: string;
     readonly accessToken: string; 
 };
