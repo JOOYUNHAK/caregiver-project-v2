@@ -11,6 +11,9 @@ export class Token {
     @JoinColumn({ referencedColumnName: 'id', name: 'user_id' })
     readonly userId: number;
 
+    @Column({ type: 'binary', length: 16, name: 'refresh_key' })
+    private refreshKey: string;
+
     @Column({ type: 'varchar', name: 'refresh_token' })
     private refreshToken: string;
 
@@ -19,10 +22,13 @@ export class Token {
 
     private accessToken: string;
 
-    constructor(accessToken: string, refreshToken: string) {
+    constructor(accessToken: string, refreshKey: string, refreshToken: string) {
         this.accessToken = accessToken;
+        this.refreshKey = refreshKey;
         this.refreshToken = refreshToken;
     };
 
     getAccessToken(): string { return this.accessToken; };
+    getRefreshKey(): string { return this.refreshKey; };
+    getRefreshToken(): string { return this.refreshToken; };
 }
