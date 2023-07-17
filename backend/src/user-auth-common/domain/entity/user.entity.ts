@@ -24,7 +24,7 @@ export class User {
     @CreateDateColumn({ name: 'registered_at', type: 'timestamp' })
     private registeredAt: Time;
 
-    @OneToOne(() => Email, (email) => email.userId, { cascade: ['insert', 'update']})
+    @OneToOne(() => Email, (email) => email.userId, { cascade: ['insert', 'update'] })
     private email: Promise<Email>;
 
     @OneToOne(() => Phone, (phone) => phone.userId, { cascade: ['insert', 'update'] })
@@ -34,30 +34,36 @@ export class User {
     private profile: Promise<UserProfile>;
 
     @OneToOne(() => Token, (token) => token.userId, { cascade: ['insert', 'update'] })
-    private authentication: Promise<Token>;
+    private authentication: Token;
 
-    constructor( name: string, role: ROLE, loginType: LOGIN_TYPE, email: Email, phone: Phone, profile: UserProfile, authentication: Token ) {
+    constructor(name: string, role: ROLE, loginType: LOGIN_TYPE, email: Email, phone: Phone, profile: UserProfile, authentication: Token) {
         this.name = name;
         this.role = role;
         this.loginType = loginType;
+        this.authentication = authentication;
         this.email = Promise.resolve(email);
         this.phone = Promise.resolve(phone);
         this.profile = Promise.resolve(profile);
-        this.authentication = Promise.resolve(authentication);
     };
 
     getId(): number { return this.id; };
     getName(): string { return this.name; };
     getRole(): ROLE { return this.role; };
+    getAuthentication(): Token { return this.authentication; };
 
     async getPhone(): Promise<Phone> { return await this.phone; };
-    async getAuthentication(): Promise<Token> { return await this.authentication; };
-    
+
     /* 회원가입시 새로 발급된 인증 */
-    setAuthentication(newUserAuthentication: NewUserAuthentication) { 
-        this.authentication = Promise.resolve(new Token(
+    setAuthentication(newUserAuthentication: NewUserAuthentication) {
+        this.authentication = new Token(
             newUserAuthentication.accessToken,
-            newUserAuthentication.refreshToken
-        ));
+            newUserAuthentication.refreshToken.getKey(),
+            newUserAuthentication.refreshToken.getToken()
+        );
     };
+
+    /* 로그인에만 성공시 사용할 AccessToken만 변경 */
+    changeAuthentication(newAccessToken: string): void {
+        this.authentication.changeAccessToken(newAccessToken);
+    }
 }
