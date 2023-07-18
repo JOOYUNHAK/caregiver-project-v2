@@ -58,7 +58,7 @@ export const MockJwtService = {
     provide: JwtService,
     useValue: {
         signAsync: jest.fn(),
-        verify: jest.fn()
+        verifyAsync: jest.fn()
     }
 }
 
