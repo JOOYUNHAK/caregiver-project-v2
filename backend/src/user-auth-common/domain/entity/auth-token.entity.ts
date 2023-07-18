@@ -1,6 +1,7 @@
 import { Time } from "src/common/shared/type/time.type";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { UUIDTransformer } from "./transformer";
 
 @Entity('auth_token')
 export class Token {
@@ -11,7 +12,7 @@ export class Token {
     @JoinColumn({ referencedColumnName: 'id', name: 'user_id' })
     readonly userId: number;
 
-    @Column({ type: 'binary', length: 16, name: 'refresh_key' })
+    @Column({ type: 'binary', length: 16, name: 'refresh_key', transformer: new UUIDTransformer() })
     private refreshKey: string;
 
     @Column({ type: 'varchar', name: 'refresh_token' })
