@@ -36,7 +36,7 @@ export class UserService {
             this.addProfile(savedUser.getId(), registerDto) // 가입목적별 프로필 추가
         ]); 
 
-        return await this.userMapper.toDto(savedUser)
+        return this.userMapper.toDto(savedUser)
     }
 
     /* 가입 목적별 프로필 추가 */

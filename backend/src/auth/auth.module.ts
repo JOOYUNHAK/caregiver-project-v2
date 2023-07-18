@@ -14,6 +14,7 @@ import { SessionService } from './application/service/session.service';
 import { AuthenticationCodeService } from './application/service/authentication-code.service';
 import { NotificationModule } from 'src/notification/notification.module';
 import { JwtStrategy } from './application/guard/jwt/jwt.strategy';
+import { RefreshAuthenticationGuard } from './application/guard/refresh-authentication.guard';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { JwtStrategy } from './application/guard/jwt/jwt.strategy';
     AuthMapper,
     AuthenticationCodeService,
     SessionService,
-    JwtStrategy
+    JwtStrategy,
+    RefreshAuthenticationGuard
   ],
   exports: [
     TokenService,

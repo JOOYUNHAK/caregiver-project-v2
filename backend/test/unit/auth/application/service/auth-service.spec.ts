@@ -10,11 +10,15 @@ import { ErrorMessage } from 'src/common/shared/enum/error-message.enum';
 import { NaverSmsService } from 'src/notification/sms/infra/service/naver-sms.service';
 import { SmsService } from 'src/notification/sms/infra/service/sms.service';
 import { UserAuthCommonService } from 'src/user-auth-common/application/user-auth-common.service';
+import { Token } from 'src/user-auth-common/domain/entity/auth-token.entity';
 import { User } from 'src/user-auth-common/domain/entity/user.entity';
 import { LOGIN_TYPE, ROLE } from 'src/user-auth-common/domain/enum/user.enum';
+import { NewUserAuthentication } from 'src/user-auth-common/domain/interface/new-user-authentication.interface';
+import { RefreshToken } from 'src/user-auth-common/domain/refresh-token';
 import { MockPhoneVerificationRepository } from 'test/unit/__mock__/auth/repository.mock';
 import { MockAuthenticationCodeService, MockVerificationUsageService, MockTokenService, MockSessionService } from 'test/unit/__mock__/auth/service.mock';
 import { MockSmsService } from 'test/unit/__mock__/notification/service.mock';
+import { MockUserRepository } from 'test/unit/__mock__/user-auth-common/repository.mock';
 import { MockUserAuthCommonService } from 'test/unit/__mock__/user-auth-common/service.mock';
 
 describe('인증 서비스(AuthService) Test', () => {
@@ -45,7 +49,8 @@ describe('인증 서비스(AuthService) Test', () => {
                 MockVerificationUsageService,
                 MockPhoneVerificationRepository,
                 MockAuthenticationCodeService,
-                MockUserAuthCommonService
+                MockUserAuthCommonService,
+                MockUserRepository
             ]
         }).compile();
         authService = module.get(AuthService);
@@ -91,18 +96,50 @@ describe('인증 서비스(AuthService) Test', () => {
     });
 
     describe('createAuthenticationToUser()', () => {
-        it('새로운 AccessToken을 발급받고 Session목록에 추가하기 위해 서비스 호출', async () => {
-            const user = new User('테스트', ROLE.CAREGIVER, LOGIN_TYPE.PHONE, null, null, null, null);
-            expect(await user.getAuthentication()).toBe(null);
+        it('새로운 AccessToken을 변경하고 Session목록에 추가하기 위해 서비스 호출', async () => {
+            const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
+            const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
+            const user = new User('테스트', ROLE.CAREGIVER, LOGIN_TYPE.PHONE, null, null, null, existAuthentication);
 
             jest.spyOn(tokenService, 'generateAccessToken').mockResolvedValueOnce('accessToken');
             const sessionServiceSpy = jest.spyOn(sessionService, 'addUserToList').mockResolvedValueOnce(null);
 
             await authService.createAuthenticationToUser(user);
-
-            expect(await user.getAuthentication()).not.toBe(null);
-            expect((await user.getAuthentication()).getAccessToken()).toBe('accessToken');
             expect(sessionServiceSpy).toBeCalledTimes(1);
         });
+
+        it('새로운 AccessToken으로 변경할때는 AccessToken만 변경되고, RefreshToken은 기존 값이어야 한다', async() => {
+            const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
+            const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
+            const user = new User('테스트', ROLE.CAREGIVER, LOGIN_TYPE.PHONE, null, null, null, existAuthentication);
+
+            const newAccessToken = 'newAccessToken';
+            
+            jest.spyOn(tokenService, 'generateAccessToken').mockResolvedValueOnce(newAccessToken);
+            user.changeAuthentication(newAccessToken);
+
+            expect(user.getAuthentication().getAccessToken()).toBe(newAccessToken);
+            expect(user.getAuthentication().getRefreshKey()).toBe('uuid');
+            expect(user.getAuthentication().getRefreshToken()).toBe('existRefreshToken');
+        });
+    })
+
+    describe('refreshAuthentication()', () => {
+        it('RefreshToken으로 갱신할 경우 RefreshToken의 key와 값도 새로 발급받아져야 한다', async() => {
+            const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
+            const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
+            const user = new User('테스트', ROLE.CAREGIVER, LOGIN_TYPE.PHONE, null, null, null, existAuthentication);
+
+            const [refreshAccessToken, newUuid, newRefreshToken] = ['refreshAccessToken', 'newUuid', 'newRefreshToken'];
+            const refreshToken = new RefreshToken(newUuid, newRefreshToken);
+            const refreshAuthentication = new NewUserAuthentication(refreshAccessToken, refreshToken);
+
+            jest.spyOn(tokenService, 'generateNewUsersToken').mockResolvedValueOnce(refreshAuthentication);
+
+            await authService.refreshAuthentication(user);
+            expect(user.getAuthentication().getAccessToken()).toBe(refreshAccessToken);
+            expect(user.getAuthentication().getRefreshKey()).toBe(newUuid);
+            expect(user.getAuthentication().getRefreshToken()).toBe(newRefreshToken);
+        })
     })
 })

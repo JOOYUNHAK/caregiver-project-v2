@@ -6,12 +6,20 @@ import { ClientDto } from "src/user-auth-common/interface/client.dto";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { AuthenticatedUser } from "src/auth/application/decorator/user.decorator";
 import { Public } from "src/auth/application/decorator/public.decorator";
+import { RefreshAuthenticationGuard } from "src/auth/application/guard/refresh-authentication.guard";
 
 @Controller('auth')
 export class AuthController {
     constructor(
         private readonly authService: AuthService
     ) {}
+
+    @Public()
+    @UseGuards(RefreshAuthenticationGuard)
+    @Post('refresh')
+    async refreshAuthentication(@AuthenticatedUser() user: User): Promise<ClientDto> {
+        return await this.authService.refreshAuthentication(user);
+    }
 
     /* 휴대폰으로 회원가입 */
     @Public()

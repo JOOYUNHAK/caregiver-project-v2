@@ -7,6 +7,7 @@ import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.ent
 import { User } from "src/user-auth-common/domain/entity/user.entity"
 import { LOGIN_TYPE, ROLE, SEX } from "src/user-auth-common/domain/enum/user.enum"
 import { NewUserAuthentication } from "src/user-auth-common/domain/interface/new-user-authentication.interface"
+import { RefreshToken } from "src/user-auth-common/domain/refresh-token"
 import { UserMapper } from "src/user/application/mapper/user.mapper"
 import { CaregiverProfileService } from "src/user/application/service/caregiver-profile.service"
 import { PatientProfileService } from "src/user/application/service/patient-profile.service"
@@ -81,10 +82,9 @@ describe('UserService Test', () => {
             const authentication = await tokenService.generateNewUsersToken(user);
             user.setAuthentication(authentication);
 
-            expect(await user.getAuthentication()).toHaveProperty('accessToken');
-            expect((await user.getAuthentication()).getAccessToken()).toBe('testAccessToken');
-            
-            expect(await user.getAuthentication()).toHaveProperty('refreshToken');
+            expect(user.getAuthentication().getAccessToken()).toBe('testAccessToken');
+            expect(user.getAuthentication().getRefreshKey()).toBe('uuid');
+            expect(user.getAuthentication().getRefreshToken()).toBe('testRefreshToken');
         });
 
         it('회원가입을 진행했을 때 DB저장, 세션추가 함수 호출', async () => {
@@ -134,7 +134,7 @@ function createTestUser(): User {
 function createTestAuthentication(): NewUserAuthentication {
     return {
         accessToken: 'testAccessToken',
-        refreshToken: 'testRefreshToken'
+        refreshToken: new RefreshToken('uuid', 'testRefreshToken')
     }
 };
 

@@ -5,5 +5,7 @@ export const enum ErrorMessage {
     NotMatchedAuthenticationCode = '인증번호가 일치하지 않습니다.',
     ExceededPhoneDailyLimit = '일일 가능한 인증횟수를 초과하였습니다.',
     ExceededCodeAttempLimit = '인증번호를 연속으로 틀렸습니다.',
-    NotExistUserInSessionList = '현재 로그인정보에 없는 사용자입니다.'
+    NotExistUserInSessionList = '현재 로그인정보에 없는 사용자입니다.',
+    InvalidRefreshKey = '유효하지 않은 RefreshKey입니다.',
+    NotExistRefreshKeyInRequest = '요청에 RefreshKey가 존재하지 않습니다.'
 }
