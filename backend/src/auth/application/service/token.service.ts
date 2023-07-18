@@ -39,7 +39,7 @@ export class TokenService {
 
     async generateRefreshToken(user: User): Promise<RefreshToken> {
         const [uuid, refreshToken] = [
-            UUIDUtil.generatedUuidV1(),
+            UUIDUtil.generateOrderedUuid(),
             await this.jwtService.signAsync( this.generateJwtPayload(user), {
                 secret: this.refreshTokenSecret,
                 expiresIn: this.refreshTokenExpiresIn
