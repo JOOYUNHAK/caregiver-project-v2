@@ -18,9 +18,9 @@ export default async function requestCreateUser(RegisterData, navigation) {
             thirdRegister: purpose === 'protector' ? undefined : convertCaregiverThirdRegister(RegisterData.thirdRegister),
             lastRegister: purpose === 'protector' ? RegisterData.patientHelpList : RegisterData.lastRegister,
         });
-        const { accessToken, ...user } = res.data;
-        store.dispatch(saveUser(user));
-        await AsyncStorage.setItem('accessToken', accessToken)
+        const { accessToken, refreshKey, name } = res.data;
+        store.dispatch(saveUser(name));
+        await AsyncStorage.setItem([['accessToken', accessToken], ['refreshToken', refreshKey]]);
         navigation.dispatch(
             StackActions.push('registerCompletePage')
         );
