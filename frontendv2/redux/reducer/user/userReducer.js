@@ -8,7 +8,7 @@ const initialState = {
 const userReducer = createReducer(initialState, (builder) => {
     builder
         .addCase(saveUser, (state, action) => {
-            Object.assign(state, action.payload)
+            state.name = action.payload;
         })
         .addCase(logout, (state) => {
             state.name = '';
