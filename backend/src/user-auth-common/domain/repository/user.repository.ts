@@ -7,7 +7,7 @@ export interface UserRepository extends Repository<User> {
     findByPhoneNumber(phoneNumber: string): Promise<User>;
 };
 
-export const customPhoneRepositoryMethods: Pick<
+export const customUserRepositoryMethods: Pick<
     UserRepository,
     'findByRefreshKey' | 
     'findByPhoneNumber'
@@ -15,7 +15,7 @@ export const customPhoneRepositoryMethods: Pick<
         async findByRefreshKey(this: Repository<User>, refreshKey: string)
         :Promise<User> {
             return await this.createQueryBuilder('user')
-                .innerJoin('user.auth_token', 'auth')
+                .innerJoinAndSelect('user.authentication', 'auth')
                 .where('auth.refresh_key = :refreshKey', { refreshKey })
                 .getOne();
         },
@@ -23,6 +23,7 @@ export const customPhoneRepositoryMethods: Pick<
         : Promise<User> {
             return await this.createQueryBuilder('user')
                 .innerJoin('user.phone', 'phone')
+                .innerJoinAndSelect('user.authentication', 'token')
                 .where('phone.phone_number = :phoneNumber', { phoneNumber })
                 .getOne();
         },
@@ -34,6 +35,6 @@ export const UserRepositoryProvider = {
     useFactory(dataSource: DataSource) {
         return dataSource
             .getRepository(User)
-            .extend(customPhoneRepositoryMethods);
+            .extend(customUserRepositoryMethods);
     }
 }
