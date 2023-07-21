@@ -1,22 +1,32 @@
 import { DataSource, Repository } from "typeorm";
 import { User } from "../entity/user.entity";
 import { getDataSourceToken, getRepositoryToken } from "@nestjs/typeorm";
+import { UUIDUtil } from "src/util/uuid.util";
 
 export interface UserRepository extends Repository<User> {
+    findById(userId: number): Promise<User>;
     findByRefreshKey(refreshKey: string): Promise<User>;
     findByPhoneNumber(phoneNumber: string): Promise<User>;
 };
 
 export const customUserRepositoryMethods: Pick<
     UserRepository,
+    'findById' |
     'findByRefreshKey' | 
     'findByPhoneNumber'
     > = {
+        async findById(this: Repository<User>, userId: number)
+        :Promise<User> {
+            return await this.createQueryBuilder('user')
+                .innerJoinAndSelect('user.authentication', 'auth')
+                .where('user.id = :userId', { userId })
+                .getOne();
+        },
         async findByRefreshKey(this: Repository<User>, refreshKey: string)
         :Promise<User> {
             return await this.createQueryBuilder('user')
                 .innerJoinAndSelect('user.authentication', 'auth')
-                .where('auth.refresh_key = :refreshKey', { refreshKey })
+                .where('auth.refresh_key = :refreshKey', { refreshKey: UUIDUtil.toBinaray(refreshKey) })
                 .getOne();
         },
         async findByPhoneNumber(this: Repository<User>, phoneNumber: string)
