@@ -36,10 +36,10 @@ describe('토큰 서비스(TokenService) Test', () => {
         it('주어진 아이디와 토큰이 세션리스트에 저장되어야 한다', async () => {
             await sessionService.addUserToList(1, 'testAccessToken');
 
-            const result = await redis.HGET('user:session:list', '1');
+            const result = await sessionService.getUserFromList(1);
             expect(result).toBe('testAccessToken');
             
-            await redis.HDEL('user:session:list', '1');
+            await sessionService.deleteUserFromList(1);
         })
     });
 
@@ -56,7 +56,21 @@ describe('토큰 서비스(TokenService) Test', () => {
             const result = await sessionService.getUserFromList(40);
             expect(result).toBe('testAccessToken');
 
-            await redis.HDEL('user:session:list', '40');
+            await sessionService.deleteUserFromList(40);
         });
+    });
+
+    describe('deleteUserFromList', () => {
+        it('세션리스트에 존재하는 사용자가 삭제되는지 확인', async () => {
+            await sessionService.addUserToList(100, 'test');
+
+            const beforeFindResult = await sessionService.getUserFromList(100);
+            expect(beforeFindResult).not.toBe(null);
+
+            await sessionService.deleteUserFromList(100);
+
+            const afterFindResult = await sessionService.getUserFromList(100);
+            expect(afterFindResult).toBe(null);
+        })
     })
 })
