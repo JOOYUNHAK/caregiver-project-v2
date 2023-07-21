@@ -21,11 +21,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         if( this.isPublicApi(context) ) return true;
 
         /* 먼저 request.user의 상태를 확인해서 토큰 검사 통과했는지 확인 */
-        await super.canActivate(context)
+        await super.canActivate(context) 
         
-        const { userId } = context.switchToHttp().getRequest().body;
+        const user = context.switchToHttp().getRequest().user;
 
-        return await this.isExistUserInSessionList(userId);
+        return await this.isExistUserInSessionList(user.getId())
     };
 
     private isPublicApi(context: ExecutionContext) {
