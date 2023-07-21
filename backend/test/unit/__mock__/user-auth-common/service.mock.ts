@@ -4,6 +4,6 @@ export const MockUserAuthCommonService = {
     provide: UserAuthCommonService,
     useValue: {
         checkExistingUserByPhone: jest.fn(),
-        findUserByUserId: jest.fn()
+        findUserById: jest.fn()
     }
 }

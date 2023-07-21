@@ -28,14 +28,14 @@ describe('Jwt 전략(JwtStrategy) Test', () => {
     })
 
     it('토큰에 들어있는 사용자 정보를 찾을 수 없는경우 에러', async() => {
-        jest.spyOn(userAuthCommonService, 'findUserByUserId').mockResolvedValueOnce(null);
+        jest.spyOn(userAuthCommonService, 'findUserById').mockResolvedValueOnce(null);
 
         const result = async () => await jwtStrategy.validate({ userId: 1 } as JwtPayload);
         await expect(result).rejects.toThrowError(ErrorMessage.NotExistUser);
     })
 
     it('토큰에 들어있는 사용자 정보를 찾을 수 있는 경우 확인', async() => {
-        jest.spyOn(userAuthCommonService, 'findUserByUserId').mockResolvedValueOnce({ id: 1 } as User);
+        jest.spyOn(userAuthCommonService, 'findUserById').mockResolvedValueOnce({ id: 1 } as User);
         
         const result = await jwtStrategy.validate({ userId: 1 } as JwtPayload);
         expect(result).toEqual({id: 1})
