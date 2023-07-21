@@ -10,10 +10,8 @@ import { AuthMapper } from "../mapper/auth.mapper";
 import { SessionService } from "./session.service";
 import { AuthenticationCodeService } from "./authentication-code.service";
 import { UserAuthCommonService } from "src/user-auth-common/application/user-auth-common.service";
-import { NewUserAuthentication } from "src/user-auth-common/domain/interface/new-user-authentication.interface";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserRepository } from "src/user-auth-common/domain/repository/user.repository";
-import { RefreshToken } from "src/user-auth-common/domain/refresh-token";
 
 @Injectable()
 export class AuthService {
@@ -41,6 +39,11 @@ export class AuthService {
         await this.sendPhoneAuthCode(phoneNumber); // 발송 이후 코드 저장
         if (await this.userAuthCommonService.checkExistingUserByPhone(phoneNumber)) return 'exist'; // 가입 사용자인지 체크
         return 'newuser';
+    }
+
+    /* 로그아웃 -> 세션 리스트에서 사용자의 토큰 삭제 */
+    async logout(user: User): Promise<void> {
+        await this.sessionService.deleteUserFromList(user.getId());
     }
 
     /* 새로운 인증 갱신 */
