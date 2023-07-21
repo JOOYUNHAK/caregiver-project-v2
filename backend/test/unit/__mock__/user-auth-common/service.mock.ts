@@ -3,6 +3,7 @@ import { UserAuthCommonService } from "src/user-auth-common/application/user-aut
 export const MockUserAuthCommonService = {
     provide: UserAuthCommonService,
     useValue: {
-        checkExistingUserByPhone: jest.fn()
+        checkExistingUserByPhone: jest.fn(),
+        findUserById: jest.fn()
     }
 }
