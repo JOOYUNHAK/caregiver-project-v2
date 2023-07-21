@@ -6,6 +6,7 @@ import { JwtAuthGuard } from "src/auth/application/guard/jwt/jwt-auth.guard"
 import { JwtStrategy } from "src/auth/application/guard/jwt/jwt.strategy"
 import { SessionService } from "src/auth/application/service/session.service"
 import { MockSessionService } from "test/unit/__mock__/auth/service.mock"
+import { MockUserAuthCommonService } from "test/unit/__mock__/user-auth-common/service.mock"
 
 describe('Jwt인증가드(JwtAuthGuard) Test', () => {
     let sessionService: SessionService;
@@ -17,6 +18,7 @@ describe('Jwt인증가드(JwtAuthGuard) Test', () => {
             providers: [
                 JwtAuthGuard,
                 JwtStrategy,
+                MockUserAuthCommonService,
                 MockSessionService,
                 {
                     provide: Reflector,
@@ -60,7 +62,24 @@ describe('Jwt인증가드(JwtAuthGuard) Test', () => {
                     getResponse: jest.fn(),
                     getRequest: () => ({
                         headers: {},
-                        body: { userId: 1 }
+                    })
+                })
+            };
+
+            const result = async () => await jwtGuard.canActivate(mockContext);
+            await expect(result).rejects.toThrowError(UnauthorizedException)
+        });
+
+        it('토큰의 형식이 잘못되었다면 에러', async () => {
+            const mockContext: any = {
+                getHandler: jest.fn(),
+                getClass: jest.fn(),
+                switchToHttp: () => ({
+                    getResponse: jest.fn(),
+                    getRequest: () => ({
+                        headers: {
+                            Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                        },
                     })
                 })
             };
@@ -79,32 +98,13 @@ describe('Jwt인증가드(JwtAuthGuard) Test', () => {
                         headers: {
                             Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxIiwicm9sZSI6ImNhcmVnaXZlciIsImlhdCI6MTUxNjIzOTAyMn0.j-8NzDc8SkY7mRzgLpllfVdOAPsc2n1dDCkRbZ1EQgI"
                         },
-                        body: { userId: 1 }
                     })
                 })
             };
-
+            
             const result = async () => await jwtGuard.canActivate(mockContext);
             await expect(result).rejects.toThrowError(UnauthorizedException)
 
         })
-
-        it('토큰은 유효하지만 세션리스트에 없는 토큰이면 오류', async () => {
-            const mockContext: any = {
-                getHandler: jest.fn(),
-                getClass: jest.fn(),
-                switchToHttp: () => ({
-                    getResponse: jest.fn(),
-                    getRequest: () => ({
-                        headers: {},
-                        body: { userId: 1 }
-                    })
-                })
-            };
-
-            jest.spyOn(sessionService, 'getUserFromList').mockResolvedValueOnce(null);
-            const result = async () => await jwtGuard.canActivate(mockContext);
-            await expect(result).rejects.toThrowError(UnauthorizedException)
-        });
     })
 })
