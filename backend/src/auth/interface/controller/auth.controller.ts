@@ -44,4 +44,10 @@ export class AuthController {
     async login(@Body('phoneNumber') phoneNumber: string): Promise<'newuser' | 'exist'> {
         return await this.authService.login(phoneNumber);
     }
+
+    @Post('logout')
+    /* 로그아웃 */
+    async logout(@AuthenticatedUser() user: User): Promise<void> {
+        return await this.authService.logout(user)
+    }
 } 
