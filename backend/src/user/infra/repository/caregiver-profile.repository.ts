@@ -23,12 +23,21 @@ export class CaregiverProfileRepository implements ICaregiverProfileRepository<W
             .insertOne(caregiverProfile);
     };
 
-    async findById(id: string): Promise<WithId<CaregiverProfile>> {
+    async findById(id: string): Promise<CaregiverProfile> {
         const findProfile = await this.mongodb
                                 .collection<CaregiverProfile>(this.collectionName)
                                 .findOne({ _id: new ObjectId(id) });
         
         return plainToInstance(CaregiverProfile, findProfile); 
+    }
+
+    async findByUserId(userId: number): Promise<CaregiverProfile> {
+        const [findProfile] = await this.mongodb
+                                .collection<CaregiverProfile>(this.collectionName)
+                                .aggregate()
+                                .match({ userId })
+                                .toArray();
+        return plainToInstance(CaregiverProfile, findProfile);
     }
 
     async delete(id: string): Promise<void> {

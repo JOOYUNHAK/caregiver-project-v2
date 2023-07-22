@@ -1,5 +1,6 @@
 import { Test } from "@nestjs/testing"
 import { getRepositoryToken } from "@nestjs/typeorm"
+import { ObjectId } from "mongodb"
 import { SessionService } from "src/auth/application/service/session.service"
 import { TokenService } from "src/auth/application/service/token.service"
 import { Phone } from "src/user-auth-common/domain/entity/user-phone.entity"
@@ -12,6 +13,7 @@ import { UserMapper } from "src/user/application/mapper/user.mapper"
 import { CaregiverProfileService } from "src/user/application/service/caregiver-profile.service"
 import { PatientProfileService } from "src/user/application/service/patient-profile.service"
 import { UserService } from "src/user/application/service/user.service"
+import { CaregiverProfileBuilder } from "src/user/domain/builder/profile.builder"
 import { CaregiverRegisterDto } from "src/user/interface/dto/caregiver-register.dto"
 import { ProtectorRegisterDto } from "src/user/interface/dto/protector-register.dto"
 import { CommonRegisterForm } from "src/user/interface/dto/register-page"
@@ -36,7 +38,8 @@ describe('UserService Test', () => {
                     provide: UserMapper,
                     useValue: {
                         mapFrom: jest.fn().mockReturnValue(createTestUser()),
-                        toDto: jest.fn()
+                        toDto: jest.fn(),
+                        toMyProfileDto: jest.fn()
                     }
                 },
                 {
@@ -49,7 +52,8 @@ describe('UserService Test', () => {
                 {
                     provide: CaregiverProfileService,
                     useValue: {
-                        addProfile: jest.fn().mockReturnValue(null)
+                        addProfile: jest.fn().mockReturnValue(null),
+                        getProfileByUserId: jest.fn()
                     }
                 },
                 {
@@ -116,6 +120,51 @@ describe('UserService Test', () => {
 
             expect(profileSpy).toHaveBeenCalled();
         });
+    })
+
+    describe('getMyProfile()', () => {
+
+        afterEach(() => jest.resetAllMocks() );
+        
+        it('간병인이 내 프로필 조회시 자격증과 비공개 여부를 위해 repository를 호출하고 mapper에 profile도 같이 넘겨주어야 한다.', async () => {
+            const caregiver = new User(
+                '테스트',
+                ROLE.CAREGIVER,
+                LOGIN_TYPE.PHONE,
+                null,
+                null,
+                null,
+                null
+            );
+            const profile = new CaregiverProfileBuilder(new ObjectId()).isPrivate(true).build();
+            const repositorySpy = jest.spyOn(caregiverProfileService, 'getProfileByUserId').mockResolvedValueOnce(profile);
+            const mapperSpy = jest.spyOn(userMapper, 'toMyProfileDto');
+            
+            await userService.getMyProfile(caregiver);
+
+            expect(repositorySpy).toBeCalledTimes(1);
+            expect(mapperSpy).toBeCalledWith(caregiver, profile)
+        });
+
+        it('보호자가 내 프로필 조회시 profile을 조회하지 않고 넘어온 User만 mapper에 넘겨준다', async () => {
+            const protector = new User(
+                '테스트',
+                ROLE.PROTECTOR,
+                LOGIN_TYPE.PHONE,
+                null,
+                null,
+                null,
+                null
+            );
+
+            const repositorySpy = jest.spyOn(caregiverProfileService, 'getProfileByUserId')
+            const mapperSpy = jest.spyOn(userMapper, 'toMyProfileDto');
+            
+            await userService.getMyProfile(protector);
+
+            expect(repositorySpy).toBeCalledTimes(0);
+            expect(mapperSpy).toBeCalledWith(protector)
+        })
     })
 })
 

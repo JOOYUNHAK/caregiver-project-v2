@@ -22,12 +22,17 @@ describe('Caregiver Profile Mapper Component Test', () => {
             expect(mappingResult.getUserId()).toBe(userId);
 
             mappingResult.getLicenseList()
-                .map( license => expect(license).toBeInstanceOf(License));
+                .map( license => {
+                    expect(license).toBeInstanceOf(License);
+                    expect(license.getName()).toBe('자격증');
+                    expect(license.getIsCertified()).toBe(false);
+                });
 
             expect(mappingResult.getStrengthList()).toEqual([]);
             expect(mappingResult.getHelpExperience()).toHaveProperty('suction');
             expect(mappingResult.getHelpExperience()).toHaveProperty('movement');
             expect(mappingResult.getHelpExperience()).not.toHaveProperty('meal');
+            expect(mappingResult.getIsPrivate()).toBe(false);
             expect(mappingResult.getWarningList()).toEqual([]);
         })
     });

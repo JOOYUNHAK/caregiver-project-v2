@@ -19,6 +19,7 @@ export class CaregiverProfile {
     private licenseList: License []; // 자격증
     private strengthList: string []; // 강점
     private tagList: string []; // 키워드
+    private isPrivate: boolean; // 프로필 비공개, 공개
     private warningList: Warning [];
 
     constructor(id: ObjectId) { this._id = id; };
@@ -37,6 +38,7 @@ export class CaregiverProfile {
     setLicenseList(licenseList: License []) { this.licenseList = licenseList; };
     setStrengthList(strengthList: string []) { this.strengthList = strengthList; };
     setTagList(tagList: string []) { this.tagList = tagList; };
+    setIsPrivate(isPrivate: boolean) { this.isPrivate = isPrivate; };
     setWarning(warningList: Warning []) { this.warningList = warningList; };
 
     getId(): string { return this._id.toHexString(); };
@@ -44,5 +46,6 @@ export class CaregiverProfile {
     getHelpExperience(): CaregiverHelpExperience { return this.helpExperience; };
     getLicenseList(): License[] { return this.licenseList; };
     getStrengthList(): string[] { return this.strengthList; };
+    getIsPrivate(): boolean { return this.isPrivate; };
     getWarningList(): Warning[] { return this.warningList; };
 }

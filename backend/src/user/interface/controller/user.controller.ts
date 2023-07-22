@@ -1,9 +1,12 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { ProtectorRegisterDto } from "../dto/protector-register.dto";
 import { ClientDto } from "src/user-auth-common/interface/client.dto";
 import { CaregiverRegisterDto } from "../dto/caregiver-register.dto";
 import { UserService } from "src/user/application/service/user.service";
 import { Public } from "src/auth/application/decorator/public.decorator";
+import { AuthenticatedUser } from "src/auth/application/decorator/user.decorator";
+import { User } from "src/user-auth-common/domain/entity/user.entity";
+import { MyProfileDto } from "../dto/my-profile.dto";
 
 @Controller('user')
 export class UserController {
@@ -21,5 +24,11 @@ export class UserController {
     @Post('register/caregiver')
     async registerAsCaregiver(@Body() caregiverReigsterDto: CaregiverRegisterDto): Promise<ClientDto> {
         return await this.userService.register(caregiverReigsterDto)
+    }
+
+    /* 나의 프로필 조회 */
+    @Get('profile/my')
+    async getMyProfile(@AuthenticatedUser() user: User): Promise<MyProfileDto> {
+        return await this.userService.getMyProfile(user);
     }
 }

@@ -81,6 +81,11 @@ export class CaregiverProfileBuilder {
         return this;
     };
 
+    isPrivate(isPrivate: boolean): this {
+        this.caregiverProfile.setIsPrivate(isPrivate);
+        return this;
+    }
+
     warningList(warningList: Warning [] = []): this {
         this.caregiverProfile.setWarning(warningList);
         return this;

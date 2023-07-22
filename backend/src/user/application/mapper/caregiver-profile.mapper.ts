@@ -23,11 +23,13 @@ export class CaregiverProfileMapper {
             .tagList(thirdRegister.tagList)
             .notice(lastRegister.notice)
             .additionalChargeCase(lastRegister.additionalChargeCase)
+            .isPrivate(false) // 처음 프로필 생성될 시 자동 공개 프로필
             .warningList()
             .build()
     }
 
     private toLicenseList(licenseList: string[]): License[] {
-        return licenseList.map(license => new License(license))
+        /* 자격증을 증명전까지 false */
+        return licenseList.map(license => new License(license, false))
     };
 }
