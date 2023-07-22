@@ -52,6 +52,7 @@ export class User {
     getAuthentication(): Token { return this.authentication; };
 
     async getPhone(): Promise<Phone> { return await this.phone; };
+    async getEmail(): Promise<Email> { return await this.email; };
 
     /* 회원가입시 새로 발급된 인증 */
     setAuthentication(newUserAuthentication: NewUserAuthentication) {
