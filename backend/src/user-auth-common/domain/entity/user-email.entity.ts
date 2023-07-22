@@ -16,4 +16,8 @@ export class Email {
 
     @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
     private updatedAt: Time;
+
+    constructor(email: string) { this.email = email; };
+
+    getEmail(): string { return this.email; };
 }
