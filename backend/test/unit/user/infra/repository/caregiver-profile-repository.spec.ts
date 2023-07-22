@@ -73,6 +73,22 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
         await caregiverProfileRepository.delete(testProfile.getId());
     });
 
+    it('findByUserId() => 일치하는 문서 반환 확인', async() => {
+        testProfile = createCommonCaregiverProfile()
+                        .helpExperience({ suction: '석션입니다' })
+                        .licenseList([])
+                        .strengthList([])
+                        .warningList([])
+                        .build();
+
+        await caregiverProfileRepository.save(testProfile);
+        const findResult = await caregiverProfileRepository.findByUserId(1);
+
+        expect(findResult.getUserId()).toBe(1);
+
+        await caregiverProfileRepository.delete(testProfile.getId());
+    })
+
     it('delete() => 삭제이후 해당 문서는 존재하면 안된다.', async () => {
 
         testProfile = createCommonCaregiverProfile()
@@ -103,5 +119,6 @@ function createCommonCaregiverProfile() {
         .nextHosptial('다음 병원 여부')
         .tagList(['태그1', '태그2', '태그3'])
         .notice('공지사항을 알려드립니다')
+        .isPrivate(false)
         .additionalChargeCase('추가요금이 붙는 상황')
 };
