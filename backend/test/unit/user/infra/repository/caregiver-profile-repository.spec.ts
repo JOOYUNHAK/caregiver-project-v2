@@ -60,7 +60,7 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
     it('save() => 간병 경험이 비어있으면 DB에 {}로 저장', async () => {
         testProfile = createCommonCaregiverProfile()
                         .helpExperience({})
-                        .licenseList([new License('자격증')])
+                        .licenseList([new License('자격증', false)])
                         .strengthList(['강점'])
                         .warningList(null)
                         .build()
