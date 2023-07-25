@@ -20,6 +20,7 @@ import { MockAuthenticationCodeService, MockVerificationUsageService, MockTokenS
 import { MockSmsService } from 'test/unit/__mock__/notification/service.mock';
 import { MockUserRepository } from 'test/unit/__mock__/user-auth-common/repository.mock';
 import { MockUserAuthCommonService } from 'test/unit/__mock__/user-auth-common/service.mock';
+import { TestUser } from 'test/unit/user/user.fixtures';
 
 describe('인증 서비스(AuthService) Test', () => {
     let authService: AuthService;
@@ -99,19 +100,19 @@ describe('인증 서비스(AuthService) Test', () => {
         it('새로운 AccessToken을 변경하고 Session목록에 추가하기 위해 서비스 호출', async () => {
             const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
             const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
-            const user = new User('테스트', ROLE.CAREGIVER, LOGIN_TYPE.PHONE, null, null, null, existAuthentication);
+            const user = TestUser.default().withToken(existAuthentication);
 
             jest.spyOn(tokenService, 'generateAccessToken').mockResolvedValueOnce('accessToken');
             const sessionServiceSpy = jest.spyOn(sessionService, 'addUserToList').mockResolvedValueOnce(null);
 
-            await authService.createAuthenticationToUser(user);
+            await authService.createAuthenticationToUser(user as unknown as User);
             expect(sessionServiceSpy).toBeCalledTimes(1);
         });
 
         it('새로운 AccessToken으로 변경할때는 AccessToken만 변경되고, RefreshToken은 기존 값이어야 한다', async() => {
             const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
             const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
-            const user = new User('테스트', ROLE.CAREGIVER, LOGIN_TYPE.PHONE, null, null, null, existAuthentication);
+            const user = TestUser.default().withToken(existAuthentication);
 
             const newAccessToken = 'newAccessToken';
             
@@ -128,7 +129,7 @@ describe('인증 서비스(AuthService) Test', () => {
         it('RefreshToken으로 갱신할 경우 RefreshToken의 key와 값도 새로 발급받아져야 한다', async() => {
             const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
             const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
-            const user = new User('테스트', ROLE.CAREGIVER, LOGIN_TYPE.PHONE, null, null, null, existAuthentication);
+            const user = TestUser.default().withToken(existAuthentication);
 
             const [refreshAccessToken, newUuid, newRefreshToken] = ['refreshAccessToken', 'newUuid', 'newRefreshToken'];
             const refreshToken = new RefreshToken(newUuid, newRefreshToken);
@@ -136,7 +137,7 @@ describe('인증 서비스(AuthService) Test', () => {
 
             jest.spyOn(tokenService, 'generateNewUsersToken').mockResolvedValueOnce(refreshAuthentication);
 
-            await authService.refreshAuthentication(user);
+            await authService.refreshAuthentication(user as unknown as User);
             expect(user.getAuthentication().getAccessToken()).toBe(refreshAccessToken);
             expect(user.getAuthentication().getRefreshKey()).toBe(newUuid);
             expect(user.getAuthentication().getRefreshToken()).toBe(newRefreshToken);

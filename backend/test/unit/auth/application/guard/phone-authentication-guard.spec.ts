@@ -4,8 +4,6 @@ import { VerificationUsageService } from "src/auth/application/service/verificat
 import { PhoneVerificationUsage } from "src/auth/domain/entity/phone-verification-usage.entity";
 
 describe('휴대폰인증 발송 가드(PhoneAuthenticationGuard) Test', () => {
-    const blockedAt = new Date();
-
     const mockContext: any = {
         switchToHttp: () => ({
             getRequest: () => ({

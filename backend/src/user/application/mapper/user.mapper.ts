@@ -25,9 +25,9 @@ export class UserMapper extends UserAuthCommonMapper{
     /* 내 정보 -> 내 프로필 조회에 쓰이는 Dto */
     async toMyProfileDto(user: User, profile?: CaregiverProfile) {
         return {
-            phoneNumber: (await user.getPhone()).getPhoneNumber(),
+            phoneNumber: user.getPhone().getPhoneNumber(),
             role: user.getRole(),
-            email: this.checkEmailVerificationStatus(await user.getEmail()),
+            email: this.checkEmailVerificationStatus(user.getEmail()),
             isPrivate: profile ? profile.getIsPrivate() : undefined, // 간병인일 경우에만 프로필 비공개인지
         }
     }

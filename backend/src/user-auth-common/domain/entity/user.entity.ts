@@ -25,13 +25,13 @@ export class User {
     private registeredAt: Time;
 
     @OneToOne(() => Email, (email) => email.userId, { cascade: ['insert', 'update'] })
-    private email: Promise<Email>;
+    private email: Email;
 
     @OneToOne(() => Phone, (phone) => phone.userId, { cascade: ['insert', 'update'] })
-    private phone: Promise<Phone>;
+    private phone: Phone;
 
     @OneToOne(() => UserProfile, (profile) => profile.userId, { cascade: ['insert'] })
-    private profile: Promise<UserProfile>;
+    private profile: UserProfile;
 
     @OneToOne(() => Token, (token) => token.userId, { cascade: ['insert', 'update'] })
     private authentication: Token;
@@ -41,9 +41,9 @@ export class User {
         this.role = role;
         this.loginType = loginType;
         this.authentication = authentication;
-        this.email = Promise.resolve(email);
-        this.phone = Promise.resolve(phone);
-        this.profile = Promise.resolve(profile);
+        this.email = email;
+        this.phone = phone;
+        this.profile = profile;
     };
 
     getId(): number { return this.id; };
@@ -51,8 +51,8 @@ export class User {
     getRole(): ROLE { return this.role; };
     getAuthentication(): Token { return this.authentication; };
 
-    async getPhone(): Promise<Phone> { return await this.phone; };
-    async getEmail(): Promise<Email> { return await this.email; };
+    getPhone(): Phone { return this.phone; };
+    getEmail(): Email { return this.email; }
 
     /* 회원가입시 새로 발급된 인증 */
     setAuthentication(newUserAuthentication: NewUserAuthentication) {
