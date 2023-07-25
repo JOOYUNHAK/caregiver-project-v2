@@ -10,8 +10,8 @@ import Icon from "../../Icon";
 
 export default function EmailAndHp({ navigation }) {
     const { email, phoneNumber } = useSelector(state => ({
-        email: state.user.email,
-        phoneNumber: state.user.id
+        email: state.user.profile.email,
+        phoneNumber: state.user.profile.phoneNumber
     }));
 
     const Hp = setPhoneNumber(phoneNumber);

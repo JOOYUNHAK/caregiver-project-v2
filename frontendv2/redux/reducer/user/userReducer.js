@@ -1,8 +1,14 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { saveUser, logout } from "../../action/user/userAction";
+import { saveUser, logout, saveProfile } from "../../action/user/userAction";
 
 const initialState = {
-    name: ''
+    name: '',
+    profile: {
+        phoneNumber: '',
+        email: '',
+        role: '',
+        isPrivate: undefined,
+    }
 };
 
 const userReducer = createReducer(initialState, (builder) => {
@@ -10,8 +16,16 @@ const userReducer = createReducer(initialState, (builder) => {
         .addCase(saveUser, (state, action) => {
             state.name = action.payload;
         })
+        .addCase(saveProfile, (state, action) => {
+            state.profile.email = action.payload.email;
+            state.profile.phoneNumber = action.payload.phoneNumber;
+            state.profile.role = 
+                action.payload.role === 'caregiver' ? '간병인' : '보호자';
+            state.profile.isPrivate = 
+                !!action.payload.isPrivate ? action.payload.isPrivate : undefined;
+        })
         .addCase(logout, (state) => {
-            state.name = '';
+            Object.assign(state, initialState)
         })
 });
 
