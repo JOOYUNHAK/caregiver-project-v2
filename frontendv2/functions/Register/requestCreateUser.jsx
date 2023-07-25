@@ -20,7 +20,7 @@ export default async function requestCreateUser(RegisterData, navigation) {
         });
         const { accessToken, refreshKey, name } = res.data;
         store.dispatch(saveUser(name));
-        await AsyncStorage.setItem([['accessToken', accessToken], ['refreshToken', refreshKey]]);
+        await AsyncStorage.multiSet([['accessToken', accessToken], ['refreshToken', refreshKey]]);
         navigation.dispatch(
             StackActions.push('registerCompletePage')
         );

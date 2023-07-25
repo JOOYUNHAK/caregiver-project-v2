@@ -7,9 +7,9 @@ import { useSelector } from "react-redux";
 import Icon from "../../components/Icon";
 
 export default function UserInfo() {
-    const { name, purpose } = useSelector(state => ({
+    const { name, role } = useSelector(state => ({
         name: state.user.name,
-        purpose: state.user.purpose
+        role: state.user.profile.role
     }))
 
     return (
@@ -22,9 +22,9 @@ export default function UserInfo() {
                     {name}님
                 </Text>
                 <Text >
-                    {purpose === '간병인' ? 
-                        (`${purpose}으로 활동중이에요`) :
-                             (`${purpose}로 활동중이에요`)}
+                    {role === '간병인' ? 
+                        (`${role}으로 활동중이에요`) :
+                             (`${role}로 활동중이에요`)}
                 </Text>
             </View>
         </View>
