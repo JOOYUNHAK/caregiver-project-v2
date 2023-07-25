@@ -1,24 +1,18 @@
 import { NotFoundException, UnauthorizedException } from "@nestjs/common"
 import { Test } from "@nestjs/testing"
-import { getRepositoryToken } from "@nestjs/typeorm"
-import { RedisClientType } from "redis"
 import { PhoneAuthenticationCodeGuard } from "src/auth/application/guard/authentication-code.guard"
 import { AuthenticationCodeService } from "src/auth/application/service/authentication-code.service"
 import { VerificationUsageService } from "src/auth/application/service/verification-usage.service"
 import { AuthenticationCode } from "src/auth/domain/authentication-code"
 import { PhoneVerificationUsage } from "src/auth/domain/entity/phone-verification-usage.entity"
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum"
-import { User } from "src/user-auth-common/domain/entity/user.entity"
-import { UserRepository } from "src/user-auth-common/domain/repository/user.repository"
 import { MockAuthenticationCodeService, MockVerificationUsageService } from "test/unit/__mock__/auth/service.mock"
 import { MockUserRepository } from "test/unit/__mock__/user-auth-common/repository.mock"
 
 describe('인증코드 관련 가드(AuthenticationCodeGuard) Test', () => {
-    let userRepository: UserRepository;
     let verificationUsgaeService: VerificationUsageService;
     let authenticationCodeService: AuthenticationCodeService;
     let guard: PhoneAuthenticationCodeGuard;
-    let redis: RedisClientType;
 
     beforeAll(async () => {
         const module = await Test.createTestingModule({
@@ -36,11 +30,9 @@ describe('인증코드 관련 가드(AuthenticationCodeGuard) Test', () => {
             ]
         }).compile();
 
-        userRepository = module.get(getRepositoryToken(User));
         verificationUsgaeService = module.get(VerificationUsageService);
         authenticationCodeService = module.get(AuthenticationCodeService);
         guard = module.get(PhoneAuthenticationCodeGuard);
-        redis = module.get('REDIS_CLIENT');
     });
 
     const [phoneNumber, code] = ['01012345667', 232222];

@@ -4,12 +4,10 @@ import { Reflector } from "@nestjs/core"
 import { Test } from "@nestjs/testing"
 import { JwtAuthGuard } from "src/auth/application/guard/jwt/jwt-auth.guard"
 import { JwtStrategy } from "src/auth/application/guard/jwt/jwt.strategy"
-import { SessionService } from "src/auth/application/service/session.service"
 import { MockSessionService } from "test/unit/__mock__/auth/service.mock"
 import { MockUserAuthCommonService } from "test/unit/__mock__/user-auth-common/service.mock"
 
 describe('Jwt인증가드(JwtAuthGuard) Test', () => {
-    let sessionService: SessionService;
     let reflector: Reflector;
     let jwtGuard: JwtAuthGuard;
 
@@ -35,7 +33,6 @@ describe('Jwt인증가드(JwtAuthGuard) Test', () => {
             ]
         }).compile();
 
-        sessionService = module.get(SessionService);
         reflector = module.get(Reflector);
         jwtGuard = module.get(JwtAuthGuard);
     });
