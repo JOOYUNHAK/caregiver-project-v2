@@ -3,10 +3,10 @@ import { JwtService } from "@nestjs/jwt"
 import { Test } from "@nestjs/testing"
 import { TokenService } from "src/auth/application/service/token.service"
 import { User } from "src/user-auth-common/domain/entity/user.entity"
-import { LOGIN_TYPE, ROLE } from "src/user-auth-common/domain/enum/user.enum"
 import { NewUserAuthentication } from "src/user-auth-common/domain/interface/new-user-authentication.interface"
 import { RefreshToken } from "src/user-auth-common/domain/refresh-token"
 import { MockJwtService } from "test/unit/__mock__/auth/service.mock"
+import { TestUser } from "test/unit/user/user.fixtures"
 
 describe('토큰 서비스(TokenService) Test', () => {
     let tokenService: TokenService; 
@@ -41,7 +41,7 @@ describe('토큰 서비스(TokenService) Test', () => {
         tokenService = module.get(TokenService);
     });
 
-    beforeEach(() => userStub = new User('test', ROLE.CAREGIVER, LOGIN_TYPE.PHONE, null, null, null, null))
+    beforeEach(() => userStub = TestUser.default() as unknown as User )
 
     describe('generateNewUsersToken()', () => {
         it('반환된 객체는 NewUserAuthentication의 인스턴스여야한다', async() => {

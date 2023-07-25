@@ -5,12 +5,11 @@ import { Test } from "@nestjs/testing"
 import { getRepositoryToken } from "@nestjs/typeorm"
 import { RefreshAuthenticationGuard } from "src/auth/application/guard/refresh-authentication.guard"
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum"
-import { Token } from "src/user-auth-common/domain/entity/auth-token.entity"
 import { User } from "src/user-auth-common/domain/entity/user.entity"
-import { LOGIN_TYPE, ROLE } from "src/user-auth-common/domain/enum/user.enum"
 import { UserRepository } from "src/user-auth-common/domain/repository/user.repository"
 import { MockJwtService } from "test/unit/__mock__/auth/service.mock"
 import { MockUserRepository } from "test/unit/__mock__/user-auth-common/repository.mock"
+import { TestUser } from "test/unit/user/user.fixtures"
 
 describe('인증 갱신 가드(RefreshAuthenticationGuard) Test', () => {
     let userRepository: UserRepository,
@@ -89,9 +88,11 @@ describe('인증 갱신 가드(RefreshAuthenticationGuard) Test', () => {
                     })
                 })
             } as ExecutionContext;
-            const userStub = new User('test', ROLE.CAREGIVER, LOGIN_TYPE.PHONE, null, null, null, new Token('access', 'key', 'refresh'));
 
-            jest.spyOn(userRepository, 'findByRefreshKey').mockResolvedValueOnce(userStub);
+
+            const testUser = TestUser.default();
+
+            jest.spyOn(userRepository, 'findByRefreshKey').mockResolvedValueOnce(testUser as unknown as User);
             jest.spyOn(jwtService, 'verifyAsync').mockRejectedValueOnce(new UnauthorizedException('검증실패'));
 
             const result = async () => await refreshAuthenticationGuard.canActivate(mockContext);
