@@ -19,6 +19,8 @@ export const customUserRepositoryMethods: Pick<
         :Promise<User> {
             return await this.createQueryBuilder('user')
                 .innerJoinAndSelect('user.authentication', 'auth')
+                .innerJoinAndSelect('user.phone', 'phone')
+                .leftJoinAndSelect('user.email', 'email')
                 .where('user.id = :userId', { userId })
                 .getOne();
         },
