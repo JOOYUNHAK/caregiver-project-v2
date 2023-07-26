@@ -12,7 +12,6 @@ import { SmsService } from 'src/notification/sms/infra/service/sms.service';
 import { UserAuthCommonService } from 'src/user-auth-common/application/user-auth-common.service';
 import { Token } from 'src/user-auth-common/domain/entity/auth-token.entity';
 import { User } from 'src/user-auth-common/domain/entity/user.entity';
-import { LOGIN_TYPE, ROLE } from 'src/user-auth-common/domain/enum/user.enum';
 import { NewUserAuthentication } from 'src/user-auth-common/domain/interface/new-user-authentication.interface';
 import { RefreshToken } from 'src/user-auth-common/domain/refresh-token';
 import { MockPhoneVerificationRepository } from 'test/unit/__mock__/auth/repository.mock';
@@ -29,6 +28,7 @@ describe('인증 서비스(AuthService) Test', () => {
     let sessionService: SessionService;
     let verificationUsageService: VerificationUsageService;
     let userAuthCommonService: UserAuthCommonService;
+    let authMapper: AuthMapper;
 
     beforeAll(async () => {
         const module = await Test.createTestingModule({
@@ -51,7 +51,7 @@ describe('인증 서비스(AuthService) Test', () => {
                 MockPhoneVerificationRepository,
                 MockAuthenticationCodeService,
                 MockUserAuthCommonService,
-                MockUserRepository
+                MockUserRepository,
             ]
         }).compile();
         authService = module.get(AuthService);
@@ -60,9 +60,11 @@ describe('인증 서비스(AuthService) Test', () => {
         sessionService = module.get(SessionService);
         verificationUsageService = module.get(VerificationUsageService);
         userAuthCommonService = module.get(UserAuthCommonService);
+        authMapper = module.get(AuthMapper);
     });
 
     beforeEach( () => jest.clearAllMocks() );
+
     describe('register()', () => {
         it('이미 가입되어 있는 전화번호인 경우 409에러를 던진다', async () => {
             jest.spyOn(userAuthCommonService, 'checkExistingUserByPhone').mockResolvedValue(true)
@@ -96,17 +98,57 @@ describe('인증 서비스(AuthService) Test', () => {
         });
     });
 
-    describe('createAuthenticationToUser()', () => {
-        it('새로운 AccessToken을 변경하고 Session목록에 추가하기 위해 서비스 호출', async () => {
+    describe('createAuthentication()', () => {
+        it('새로 가입된 사용자에게 새로 발급된 인증이 부여되어야 한다', async () => {
+            const newUser = TestUser.default().withToken(null);
+            expect(newUser.getAuthentication()).toBe(null);
+
+            const [newAccessToken, newRefreshKey, newRefreshToken] = ['newAccessToken', 'newRefreshKey', 'newRefreshToken'];
+            const newAuthentication = new NewUserAuthentication(newAccessToken, new RefreshToken(newRefreshKey, newRefreshToken));
+            newUser.setAuthentication(newAuthentication);
+
+            expect(newUser.getAuthentication()).not.toBe(null);
+            expect(newUser.getAuthentication().getAccessToken()).toBe(newAccessToken);
+            expect(newUser.getAuthentication().getRefreshKey()).toBe(newRefreshKey);
+            expect(newUser.getAuthentication().getRefreshToken()).toBe(newRefreshToken);
+        });
+
+        it('생성된 토큰을 세션리스트에 추가하기 위해 호출하고, 사용자용 Dto 반환', async() => {
+            const testUser = TestUser.default().withToken(null) as unknown as User;
+
+            const [newAccessToken, newRefreshKey, newRefreshToken] = ['newAccessToken', 'newRefreshKey', 'newRefreshToken'];
+            const newAuthentication = new NewUserAuthentication(newAccessToken, new RefreshToken(newRefreshKey, newRefreshToken));
+
+            jest.spyOn(tokenService, 'generateNewUsersToken').mockResolvedValueOnce(newAuthentication);
+
+            const expectedDto = { name: testUser.getName(), accessToken: newAccessToken, refreshKey: newRefreshKey };
+            jest.spyOn(authMapper, 'toDto').mockReturnValueOnce(expectedDto); // 예상 결과값
+
+            const sessionSpy = jest.spyOn(sessionService, 'addUserToList'); // 세션 리스트에 추가되는지
+
+            const result = await authService.createAuthentication(testUser);
+            expect(sessionSpy).toHaveBeenCalledWith(testUser.getId(), newAccessToken);
+            expect(result).toEqual(expectedDto);
+        })
+    })
+
+    describe('changeAuthentication()', () => {
+        it('새로운 AccessToken으로 변경하고 Session목록에 변경된 토큰 추가 및 사용자용 Dto 반환', async () => {
             const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
             const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
             const user = TestUser.default().withToken(existAuthentication);
 
-            jest.spyOn(tokenService, 'generateAccessToken').mockResolvedValueOnce('accessToken');
-            const sessionServiceSpy = jest.spyOn(sessionService, 'addUserToList').mockResolvedValueOnce(null);
+            const changedToken = 'changedAccessToken';
+            jest.spyOn(tokenService, 'generateAccessToken').mockResolvedValueOnce(changedToken);
+            
+            const expectedDto = { name: user.getName(), accessToken: changedToken, refreshKey: existRefreshKey };
+            jest.spyOn(authMapper, 'toDto').mockReturnValueOnce(expectedDto); // 예상 결과값
 
-            await authService.createAuthenticationToUser(user as unknown as User);
-            expect(sessionServiceSpy).toBeCalledTimes(1);
+            const sessionSpy = jest.spyOn(sessionService, 'addUserToList')
+
+            const result = await authService.changeAuthentication(user as unknown as User);
+            expect(sessionSpy).toHaveBeenCalledWith(user.getId(), changedToken);
+            expect(result).toEqual(expectedDto);
         });
 
         it('새로운 AccessToken으로 변경할때는 AccessToken만 변경되고, RefreshToken은 기존 값이어야 한다', async() => {
@@ -120,12 +162,33 @@ describe('인증 서비스(AuthService) Test', () => {
             user.changeAuthentication(newAccessToken);
 
             expect(user.getAuthentication().getAccessToken()).toBe(newAccessToken);
-            expect(user.getAuthentication().getRefreshKey()).toBe('uuid');
-            expect(user.getAuthentication().getRefreshToken()).toBe('existRefreshToken');
+            expect(user.getAuthentication().getRefreshKey()).toBe(existRefreshKey);
+            expect(user.getAuthentication().getRefreshToken()).toBe(existRefreshToken);
         });
     })
 
     describe('refreshAuthentication()', () => {
+        it('새로 갱신된 토큰을 Session목록에 추가 및 사용자용 Dto 반환', async () => {
+            const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
+            const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
+            const user = TestUser.default().withToken(existAuthentication);
+
+            const [refreshAccessToken, refreshKey, newRefreshToken] = ['refreshAccessToken', 'newUuid', 'newRefreshToken'];
+            const refreshToken = new RefreshToken(refreshKey, newRefreshToken);
+            const refreshAuthentication = new NewUserAuthentication(refreshAccessToken, refreshToken);
+            
+            jest.spyOn(tokenService, 'generateNewUsersToken').mockResolvedValueOnce(refreshAuthentication);
+
+            const expectedDto = { name: user.getName(), accessToken: refreshAccessToken, refreshKey: refreshKey };
+            jest.spyOn(authMapper, 'toDto').mockReturnValueOnce(expectedDto); // 예상 결과값
+
+            const sessionSpy = jest.spyOn(sessionService, 'addUserToList')
+
+            const result = await authService.refreshAuthentication(user as unknown as User);
+            expect(sessionSpy).toHaveBeenCalledWith(user.getId(), refreshAccessToken);
+            expect(result).toEqual(expectedDto);
+        });
+
         it('RefreshToken으로 갱신할 경우 RefreshToken의 key와 값도 새로 발급받아져야 한다', async() => {
             const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
             const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
@@ -137,10 +200,11 @@ describe('인증 서비스(AuthService) Test', () => {
 
             jest.spyOn(tokenService, 'generateNewUsersToken').mockResolvedValueOnce(refreshAuthentication);
 
-            await authService.refreshAuthentication(user as unknown as User);
+            user.refreshAuthentication(refreshAuthentication);
+
             expect(user.getAuthentication().getAccessToken()).toBe(refreshAccessToken);
             expect(user.getAuthentication().getRefreshKey()).toBe(newUuid);
             expect(user.getAuthentication().getRefreshToken()).toBe(newRefreshToken);
-        })
+        });
     })
 })
