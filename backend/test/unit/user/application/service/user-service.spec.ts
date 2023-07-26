@@ -56,7 +56,7 @@ describe('UserService Test', () => {
             jest.spyOn(caregiverProfileService, 'addProfile').mockResolvedValueOnce(null);
 
             const clientDto = { name: '테스트', accessToken: 'access', refreshKey: 'refreshKey' };
-            jest.spyOn(authService, 'refreshAuthentication').mockResolvedValueOnce(clientDto);
+            jest.spyOn(authService, 'createAuthentication').mockResolvedValueOnce(clientDto);
 
             const registerDto = { firstRegister: { purpose: ROLE.CAREGIVER } } as CaregiverRegisterDto;
             const result = await userService.register(registerDto);
@@ -76,7 +76,7 @@ describe('UserService Test', () => {
             jest.spyOn(patientProfileService, 'addProfile').mockResolvedValueOnce(null);
 
             const clientDto = { name: '테스트', accessToken: 'access', refreshKey: 'refreshKey' };
-            jest.spyOn(authService, 'refreshAuthentication').mockResolvedValueOnce(clientDto);
+            jest.spyOn(authService, 'createAuthentication').mockResolvedValueOnce(clientDto);
 
             const registerDto = { firstRegister: { purpose: ROLE.PROTECTOR } } as ProtectorRegisterDto;
             const result = await userService.register(registerDto);

@@ -30,7 +30,7 @@ export class UserService {
 
         await this.addProfile(savedUser.getId(), registerDto); // 각자의 역할 프로필 저장
 
-        return await this.authService.refreshAuthentication(savedUser); // 새로운 토큰들을 발급받아 저장
+        return await this.authService.createAuthentication(savedUser); // 새로운 토큰들을 발급받아 저장
     }
 
     async getMyProfile(user: User): Promise<MyProfileDto> {
