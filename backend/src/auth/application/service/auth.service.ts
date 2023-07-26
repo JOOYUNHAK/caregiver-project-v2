@@ -12,6 +12,7 @@ import { AuthenticationCodeService } from "./authentication-code.service";
 import { UserAuthCommonService } from "src/user-auth-common/application/user-auth-common.service";
 import { InjectRepository } from "@nestjs/typeorm";
 import { UserRepository } from "src/user-auth-common/domain/repository/user.repository";
+import { NewUserAuthentication } from "src/user-auth-common/domain/interface/new-user-authentication.interface";
 
 @Injectable()
 export class AuthService {
@@ -25,7 +26,7 @@ export class AuthService {
         private readonly smsService: SmsService, // sms 발송 서비스
         private readonly sessionService: SessionService, // session 관리 서비스
         private readonly authMapper: AuthMapper
-    ) {}
+    ) { }
 
     async register(phoneNumber: string) {
         /* 이미 가입된 전화번호 인지 확인 이후 인증번호 발송 */
@@ -46,21 +47,27 @@ export class AuthService {
         await this.sessionService.deleteUserFromList(user.getId());
     }
 
-    /* 새로운 인증 갱신 */
-    async refreshAuthentication(user: User): Promise<ClientDto> {
-        const newAuthentication = await this.tokenService.generateNewUsersToken(user); // 새로운 인증 발급
-        user.setAuthentication(newAuthentication); 
-        await this.userRepository.save(user); // 새로운 갱신토큰, 갱신키 저장
-        await this.sessionService.addUserToList(user.getId(), newAuthentication.refreshToken.getToken()); // 새로운 AccessToken 세션에 추가
-        return this.authMapper.toDto(user);
+    /* 회원가입 시 새로운 인증을 발급 */
+    async createAuthentication(user: User): Promise<ClientDto> {
+        const newAuthentication = await this.generateAuthentication(user);
+        user.setAuthentication(newAuthentication);
+        await this.userRepository.save(user);
+        return await this.addToSessionListAndMapToDto(user, newAuthentication.accessToken);
     }
 
-    /* 로그인에 성공한 사용자는 사용할 토큰 발급 */
-    async createAuthenticationToUser(user: User): Promise<ClientDto> {
+    /* 로그인에 성공한 사용자는 새로운 AccessToken으로 변경  */
+    async changeAuthentication(user: User): Promise<ClientDto> {
         const newAccessToken = await this.tokenService.generateAccessToken(user); // 새로운 AccessToken 발급
         user.changeAuthentication(newAccessToken); // RefreshToken은 기존 토큰 사용
-        await this.sessionService.addUserToList(user.getId(), newAccessToken) // sessionList에 추가
-        return this.authMapper.toDto(user);
+        return await this.addToSessionListAndMapToDto(user, newAccessToken);
+    }
+
+    /* 만료된 토큰일 경우 RefreshToken으로 새로 갱신 */
+    async refreshAuthentication(user: User): Promise<ClientDto> {
+        const refreshedAuthentication = await this.generateAuthentication(user);
+        user.refreshAuthentication(refreshedAuthentication);
+        await this.userRepository.save(user);
+        return await this.addToSessionListAndMapToDto(user, refreshedAuthentication.accessToken);
     }
 
     /* 문자 발송 이후 발송된 코드 저장 */
@@ -73,5 +80,16 @@ export class AuthService {
                 phoneNumber, authenticationCodeMessage.getAuthenticationCode().toString()
             )
         ]);
+    }
+
+    /* 새로운 전체 인증(AccessToken, RefreshToken)을 생성하는 메서드 */
+    private async generateAuthentication(user: User): Promise<NewUserAuthentication> {
+        return await this.tokenService.generateNewUsersToken(user);
+    }
+
+    /* 세션 리스트에 사용자를 추가하고 사용자에게 넘겨줄 Dto로 변환 */
+    private async addToSessionListAndMapToDto(user: User, newAccessToken: string): Promise<ClientDto> {
+        await this.sessionService.addUserToList(user.getId(), newAccessToken);
+        return this.authMapper.toDto(user);
     }
 }
