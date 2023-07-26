@@ -5,22 +5,23 @@ import { Test } from "@nestjs/testing"
 import { getRepositoryToken } from "@nestjs/typeorm"
 import { RefreshAuthenticationGuard } from "src/auth/application/guard/refresh-authentication.guard"
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum"
+import { Token } from "src/user-auth-common/domain/entity/auth-token.entity"
 import { User } from "src/user-auth-common/domain/entity/user.entity"
 import { UserRepository } from "src/user-auth-common/domain/repository/user.repository"
-import { MockJwtService } from "test/unit/__mock__/auth/service.mock"
 import { MockUserRepository } from "test/unit/__mock__/user-auth-common/repository.mock"
 import { TestUser } from "test/unit/user/user.fixtures"
 
 describe('인증 갱신 가드(RefreshAuthenticationGuard) Test', () => {
     let userRepository: UserRepository,
             jwtService: JwtService,
+            configService: ConfigService,
             refreshAuthenticationGuard: RefreshAuthenticationGuard;
     
     beforeAll( async() => {
         const module = await Test.createTestingModule({
             providers: [
                 MockUserRepository,
-                MockJwtService,
+                JwtService,
                 RefreshAuthenticationGuard,
                 {
                     provide: ConfigService,
@@ -43,6 +44,7 @@ describe('인증 갱신 가드(RefreshAuthenticationGuard) Test', () => {
         }).compile();
         
         userRepository = module.get(getRepositoryToken(User));
+        configService = module.get(ConfigService);
         jwtService = module.get(JwtService);
         refreshAuthenticationGuard = module.get(RefreshAuthenticationGuard);
     })
@@ -78,7 +80,7 @@ describe('인증 갱신 가드(RefreshAuthenticationGuard) Test', () => {
             await expect(result).rejects.toThrowError(new UnauthorizedException(ErrorMessage.InvalidRefreshKey));
         });
 
-        it('조회된 RefreshToken의 유효성검사를 통과하지 못하면 401 에러', async() => {
+        it('조회된 RefreshToken의 signature가 일치하지 않으면 401 에러', async() => {
             const mockContext = {
                 switchToHttp: () => ({
                     getRequest: () => ({
@@ -89,16 +91,47 @@ describe('인증 갱신 가드(RefreshAuthenticationGuard) Test', () => {
                 })
             } as ExecutionContext;
 
+            /* 잘못 서명된 토큰을 만들고 Test */
+            const wrongSecretKey = 'wrongSecretKey';
+            const refreshToken = await jwtService.signAsync({}, {
+                secret: wrongSecretKey,
+                expiresIn: '100d'
+            });
 
-            const testUser = TestUser.default();
+            const wrongRefreshToken = new Token(null, null, refreshToken);
+            const testUser = TestUser.default().withToken(wrongRefreshToken);
 
             jest.spyOn(userRepository, 'findByRefreshKey').mockResolvedValueOnce(testUser as unknown as User);
-            jest.spyOn(jwtService, 'verifyAsync').mockRejectedValueOnce(new UnauthorizedException('검증실패'));
 
             const result = async () => await refreshAuthenticationGuard.canActivate(mockContext);
-            await expect(result).rejects.toThrowError(new UnauthorizedException('검증실패'))
+            await expect(result).rejects.toThrowError(new UnauthorizedException('invalid signature'))
         });
 
+        it('조회된 RefreshToken이 만료되었으면 401 에러', async() => {
+            const mockContext = {
+                switchToHttp: () => ({
+                    getRequest: () => ({
+                        body: {
+                            refreshKey: 'refreshKey'
+                        }
+                    })
+                })
+            } as ExecutionContext;
 
+            /* 바로 만료되는 토큰을 만들고 Test */
+            const testTime = '0s';
+            const refreshToken = await jwtService.signAsync({}, {
+                secret: configService.get('jwt.refreshToken.secret'),
+                expiresIn: testTime
+            });
+
+            const expiredRfreshToken = new Token(null, null, refreshToken);
+            const testUser = TestUser.default().withToken(expiredRfreshToken);
+
+            jest.spyOn(userRepository, 'findByRefreshKey').mockResolvedValueOnce(testUser as unknown as User);
+
+            const result = async () => await refreshAuthenticationGuard.canActivate(mockContext);
+            await expect(result).rejects.toThrowError(new UnauthorizedException('jwt expired'))
+        });
     })
 })
