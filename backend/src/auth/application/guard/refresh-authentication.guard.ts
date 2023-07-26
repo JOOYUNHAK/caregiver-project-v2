@@ -4,14 +4,20 @@ import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { UserRepository } from "src/user-auth-common/domain/repository/user.repository";
 import { JwtService } from "@nestjs/jwt";
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class RefreshAuthenticationGuard implements CanActivate{
+    private refreshTokenSecret: string;
+    
     constructor(
         @InjectRepository(User)
         private readonly userRepository: UserRepository,
         private readonly jwtService: JwtService,
-    ) {}
+        private readonly configService: ConfigService
+    ) {
+        this.refreshTokenSecret = configService.get('jwt.refreshToken.secret')
+    }
     
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const request = context.switchToHttp().getRequest();
@@ -20,7 +26,10 @@ export class RefreshAuthenticationGuard implements CanActivate{
         const user = await this.getUserByRefreshKey(request.body.refreshKey); 
 
         /* 조회된 유저의 RefreshToken 검증 */
-        await this.jwtService.verifyAsync( user.getAuthentication().getRefreshToken());
+        await this.jwtService.verifyAsync( user.getAuthentication().getRefreshToken(), { 
+            secret: this.refreshTokenSecret,
+            ignoreExpiration: false
+        });
 
         request.user = user;
         return true;
