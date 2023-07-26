@@ -67,13 +67,22 @@ export class TestUser {
     getEmail(): Email { return this.email; }
 
     /* 회원가입시 새로 발급된 인증 */
-    setAuthentication(newUserAuthentication: NewUserAuthentication) {
+    setAuthentication(newAuthentication: NewUserAuthentication) {
         this.authentication = new Token(
-            newUserAuthentication.accessToken,
-            newUserAuthentication.refreshToken.getKey(),
-            newUserAuthentication.refreshToken.getToken()
+            newAuthentication.accessToken,
+            newAuthentication.refreshToken.getKey(),
+            newAuthentication.refreshToken.getToken()
         );
     };
+
+    /* 인증을 새로 갱신할 때 전체 값만 변경 */
+    refreshAuthentication(refreshedAuthentication: NewUserAuthentication) {
+        this.authentication.refreshAuthentication(
+            refreshedAuthentication.accessToken, 
+            refreshedAuthentication.refreshToken.getKey(),
+            refreshedAuthentication.refreshToken.getToken()
+        );
+    }
 
     /* 로그인에만 성공시 사용할 AccessToken만 변경 */
     changeAuthentication(newAccessToken: string): void {
