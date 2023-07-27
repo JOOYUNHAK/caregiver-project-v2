@@ -8,5 +8,6 @@ export const enum ErrorMessage {
     NotExistUser = '일치하는 사용자 정보를 찾을 수 없습니다.',
     NotExistUserInSessionList = '현재 로그인정보에 없는 사용자입니다.',
     InvalidRefreshKey = '유효하지 않은 RefreshKey입니다.',
-    NotExistRefreshKeyInRequest = '요청에 RefreshKey가 존재하지 않습니다.'
+    NotExistRefreshKeyInRequest = '요청에 RefreshKey가 존재하지 않습니다.',
+    ExpiredToken = 'jwt expired'
 }
