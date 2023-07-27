@@ -15,8 +15,8 @@ import api from '../../config/CustomAxios';
 import { saveId, saveIsAuthed } from '../../redux/action/register/firstRegisterAction';
 import { useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { saveUser } from '../../redux/action/user/userAction';
 import { StackActions } from '@react-navigation/native';
+import { saveUser } from '../../redux/action/user/userAction';
 
 
 export default function AuthId({ navigation }) {
@@ -81,8 +81,8 @@ export default function AuthId({ navigation }) {
                 }, 200);
             } else {
                 const { accessToken, refreshKey, name } = res.data;  
+                await AsyncStorage.multiSet([['accessToken', accessToken], ['refreshToken', refreshKey], ['name', name]]);
                 dispatch(saveUser(name));
-                await AsyncStorage.multiSet([['accessToken', accessToken], ['refreshToken', refreshKey]]);
                 navigation.dispatch(
                     StackActions.pop()
                 )
