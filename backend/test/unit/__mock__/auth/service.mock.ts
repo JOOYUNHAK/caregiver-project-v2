@@ -42,7 +42,8 @@ export const MockSessionService = {
     provide: SessionService,
     useValue: {
         addUserToList: jest.fn(),
-        getUserFromList: jest.fn()
+        getUserFromList: jest.fn(),
+        deleteUserFromList: jest.fn()
     }
 };
 
@@ -60,7 +61,8 @@ export const MockJwtService = {
     provide: JwtService,
     useValue: {
         signAsync: jest.fn(),
-        verifyAsync: jest.fn()
+        verifyAsync: jest.fn(),
+        decode: jest.fn()
     }
 }
 

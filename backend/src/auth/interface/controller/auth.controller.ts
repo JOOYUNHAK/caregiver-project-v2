@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Post, UseFilters, UseGuards } from "@nestjs/common";
 import { AuthService } from "src/auth/application/service/auth.service";
 import { PhoneAuthenticationSendGuard } from "src/auth/application/guard/authentication-send.guard";
 import { PhoneAuthenticationCodeGuard } from "src/auth/application/guard/authentication-code.guard";
@@ -7,6 +7,7 @@ import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { AuthenticatedUser } from "src/auth/application/decorator/user.decorator";
 import { Public } from "src/auth/application/decorator/public.decorator";
 import { RefreshAuthenticationGuard } from "src/auth/application/guard/refresh-authentication.guard";
+import { TokenExpiredExceptionFilter } from "src/auth/application/filter/token-expired-exception.filter";
 
 @Controller('auth')
 export class AuthController {
@@ -16,6 +17,7 @@ export class AuthController {
 
     @Public()
     @UseGuards(RefreshAuthenticationGuard)
+    @UseFilters(TokenExpiredExceptionFilter)
     @Post('refresh')
     async refreshAuthentication(@AuthenticatedUser() user: User): Promise<ClientDto> {
         return await this.authService.refreshAuthentication(user);
