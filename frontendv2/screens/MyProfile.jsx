@@ -12,6 +12,7 @@ import api from "../config/CustomAxios";
 import store from "../redux/store";
 import { saveProfile } from "../redux/action/user/userAction";
 import UserAccount from "../components/MyProfile/UserAccount";
+import { requestRefreshToken } from "../functions/Token";
 
 export default function MyProfile({ navigation }) {
 
@@ -22,7 +23,8 @@ export default function MyProfile({ navigation }) {
                 store.dispatch(saveProfile(res.data));
             }
             catch(err) {
-                console.log(err.response)
+                await requestRefreshToken(navigation);
+                await getMyProfile();
             }
         }
         getMyProfile();
