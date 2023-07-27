@@ -14,9 +14,8 @@ import { useSelector } from 'react-redux';
 import Icon from '../../Icon';
 
 export default function LoginProfile({ navigation }) {
-    const { name, purpose } = useSelector(state => ({
+    const { name } = useSelector(state => ({
         name: state.user.name,
-        purpose: state.user.purpose
     }));
 
     return (
