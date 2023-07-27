@@ -4,11 +4,11 @@ import { StackActions } from "@react-navigation/native";
 import store from "../redux/store";
 import api from "../config/CustomAxios";
 import { logout, saveUser } from "../redux/action/user/userAction";
+import requestLogout from "./requestLogout";
 
 export async function validateToken(navigation) {
 
     try {
-        //await AsyncStorage.multiRemove(['accessToken', 'refreshToken']);
         const res = await api.post('/auth');
         const user = res.data;
         store.dispatch(saveUser(user));
@@ -35,37 +35,31 @@ export async function validateToken(navigation) {
 
 /**
  * 사용자가 가지고 있는 refreshToken Index로 accessToken 갱신 시켜주는 함수
- * @param navigation accessToken 갱신에 실패할 경우 loginPage  이동위해 
+ * @param navigation accessToken 갱신에 실패할 경우 로그아웃 시키고 loginPage  
  * @returns accessToken 갱신에 성공하면 true
  */
 export async function requestRefreshToken(navigation) {
-    
+
     const refreshToken = await AsyncStorage.getItem('refreshToken');
-    //console.log(refreshToken);
-    if (refreshToken !== null) {
+
+    if (refreshToken) {
         try {
-            const res = await api.get(`/auth/refreshToken/${refreshToken}`);
-            const user = res.data.user;
-            //console.log(res.data)
-            const accessToken = res.data.accessToken;
-            await AsyncStorage.setItem('accessToken', accessToken);
-            store.dispatch(saveUser(user));
+            const res = await api.post(`/auth/refresh`, {
+                refreshKey: refreshToken
+            });
+            const { accessToken, refreshKey, name } = res.data;
+
+            await AsyncStorage.multiSet([['accessToken', accessToken], ['refreshToken', refreshKey], ['name', name]]);
+            store.dispatch(saveUser(name));
             return true;
         }
         catch (err) {
-            console.log(err)
-            await AsyncStorage.multiRemove(['accessToken', 'refreshToken']);
-            store.dispatch(logout());
-            //console.log(err.response.data)
-            navigation.dispatch(
-                StackActions.push('loginPage')
-            )
+            await requestLogout(navigation);
         }
     }
-    else
-        navigation.dispatch(
-            StackActions.push('loginPage')
-        )
+    else{
+       await requestLogout(navigation);
+    }
 }
 
 export async function getLoginState() {
