@@ -11,12 +11,17 @@ export class TokenExpiredExceptionFilter implements ExceptionFilter {
   ) { }
 
   async catch(exception: UnauthorizedException, host: ArgumentsHost) {
-    const request = host.switchToHttp().getRequest();
+    const [request, response] = [
+      host.switchToHttp().getRequest(),
+      host.switchToHttp().getResponse()
+    ];
 
     /* 만료된 토큰으로 인한 오류면 세션리스트에서 사용자 삭제 */
     if (exception.message === ErrorMessage.ExpiredToken)
       await this.deleteTokenFromSessionList(request);
-    return;
+
+    response.status(exception.getStatus())
+            .send({ statusCode: exception.getStatus(), message: exception.message });
   }
 
   /* 세션리스트에서 해당 토큰 삭제 */
