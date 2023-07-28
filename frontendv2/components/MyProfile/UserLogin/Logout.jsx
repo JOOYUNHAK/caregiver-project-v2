@@ -17,9 +17,9 @@ export default function Logout({ navigation }) {
     /* 로그아웃 시도 시 에러가 나면 무조건 로그아웃 처리 */
     const pressLogoutBtn = async () => {
         try {
-            await api.post('auth/logout');
+            const res = await api.post('auth/logout');
         }
-        catch (err) {
+        finally {
             dispatch(logout()); //현재 유저정보 리셋
             await AsyncStorage.multiRemove(['accessToken', 'refreshToken', 'name']);
             navigation.dispatch(
@@ -32,7 +32,7 @@ export default function Logout({ navigation }) {
         <TouchableHighlight
             style={{ heigh: hp('6%') }}
             underlayColor='none'
-            onPress={async () => await pressLogoutBtn(navigation)}
+            onPress={() => pressLogoutBtn()}
         >
             <View style={styles.eachPart}>
                 <Text style={{ fontSize: 16, fontWeight: '400' }}>
