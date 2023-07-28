@@ -22,7 +22,6 @@ export const MockAuthService = {
         login: jest.fn(),
         refreshAuthentication: jest.fn(),
         createAuthentication: jest.fn(),
-        changeAuthentication: jest.fn(),
         validateSmsCode: jest.fn()
     }
 };

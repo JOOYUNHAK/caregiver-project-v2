@@ -71,9 +71,4 @@ export class User {
             refreshedAuthentication.refreshToken.getToken()
         );
     }
-
-    /* 로그인에만 성공시 사용할 AccessToken만 변경 */
-    changeAuthentication(newAccessToken: string): void {
-        this.authentication.changeAccessToken(newAccessToken);
-    }
 }

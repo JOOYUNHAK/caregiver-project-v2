@@ -36,7 +36,7 @@ export class AuthController {
     @UseGuards(PhoneAuthenticationCodeGuard)
     @Post('code/sms')
     async validateSmsCode(@AuthenticatedUser() user: User): Promise<ClientDto | void> {
-        if( user ) return await this.authService.changeAuthentication(user);
+        if( user ) return await this.authService.refreshAuthentication(user);
     }
 
     /* 로그인 */
