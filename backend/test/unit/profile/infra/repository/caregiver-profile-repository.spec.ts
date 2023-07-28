@@ -1,11 +1,11 @@
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { ObjectId } from "mongodb";
-import { CaregiverProfileBuilder } from "src/user/domain/builder/profile.builder";
-import { CaregiverProfile } from "src/user/domain/entity/caregiver/caregiver-profile.entity";
-import { License } from "src/user/domain/entity/caregiver/license.entity";
-import { PossibleDate } from "src/user/domain/enum/possible-date.enum";
-import { CaregiverProfileRepository } from "src/user/infra/repository/caregiver-profile.repository";
+import { CaregiverProfileBuilder } from "src/profile/domain/builder/profile.builder";
+import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
+import { License } from "src/profile/domain/entity/caregiver/license.entity";
+import { PossibleDate } from "src/profile/domain/enum/possible-date.enum";
+import { CaregiverProfileRepository } from "src/profile/infra/repository/caregiver-profile.repository";
 import { ConnectMongoDB, DisconnectMongoDB, getMongodb } from "test/unit/common/database/datebase-setup.fixture";
 
 describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test', () => {

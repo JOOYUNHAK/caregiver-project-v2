@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
-import { ProtectorRegisterDto } from "../dto/protector-register.dto";
+import { ProtectorRegisterDto } from "../../../profile/interface/dto/protector-register.dto";
 import { ClientDto } from "src/user-auth-common/interface/client.dto";
-import { CaregiverRegisterDto } from "../dto/caregiver-register.dto";
+import { CaregiverRegisterDto } from "../../../profile/interface/dto/caregiver-register.dto";
 import { UserService } from "src/user/application/service/user.service";
 import { Public } from "src/auth/application/decorator/public.decorator";
 import { AuthenticatedUser } from "src/auth/application/decorator/user.decorator";

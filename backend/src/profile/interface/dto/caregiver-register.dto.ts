@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsObject, ValidateNested } from "class-validator";
-import { CaregiverInfoForm, CaregiverLastRegisterDto, CaregiverThirdRegisterDto, CommonRegisterForm } from "./register-page";
+import { CaregiverInfoForm, CaregiverLastRegisterDto, CaregiverThirdRegisterDto, CommonRegisterForm } from "../../../user/interface/dto/register-page";
 
 export class CaregiverRegisterDto {
     @IsObject()

@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { CaregiverRegisterDto } from "src/user/interface/dto/caregiver-register.dto";
+import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto";
 import { CaregiverProfileMapper } from "../mapper/caregiver-profile.mapper";
-import { CaregiverProfileRepository } from "src/user/infra/repository/caregiver-profile.repository";
-import { CaregiverProfile } from "src/user/domain/entity/caregiver/caregiver-profile.entity";
+import { CaregiverProfileRepository } from "src/profile/infra/repository/caregiver-profile.repository";
+import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
 
 @Injectable()
 export class CaregiverProfileService {

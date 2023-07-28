@@ -2,8 +2,8 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { plainToInstance } from "class-transformer";
 import { Db, ObjectId, WithId } from "mongodb";
-import { PatientProfile } from "src/user/domain/entity/protector/patient-profile.entity";
-import { IPatientProfileRepository } from "src/user/domain/repository/ipatient-profile.repository";
+import { PatientProfile } from "src/profile/domain/entity/protector/patient-profile.entity";
+import { IPatientProfileRepository } from "src/profile/domain/repository/ipatient-profile.repository";
 
 @Injectable()
 export class PatientProfileRepository implements IPatientProfileRepository<WithId<PatientProfile>> {

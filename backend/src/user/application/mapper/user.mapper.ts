@@ -5,7 +5,7 @@ import { Phone } from "src/user-auth-common/domain/entity/user-phone.entity";
 import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.entity";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { LOGIN_TYPE } from "src/user-auth-common/domain/enum/user.enum";
-import { CaregiverProfile } from "src/user/domain/entity/caregiver/caregiver-profile.entity";
+import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
 import { CommonRegisterForm } from "src/user/interface/dto/register-page";
 
 @Injectable()

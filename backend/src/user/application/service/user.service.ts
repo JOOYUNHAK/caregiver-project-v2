@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { ClientDto } from "src/user-auth-common/interface/client.dto";
-import { CaregiverRegisterDto } from "src/user/interface/dto/caregiver-register.dto";
+import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto";
 import { UserMapper } from "../mapper/user.mapper";
 import { InjectRepository } from "@nestjs/typeorm";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { Repository } from "typeorm";
 import { ROLE } from "src/user-auth-common/domain/enum/user.enum";
-import { CaregiverProfileService } from "./caregiver-profile.service";
-import { ProtectorRegisterDto } from "src/user/interface/dto/protector-register.dto";
-import { PatientProfileService } from "./patient-profile.service";
+import { CaregiverProfileService } from "../../../profile/application/service/caregiver-profile.service";
+import { ProtectorRegisterDto } from "src/profile/interface/dto/protector-register.dto";
+import { PatientProfileService } from "../../../profile/application/service/patient-profile.service";
 import { MyProfileDto } from "src/user/interface/dto/my-profile.dto";
 import { AuthService } from "src/auth/application/service/auth.service";
 

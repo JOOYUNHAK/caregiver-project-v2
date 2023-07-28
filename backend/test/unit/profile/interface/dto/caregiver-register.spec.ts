@@ -3,7 +3,7 @@ import { plainToInstance } from "class-transformer"
 import { validate } from "class-validator"
 import { ROLE, SEX } from "src/user-auth-common/domain/enum/user.enum"
 import { CaregiverInfoForm, CaregiverLastRegisterDto, CaregiverThirdRegisterDto, CommonRegisterForm } from "src/user/interface/dto/register-page"
-import { CaregiverRegisterDto } from "src/user/interface/dto/caregiver-register.dto"
+import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto"
 
 describe('간병인 회원가입 전체 Dto Validator Test', () => {
     
