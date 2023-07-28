@@ -47,8 +47,9 @@ export class AuthController {
         return await this.authService.login(phoneNumber);
     }
 
-    @Post('logout')
     /* 로그아웃 */
+    @UseFilters(TokenExpiredExceptionFilter)
+    @Post('logout')
     async logout(@AuthenticatedUser() user: User): Promise<void> {
         return await this.authService.logout(user)
     }
