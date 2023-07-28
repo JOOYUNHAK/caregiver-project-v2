@@ -24,19 +24,23 @@ describe('TokenExpiredExceptionFilter Test', () => {
         tokenExpiredFilter = new TokenExpiredExceptionFilter(sessionService, jwtService);
     });
 
-    it('만료된 토큰으로 인한 문제가 아닌 UnauthorizedException이 발생하면 로직 없이 반환', async () => {
+    it('만료된 토큰으로 인한 문제가 아닌 UnauthorizedException이 발생하면 세션리스트에서 삭제 함수 호출 X', async () => {
         
         const mockRequest: any = {
             switchToHttp: () => ({
-                getRequest: jest.fn()
+                getRequest: jest.fn(),
+                getResponse: () => ({
+                    status: jest.fn().mockReturnThis(),
+                    send: jest.fn()
+                })
             })
         };
-
         const wrongError = new UnauthorizedException('otherMessage');
+        jest.spyOn(sessionService, 'deleteUserFromList').mockResolvedValueOnce(null);
 
         const result = await tokenExpiredFilter.catch(wrongError, mockRequest);
 
-        expect(result).toBeUndefined();
+        expect(sessionService.deleteUserFromList).not.toHaveBeenCalled()
     });
 
     it('만료된 토큰으로 인한 UnauthorizedException이 발생하면 세션리스트에서 삭제 함수 호출', async () => {
@@ -46,6 +50,11 @@ describe('TokenExpiredExceptionFilter Test', () => {
                     headers: {
                         authorization: "bearer accessToken"
                     }
+                }),
+                getResponse: () => ({
+                    status: () => ({
+                        send: jest.fn()
+                    }),
                 })
             })
         };
