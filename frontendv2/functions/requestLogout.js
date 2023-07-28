@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "../config/CustomAxios";
 import { logout } from "../redux/action/user/userAction";
 import store from "../redux/store";
+import { StackActions } from "@react-navigation/native";
 
 /* 공통 로그아웃 */
 export default async function requestLogout(navigation) {
