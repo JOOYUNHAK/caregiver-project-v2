@@ -55,13 +55,6 @@ export class AuthService {
         return await this.addToSessionListAndMapToDto(user, newAuthentication.accessToken);
     }
 
-    /* 로그인에 성공한 사용자는 새로운 AccessToken으로 변경  */
-    async changeAuthentication(user: User): Promise<ClientDto> {
-        const newAccessToken = await this.tokenService.generateAccessToken(user); // 새로운 AccessToken 발급
-        user.changeAuthentication(newAccessToken); // RefreshToken은 기존 토큰 사용
-        return await this.addToSessionListAndMapToDto(user, newAccessToken);
-    }
-
     /* 만료된 토큰일 경우 RefreshToken으로 새로 갱신 */
     async refreshAuthentication(user: User): Promise<ClientDto> {
         const refreshedAuthentication = await this.generateAuthentication(user);
