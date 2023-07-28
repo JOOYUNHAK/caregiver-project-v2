@@ -2,7 +2,7 @@ import { Transform, Type } from "class-transformer";
 import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, Matches, Max, Min, ValidateNested } from "class-validator";
 import { Time } from "src/common/shared/type/time.type";
 import { ROLE, SEX, birthRegExp, phoneRegExp } from "src/user-auth-common/domain/enum/user.enum";
-import { PossibleDate } from "src/user/domain/enum/possible-date.enum";
+import { PossibleDate } from "src/profile/domain/enum/possible-date.enum";
 
 /* 보호자, 간병인 공통 회원가입 작성 페이지 */
 export class CommonRegisterForm {

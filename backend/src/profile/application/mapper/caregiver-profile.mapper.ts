@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { ObjectId } from "mongodb";
-import { CaregiverProfileBuilder } from "src/user/domain/builder/profile.builder";
-import { CaregiverProfile } from "src/user/domain/entity/caregiver/caregiver-profile.entity";
-import { License } from "src/user/domain/entity/caregiver/license.entity";
-import { CaregiverRegisterDto } from "src/user/interface/dto/caregiver-register.dto";
+import { CaregiverProfileBuilder } from "src/profile/domain/builder/profile.builder";
+import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
+import { License } from "src/profile/domain/entity/caregiver/license.entity";
+import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto";
 
 @Injectable()
 export class CaregiverProfileMapper {

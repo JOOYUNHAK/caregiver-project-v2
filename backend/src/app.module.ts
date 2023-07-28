@@ -15,6 +15,7 @@ import { MongodbModule } from './common/shared/database/mongodb/mongodb.module';
 import { NotificationModule } from './notification/notification.module';
 import { BatchModule } from './batch/batch.module';
 import { GlobalScopedJwtGuard } from './auth/application/guard/jwt/jwt-auth.guard';
+import { ProfileModule } from './profile/profile.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { GlobalScopedJwtGuard } from './auth/application/guard/jwt/jwt-auth.guar
     AuthModule,
     NotificationModule,
     UserAuthCommonModule,
-    UserModule
+    UserModule,
+    ProfileModule
   ],
   providers: [
     GlobalScopedValidationPipe,

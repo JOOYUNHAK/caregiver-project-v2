@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { ObjectId } from "mongodb";
 import { Time } from "src/common/shared/type/time.type";
-import { PatientProfileBuilder } from "src/user/domain/builder/profile.builder";
-import { CarePeriod } from "src/user/domain/entity/protector/care-period.entity";
-import { PatientProfile } from "src/user/domain/entity/protector/patient-profile.entity";
-import { ProtectorRegisterDto } from "src/user/interface/dto/protector-register.dto";
+import { PatientProfileBuilder } from "src/profile/domain/builder/profile.builder";
+import { CarePeriod } from "src/profile/domain/entity/protector/care-period.entity";
+import { PatientProfile } from "src/profile/domain/entity/protector/patient-profile.entity";
+import { ProtectorRegisterDto } from "src/profile/interface/dto/protector-register.dto";
 
 @Injectable()
 export class PatientProfileMapper {

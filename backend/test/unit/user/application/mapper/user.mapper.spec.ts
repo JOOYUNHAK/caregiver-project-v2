@@ -3,7 +3,7 @@ import { Token } from "src/user-auth-common/domain/entity/auth-token.entity";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { ROLE, SEX } from "src/user-auth-common/domain/enum/user.enum";
 import { UserMapper } from "src/user/application/mapper/user.mapper"
-import { CaregiverProfileBuilder } from "src/user/domain/builder/profile.builder";
+import { CaregiverProfileBuilder } from "src/profile/domain/builder/profile.builder";
 import { CommonRegisterForm } from "src/user/interface/dto/register-page";
 import { TestUser } from "../../user.fixtures";
 

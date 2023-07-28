@@ -2,8 +2,8 @@ import { Inject, Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { plainToInstance } from "class-transformer";
 import { Db, ObjectId, WithId } from "mongodb";
-import { CaregiverProfile } from "src/user/domain/entity/caregiver/caregiver-profile.entity";
-import { ICaregiverProfileRepository } from "src/user/domain/repository/icaregiver-profile.repository";
+import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
+import { ICaregiverProfileRepository } from "src/profile/domain/repository/icaregiver-profile.repository";
 
 @Injectable()
 export class CaregiverProfileRepository implements ICaregiverProfileRepository<WithId<CaregiverProfile>> {

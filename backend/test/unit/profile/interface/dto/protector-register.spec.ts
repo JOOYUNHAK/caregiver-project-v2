@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { plainToInstance } from "class-transformer"
 import { validate } from "class-validator"
 import { ROLE, SEX } from "src/user-auth-common/domain/enum/user.enum"
-import { ProtectorRegisterDto } from "src/user/interface/dto/protector-register.dto"
+import { ProtectorRegisterDto } from "src/profile/interface/dto/protector-register.dto"
 import { CommonRegisterForm, PatientHelpList, PatientInfoForm } from "src/user/interface/dto/register-page"
 
 describe('보호자 회원가입 전체 Dto Validator Test', () => {

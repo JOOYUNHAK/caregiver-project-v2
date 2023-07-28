@@ -3,12 +3,12 @@ import { TypeOrmModule, getRepositoryToken } from "@nestjs/typeorm"
 import { Token } from "src/user-auth-common/domain/entity/auth-token.entity"
 import { Phone } from "src/user-auth-common/domain/entity/user-phone.entity"
 import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.entity"
-import { User } from "../../../../src/user-auth-common/domain/entity/user.entity"
 import { UserRepository, customUserRepositoryMethods } from "src/user-auth-common/domain/repository/user.repository"
 import { UUIDUtil } from "src/util/uuid.util"
 import { TestTypeOrmOptions } from "test/unit/common/database/datebase-setup.fixture"
 import { Email } from "src/user-auth-common/domain/entity/user-email.entity"
-import { TestUser } from "../user.fixtures"
+import { User } from "src/user-auth-common/domain/entity/user.entity"
+import { TestUser } from "../../user.fixtures"
 
 describe('사용자 저장소(UserRepository) Test', () => {
     let userRepository: UserRepository;

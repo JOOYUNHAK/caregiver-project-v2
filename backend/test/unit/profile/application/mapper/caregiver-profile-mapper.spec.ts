@@ -1,7 +1,7 @@
-import { CaregiverProfileMapper } from "src/user/application/mapper/caregiver-profile.mapper"
-import { CaregiverProfile } from "src/user/domain/entity/caregiver/caregiver-profile.entity";
-import { License } from "src/user/domain/entity/caregiver/license.entity";
-import { CaregiverRegisterDto } from "src/user/interface/dto/caregiver-register.dto";
+import { CaregiverProfileMapper } from "src/profile/application/mapper/caregiver-profile.mapper"
+import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
+import { License } from "src/profile/domain/entity/caregiver/license.entity";
+import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto";
 import { CaregiverInfoForm, CaregiverLastRegisterDto, CaregiverThirdRegisterDto, CommonRegisterForm } from "src/user/interface/dto/register-page";
 
 describe('Caregiver Profile Mapper Component Test', () => {

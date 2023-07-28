@@ -1,6 +1,6 @@
-import { PatientProfileMapper } from "src/user/application/mapper/patient-profile.mapper";
-import { PatientProfile } from "src/user/domain/entity/protector/patient-profile.entity";
-import { ProtectorRegisterDto } from "src/user/interface/dto/protector-register.dto";
+import { PatientProfileMapper } from "src/profile/application/mapper/patient-profile.mapper";
+import { PatientProfile } from "src/profile/domain/entity/protector/patient-profile.entity";
+import { ProtectorRegisterDto } from "src/profile/interface/dto/protector-register.dto";
 import { CommonRegisterForm, PatientInfoForm } from "src/user/interface/dto/register-page";
 
 describe('Patient Profile Mapper Component Test', () => {
