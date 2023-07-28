@@ -20,15 +20,13 @@ export default async function requestCreateUser(RegisterData, navigation) {
         });
         const { accessToken, refreshKey, name } = res.data;
         store.dispatch(saveUser(name));
-        await AsyncStorage.multiSet([['accessToken', accessToken], ['refreshToken', refreshKey], ['name', nmae]]);
+        await AsyncStorage.multiSet([['accessToken', accessToken], ['refreshToken', refreshKey], ['name', name]]);
         navigation.dispatch(
             StackActions.push('registerCompletePage')
         );
-        return;
     }
-
     catch (err) {
-        console.log(err.response)
+        console.log(err)
     }
 }
 
