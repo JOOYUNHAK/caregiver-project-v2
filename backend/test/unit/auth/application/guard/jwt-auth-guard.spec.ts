@@ -108,8 +108,31 @@ describe('Jwt인증가드(JwtAuthGuard) Test', () => {
             };
             
             const result = async () => await jwtGuard.canActivate(mockContext);
-            await expect(result).rejects.toThrowError(UnauthorizedException);
+            await expect(result).rejects.toThrowError(new UnauthorizedException(ErrorMessage.ExpiredToken));
         });
+
+        describe('handledRequest()', () => {
+            it('user가 있는경우 그대로 반환 확인', async () => {
+                const testUser = TestUser.default() as unknown as User;
+                const result = jwtGuard.handleRequest(null, testUser, null, null, null);
+
+                expect(result).toEqual(testUser);
+            });
+
+            it('TokenExpiredError가 난 경우 Custom ErrorMessage로 변경하여 호출', () => {
+                const mockInfo = { name: 'TokenExpiredError' };
+
+                const result = () => jwtGuard.handleRequest(null, null, mockInfo, null, null);
+                expect(result).toThrowError(new UnauthorizedException(ErrorMessage.ExpiredToken));
+            });
+
+            it('TokenExpiredError가 아닌경우 기존 처리방식으로 처리 확인', () => {
+                const mockInfo = { name: 'JsonWebTokenError'}
+
+                const result = () => jwtGuard.handleRequest(null, null, mockInfo, null, null);
+                expect(result).toThrowError(UnauthorizedException);
+            });
+        })
 
         describe('토큰의 유효성 검사를 모두 통과했을 경우', () => {
             it('인증된 사용자가 세션리스트에서 있으면 반환', async() => {
