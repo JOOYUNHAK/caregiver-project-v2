@@ -132,41 +132,6 @@ describe('인증 서비스(AuthService) Test', () => {
         })
     })
 
-    describe('changeAuthentication()', () => {
-        it('새로운 AccessToken으로 변경하고 Session목록에 변경된 토큰 추가 및 사용자용 Dto 반환', async () => {
-            const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
-            const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
-            const user = TestUser.default().withToken(existAuthentication);
-
-            const changedToken = 'changedAccessToken';
-            jest.spyOn(tokenService, 'generateAccessToken').mockResolvedValueOnce(changedToken);
-            
-            const expectedDto = { name: user.getName(), accessToken: changedToken, refreshKey: existRefreshKey };
-            jest.spyOn(authMapper, 'toDto').mockReturnValueOnce(expectedDto); // 예상 결과값
-
-            const sessionSpy = jest.spyOn(sessionService, 'addUserToList')
-
-            const result = await authService.changeAuthentication(user as unknown as User);
-            expect(sessionSpy).toHaveBeenCalledWith(user.getId(), changedToken);
-            expect(result).toEqual(expectedDto);
-        });
-
-        it('새로운 AccessToken으로 변경할때는 AccessToken만 변경되고, RefreshToken은 기존 값이어야 한다', async() => {
-            const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
-            const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
-            const user = TestUser.default().withToken(existAuthentication);
-
-            const newAccessToken = 'newAccessToken';
-            
-            jest.spyOn(tokenService, 'generateAccessToken').mockResolvedValueOnce(newAccessToken);
-            user.changeAuthentication(newAccessToken);
-
-            expect(user.getAuthentication().getAccessToken()).toBe(newAccessToken);
-            expect(user.getAuthentication().getRefreshKey()).toBe(existRefreshKey);
-            expect(user.getAuthentication().getRefreshToken()).toBe(existRefreshToken);
-        });
-    })
-
     describe('refreshAuthentication()', () => {
         it('새로 갱신된 토큰을 Session목록에 추가 및 사용자용 Dto 반환', async () => {
             const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
