@@ -1,6 +1,6 @@
 # 간병인 중개 플랫폼 '믿음케어' 리팩토링
 ```javascript
-기간: 2023.06 ~
+기간: 2023.06.18 ~
 ```
 ## Environment & Stack
 ```sh
@@ -10,9 +10,6 @@
 ```
 ### FrontEnd
 새로운 프로젝트를 생성하여 Expo관련 라이브러리를 지우고 npx를 활용하여 진행하고 있습니다.
-
-### BackEnd
-객체지향프그래밍과 파일구조, 데이터베이스 테이블구조를 중점적으로 진행하고 있습니다.
 
 <p>
 <img src="https://img.shields.io/badge/React Native-61DAFB?style=flat-square&logo=React&logoColor=white"/></a>&nbsp 
@@ -26,6 +23,10 @@
 # openjdk Version 11.0.19 #
 ```
 ### BackEnd
+**객체지향프그래밍**과 **계층형 아키텍처**, **테스트 코드**를 중심으로 코드의 구조, 분리를 기준으로 리팩토링을 진행하고 있습니다.  
+
+리팩토링의 요약 과정은 [이곳에서](https://velog.io/@wndbsgkr/series/%EA%B0%84%EB%B3%91%EC%9D%B8-%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8) 글로 작성중입니다.
+
 <p>
 <img src="https://img.shields.io/badge/NestJS-E0234E?style=flat-square&logo=NestJS&logoColor=white"/></a>&nbsp 
 <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/></a>&nbsp 
@@ -33,6 +34,15 @@
 <img src="https://img.shields.io/badge/Socket.io-010101?style=flat-square&logo=Socket.io&logoColor=white"/></a>&nbsp 
 <img src="https://img.shields.io/badge/TypeORM-18A497?style=flat-square&logo=&logoColor=white"/></a>&nbsp 
 </p>
+
+```sh
+# nestjs/common  9.0.0 #
+# typeorm 0.3.7 #
+# mongodb 5.0.0 #
+# redis 4.3.1 #
+```
+## Table Structure
+![image](https://github.com/JOOYUNHAK/caregiver-project-v2/assets/99117410/b252c9f0-094c-49a3-a559-21efe9c5e661)
 
 ## Implement
 
