@@ -6,6 +6,7 @@ import { AuthGuard } from "@nestjs/passport";
 import { SessionService } from "../../service/session.service";
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
 import { IS_PUBLIC_KEY } from "../../decorator/public.decorator";
+import { User } from "src/user-auth-common/domain/entity/user.entity";
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
@@ -27,6 +28,15 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
         return await this.isExistUserInSessionList(user.getId())
     };
+
+    handleRequest(err: any, user: User, info: any, context: ExecutionContext, status?: any): any {
+        if( user ) return user;
+
+        if( info.name === 'TokenExpiredError' )
+            throw new UnauthorizedException(ErrorMessage.ExpiredToken);
+        
+        return super.handleRequest(err, user, info, context, status);
+    }
 
     private isPublicApi(context: ExecutionContext) {
         return this.reflector.getAllAndOverride(IS_PUBLIC_KEY, [
