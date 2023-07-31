@@ -21,4 +21,7 @@ export class UserProfile {
          this.birth = birth;
          this.sex = sex;
     }
+
+    getBirth() : number { return this.birth; };
+    getSex(): SEX { return this.sex; };
 }

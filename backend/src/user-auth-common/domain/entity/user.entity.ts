@@ -52,7 +52,8 @@ export class User {
     getAuthentication(): Token { return this.authentication; };
 
     getPhone(): Phone { return this.phone; };
-    getEmail(): Email { return this.email; }
+    getEmail(): Email { return this.email; };
+    getProfile(): UserProfile { return this.profile; };
 
     /* 회원가입시 새로 발급된 인증 */
     setAuthentication(newAuthentication: NewUserAuthentication) {

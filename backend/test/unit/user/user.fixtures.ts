@@ -53,6 +53,11 @@ export class TestUser {
         return this;
     };
 
+    withUserProfile(profile: UserProfile): this {
+        this.profile = profile;
+        return this;
+    }
+
     withToken(token: Token): this {
         this.authentication = token;
         return this;

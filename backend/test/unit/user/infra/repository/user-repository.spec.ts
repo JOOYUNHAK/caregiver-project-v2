@@ -9,6 +9,7 @@ import { TestTypeOrmOptions } from "test/unit/common/database/datebase-setup.fix
 import { Email } from "src/user-auth-common/domain/entity/user-email.entity"
 import { User } from "src/user-auth-common/domain/entity/user.entity"
 import { TestUser } from "../../user.fixtures"
+import { SEX } from "src/user-auth-common/domain/enum/user.enum"
 
 describe('사용자 저장소(UserRepository) Test', () => {
     let userRepository: UserRepository;
@@ -28,12 +29,14 @@ describe('사용자 저장소(UserRepository) Test', () => {
     afterAll(async() => module.close() );
 
 
-    describe('findByUserId', () => {
+    describe('findById()', () => {
         it('일치하는 사용자 id로 조회했을 때 반환되는지 확인', async() => {
             const [phoneNumber, refreshKey, refreshToken] = ['01022221111', UUIDUtil.generateOrderedUuid(), 'refresh'];
+            const [birth, sex] = [20020101, SEX.MALE]
 
             const token = new Token(null, refreshKey, refreshToken);
-            const testUser = TestUser.default().withPhoneNumber(phoneNumber).withToken(token);
+            const userProfile = new UserProfile(birth, sex);
+            const testUser = TestUser.default().withPhoneNumber(phoneNumber).withToken(token).withUserProfile(userProfile);
             
             const savedId = (await userRepository.save(testUser as unknown as User)).getId();
             const result = await userRepository.findById(savedId);
@@ -42,6 +45,9 @@ describe('사용자 저장소(UserRepository) Test', () => {
             expect(result.getAuthentication().getRefreshKey()).toBe(refreshKey);
             expect(result.getAuthentication().getRefreshToken()).toBe(refreshToken);
             expect(result.getPhone().getPhoneNumber()).toBe(phoneNumber);
+            expect(result.getEmail()).toBe(null);
+            expect(result.getProfile().getBirth()).toBe(birth);
+            expect(result.getProfile().getSex()).toBe(sex);
 
             await userRepository.delete({ id: savedId })
         })
