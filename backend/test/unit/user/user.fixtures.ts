@@ -9,6 +9,7 @@ import { NewUserAuthentication } from "src/user-auth-common/domain/interface/new
 export class TestUser {
     id: number;
     name: string;
+    sex: SEX;
     loginType: LOGIN_TYPE;
     role: ROLE;
     phone: Phone;
@@ -37,6 +38,11 @@ export class TestUser {
         this.id = id;
         return this;
     };
+
+    withSex(sex: SEX): this {
+        this.sex = sex;
+        return this;
+    }
 
     withRole(role: ROLE): this {
         this.role = role;
@@ -69,7 +75,8 @@ export class TestUser {
     getAuthentication(): Token { return this.authentication; };
 
     getPhone(): Phone { return this.phone; };
-    getEmail(): Email { return this.email; }
+    getEmail(): Email { return this.email; };
+    getProfile(): UserProfile { return this.profile; };
 
     /* 회원가입시 새로 발급된 인증 */
     setAuthentication(newAuthentication: NewUserAuthentication) {
