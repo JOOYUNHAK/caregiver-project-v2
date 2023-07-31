@@ -43,9 +43,15 @@ export class CaregiverProfile {
 
     getId(): string { return this._id.toHexString(); };
     getUserId(): number { return this.userId; };
+    getCareer(): number { return this.career; };
+    getPay(): number { return this.pay; };
+    getPossibleDate(): number { return this.possibleDate; };
     getHelpExperience(): CaregiverHelpExperience { return this.helpExperience; };
+    getPossibleAreaList(): string [] { return this.possibleAreaList; };
     getLicenseList(): License[] { return this.licenseList; };
+    getTagList(): string [] { return this.tagList; };
     getStrengthList(): string[] { return this.strengthList; };
     getIsPrivate(): boolean { return this.isPrivate; };
+    getNotice(): string { return this.notice; };
     getWarningList(): Warning[] { return this.warningList; };
 }
