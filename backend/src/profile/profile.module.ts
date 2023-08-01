@@ -7,10 +7,16 @@ import { PatientProfileService } from "./application/service/patient-profile.ser
 import { PatientProfileRepository } from "./infra/repository/patient-profile.repository";
 import { CaregiverProfileMapper } from "./application/mapper/caregiver-profile.mapper";
 import { MongodbModule } from "src/common/shared/database/mongodb/mongodb.module";
+import { UserAuthCommonModule } from "src/user-auth-common/user-auth-common.module";
+import { ProfileController } from "./interface/controller/profile.controller";
 
 @Module({
     imports: [
+        UserAuthCommonModule,
         MongodbModule
+    ],
+    controllers: [
+        ProfileController
     ],
     providers: [
         CaregiverProfileBuilder,
