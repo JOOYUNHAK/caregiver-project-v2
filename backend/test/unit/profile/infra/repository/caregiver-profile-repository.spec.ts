@@ -1,17 +1,17 @@
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
-import { ObjectId } from "mongodb";
-import { CaregiverProfileBuilder } from "src/profile/domain/builder/profile.builder";
+import { AggregationCursor, ObjectId } from "mongodb";
 import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
-import { License } from "src/profile/domain/entity/caregiver/license.entity";
-import { PossibleDate } from "src/profile/domain/enum/possible-date.enum";
 import { CaregiverProfileRepository } from "src/profile/infra/repository/caregiver-profile.repository";
 import { ConnectMongoDB, DisconnectMongoDB, getMongodb } from "test/unit/common/database/datebase-setup.fixture";
+import { TestCaregiverProfile } from "../../profile.fixtures";
 
 describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test', () => {
     let testProfile: CaregiverProfile, 
         caregiverProfileRepository: CaregiverProfileRepository;
     
+    const testCollectionName = 'test';
+
     beforeAll(async () => {
         await ConnectMongoDB();
 
@@ -27,7 +27,7 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
                 {
                     provide: ConfigService,
                     useValue: {
-                        get: jest.fn().mockReturnValue('test')                        
+                        get: jest.fn().mockReturnValue(testCollectionName)                        
                     }
                 },
                 CaregiverProfileRepository
@@ -40,8 +40,8 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
 
     it('save() => 빈 배열을 가지는 필드는 DB에 []로 저장.', async () => {
 
-        testProfile = createCommonCaregiverProfile()
-                        .helpExperience({ suction: '석션입니다' })
+        testProfile = TestCaregiverProfile
+                        .default()
                         .licenseList([])
                         .strengthList([])
                         .warningList([])
@@ -58,12 +58,7 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
     });
 
     it('save() => 간병 경험이 비어있으면 DB에 {}로 저장', async () => {
-        testProfile = createCommonCaregiverProfile()
-                        .helpExperience({})
-                        .licenseList([new License('자격증', false)])
-                        .strengthList(['강점'])
-                        .warningList(null)
-                        .build()
+        testProfile = TestCaregiverProfile.default().helpExperience({}).build()
 
         await caregiverProfileRepository.save(testProfile);
         const savedProfile = await caregiverProfileRepository.findById(testProfile.getId());
@@ -74,29 +69,20 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
     });
 
     it('findByUserId() => 일치하는 문서 반환 확인', async() => {
-        testProfile = createCommonCaregiverProfile()
-                        .helpExperience({ suction: '석션입니다' })
-                        .licenseList([])
-                        .strengthList([])
-                        .warningList([])
-                        .build();
+        const userId = 100;
+        testProfile = TestCaregiverProfile.default().userId(userId).build();
 
         await caregiverProfileRepository.save(testProfile);
-        const findResult = await caregiverProfileRepository.findByUserId(1);
+        const findResult = await caregiverProfileRepository.findByUserId(userId);
 
-        expect(findResult.getUserId()).toBe(1);
+        expect(findResult.getUserId()).toBe(userId);
 
         await caregiverProfileRepository.delete(testProfile.getId());
     })
 
     it('delete() => 삭제이후 해당 문서는 존재하면 안된다.', async () => {
 
-        testProfile = createCommonCaregiverProfile()
-                        .helpExperience({ suction: '석션입니다' })
-                        .licenseList([])
-                        .strengthList([])
-                        .warningList([])
-                        .build()
+        testProfile = TestCaregiverProfile.default().build();
 
         await caregiverProfileRepository.save(testProfile);
 
@@ -106,19 +92,38 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
         const afterDeleteResult = await caregiverProfileRepository.delete(testProfile.getId());
         expect(afterDeleteResult).toBeUndefined();
     });
-})
 
-function createCommonCaregiverProfile() {
-    return new CaregiverProfileBuilder(new ObjectId())
-        .userId(1)
-        .weight(50)
-        .career(10)
-        .pay(10)
-        .possibleDate(PossibleDate.IMMEDATELY)
-        .possibleAreaList(['인천', '서욿'])
-        .nextHosptial('다음 병원 여부')
-        .tagList(['태그1', '태그2', '태그3'])
-        .notice('공지사항을 알려드립니다')
-        .isPrivate(false)
-        .additionalChargeCase('추가요금이 붙는 상황')
-};
+    describe('getProfileList()', () => {
+        /* private 2개, public 1개로 설정된 프로필 3개 저장 */
+        beforeAll(async() => {
+            for( let i = 0; i < 3; i++ ) {
+                let profileStub: CaregiverProfile;
+                profileStub = i != 1 ? 
+                    TestCaregiverProfile.default().build() : 
+                        TestCaregiverProfile.default().isPrivate(true).build();
+                await caregiverProfileRepository.save(profileStub);
+            };
+        });
+
+        afterAll(async() => {
+            const mongo = getMongodb();
+            await mongo.collection(testCollectionName).deleteMany({});
+        });
+
+        it('반환 결과로 Cursor가 반환되며, 개수는 2개여야 한다', async () => {
+            const result = caregiverProfileRepository.getProfileList(new ObjectId().toString());
+            expect(result).toBeInstanceOf(AggregationCursor);
+
+            const resultLenght = (await result.toArray()).length;
+            expect(resultLenght).toBe(2);
+        });
+
+        it('마지막 프로필 id보다 오래된 id면 결과에 포함되지 않아야 한다', async() => {
+            const oldProfileId = '64c7aab5553ebdcc0159ce2f';
+            const result = caregiverProfileRepository.getProfileList(oldProfileId);
+
+            const resultLength = (await result.toArray()).length;
+            expect(resultLength).toBe(0);
+        });
+    })
+})
