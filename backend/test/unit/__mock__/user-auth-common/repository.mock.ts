@@ -7,6 +7,7 @@ export const MockUserRepository = {
     provide: getRepositoryToken(User),
     useValue: {
         save: jest.fn(),
+        findById: jest.fn(),
         findByRefreshKey: jest.fn(),
         findByPhoneNumber: jest.fn()
     }
