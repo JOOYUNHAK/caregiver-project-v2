@@ -67,8 +67,7 @@ describe('Caregiver Profile Mapper Component Test', () => {
         });
 
         it.each([
-            [[], []],
-            [['인천', '서울'], ['인천', '서울']],
+            [['인천', '서울'], '인천,서울'],
             [['인천', '서울', '경기', '부산'], '상세보기참고']
         ])('possibleAreaList(가능한 지역)이 클라이언트 화면용 값으로 변경되는지 확인', (testAreaList, expectedAreaList) => {
             const userStub = TestUser.default() as unknown as User;

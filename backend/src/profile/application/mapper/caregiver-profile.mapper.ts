@@ -87,7 +87,7 @@ export class CaregiverProfileMapper {
 
     /* 클라이언트 데이터 노출에 맞게 가능 지역 변환 */
     private toDtoAreaList(areaList: string[]): string[] | string {
-        return areaList.length >= 4 ? '상세보기참고' : areaList;
+        return areaList.length >= 4 ? '상세보기참고' : areaList.join(',');
     }
 
     private toLicenseList(licenseList: string[]): License[] {
