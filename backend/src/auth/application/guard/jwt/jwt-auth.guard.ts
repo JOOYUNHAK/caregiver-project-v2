@@ -7,11 +7,13 @@ import { SessionService } from "../../service/session.service";
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
 import { IS_PUBLIC_KEY } from "../../decorator/public.decorator";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
+import { TokenService } from "../../service/token.service";
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
     constructor(
         private readonly sessionService: SessionService,
+        private readonly tokenService: TokenService,
         private readonly reflector: Reflector
     ) {
         super();
@@ -24,9 +26,11 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         /* 먼저 request.user의 상태를 확인해서 토큰 검사 통과했는지 확인 */
         await super.canActivate(context) 
         
-        const user = context.switchToHttp().getRequest().user;
+        const request = context.switchToHttp().getRequest();
 
-        return await this.isExistUserInSessionList(user.getId())
+        const requestToken = this.tokenService.extractTokenFromHeader(request);
+
+        return await this.validateUserInSessionList(request.user.getId(), requestToken);
     };
 
     handleRequest(err: any, user: User, info: any, context: ExecutionContext, status?: any): any {
@@ -49,12 +53,14 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
         토큰은 유효하지만 로그아웃을 진행한 사용자와같이 
         현재 로그인정보에 없는 사용자의 토큰이면 오류 
     */
-    private async isExistUserInSessionList(userId: number): Promise<boolean> {
-        if (!await this.sessionService.getUserFromList(userId))
+    private async validateUserInSessionList(userId: number, requestToken: string): Promise<boolean> {
+        const validToken = await this.sessionService.getUserFromList(userId);
+        
+        if( !validToken || (requestToken !== validToken) ) 
             throw new UnauthorizedException(ErrorMessage.NotExistUserInSessionList);
+        
         return true;
     }
-
 };
 
 /* jwt module options */
