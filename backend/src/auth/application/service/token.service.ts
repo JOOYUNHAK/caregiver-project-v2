@@ -48,6 +48,20 @@ export class TokenService {
         return new RefreshToken(uuid, refreshToken);   
     };
 
+    /* Request의 Header로부터 토큰 추출 */
+    extractTokenFromHeader(request: any): string {
+        const { authorization } = request.headers;
+        return authorization.split(' ')[1];
+    }
+
+    /* 토큰의 payload를 구하는 메서드 */
+    decode(token: string): JwtPayload {
+        return this.jwtService.decode(token, {
+            complete: false,
+            json: true
+        }) as JwtPayload;
+    }
+
     /* JwtToken의 Payload 생성 */
     private generateJwtPayload(user: User): JwtPayload {
         return {
