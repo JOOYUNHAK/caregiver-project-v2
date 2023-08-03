@@ -1,15 +1,14 @@
 /* 프로필 api 중 목록 받아오기 */
 
-import { useNavigation } from "@react-navigation/native";
 import api from "../../config/CustomAxios";
-import { listLoading, saveCareGiverProfile, saveLastListNo, setNoData } from "../../redux/action/profile/profileAction";
+import { listLoading, saveCareGiverProfile, saveLastProfileId, setNoData } from "../../redux/action/profile/profileAction";
 import store from "../../redux/store";
 
 export default async function requestProfileList(purpose) {
     try {
-        const {lastListNo, noData } = store.getState().profile;
-        if ( noData ) return; //스크롤 끝에 도달했는데 더이상 받을 데이터가 없을 때
-        
+        const { lastListNo, noData } = store.getState().profile;
+        if (noData) return; //스크롤 끝에 도달했는데 더이상 받을 데이터가 없을 때
+
         let { mainFilter, payFilter, startDateFilter, sexFilter, ageFilter,
             areaFilter, licenseFilter, warningFilter, strengthFilter, exceptLicenseFilter } = store.getState().profile.filters;
 
@@ -23,11 +22,11 @@ export default async function requestProfileList(purpose) {
         warningFilter = warningFilter ? true : undefined;
         strengthFilter = strengthFilter ? true : undefined;
         exceptLicenseFilter = exceptLicenseFilter ? true : undefined;
-        
+
         //첫 데이터 요청시에만 데이터 로딩 중 표시 이후 스크롤 요청시에는 데이터 로팅 표시 x
-        lastListNo == 0 ? store.dispatch(listLoading(true)) : null
-        //const startTime = Date.now();
-        const res = await api.get(`user/profile/${purpose}`, {
+        if( !lastListNo ) store.dispatch(listLoading(true));
+       
+        const res = await api.get(`profile/list`, {
             params: {
                 mainFilter: mainFilter,
                 payFilter: payFilter,
@@ -39,32 +38,26 @@ export default async function requestProfileList(purpose) {
                 warningFilter: warningFilter,
                 strengthFilter: strengthFilter,
                 exceptLicenseFilter: exceptLicenseFilter,
-                start: lastListNo
+                lastProfileId: lastListNo
             }
-        });
-        //const endTime = Date.now();
-        //console.log(endTime - startTime)
-        const profileList = res.data;
+        });        
+        /* 첫 프로필 리스트의 조회 결과를 받아왔으면 Loading 해제 */
+        if( !lastListNo ) store.dispatch(listLoading(false));
 
-        if (purpose === 'careGiver') {
-            lastListNo == 0 ? store.dispatch(listLoading(false)) : null;
-            //받을 데이터가 더이상 없는경우
-            if( !profileList.length ) {
-                store.dispatch(setNoData(true));    
-                return;
-            }
-            store.dispatch(saveCareGiverProfile(profileList));
-            store.dispatch(saveLastListNo(lastListNo + 5));
-            store.dispatch(setNoData(false));
-        }
-        else {
-            console.log('assistant')
-        }
-        return true;
+        const profileList = res.data;
+        /* 더 이상 프로필 데이터가 없을 때 */
+        if( !profileList.length ) {
+            store.dispatch(setNoData(true));
+            return;
+        };
+
+        /* 아직 프로필 데이터가 조회될 때 다음을 위해 저장 */
+        store.dispatch(saveCareGiverProfile(profileList));
+        store.dispatch(saveLastProfileId(profileList[profileList.length - 1].profile._id));
+        store.dispatch(setNoData(false));
     }
     catch (err) {
-        console.log(err);
-        return false;
+        console.log(err.response);
     }
 }
 
