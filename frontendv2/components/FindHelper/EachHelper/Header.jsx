@@ -8,44 +8,25 @@ import {
     Platform,
 } from 'react-native';
 import Icon from '../../Icon';
-import { getAge, possibleAreaRange } from '../../../functions/Profile/profileFunctions';
 import { StackActions, useNavigation } from "@react-navigation/native";
 
 export default function Header({ profile }) {
     const navigation = useNavigation();
-    // 기본 프로필 목록과 나의 찜 프로필 목록 데이터가 다르므로
-    const age = getAge(profile.birth);
-    const exceedArea = possibleAreaRange(profile.possibleArea);
-    
-    const name = profile.name;
-    const sex =  profile.sex;
-    const isCertified = profile.isCertified;
+
+    const { user } = profile;
 
     return (
-        <View style={header(exceedArea, isCertified).header}>
+        <View style={header().header}>
             <View style={{ flex: 2 }}>
                 <View style={{ flexDirection: 'row' }}>
                     <View style={styles.name}>
                         <Text style={styles.nameText}>
-                            {name}
+                            {user.name}
                         </Text>
                         <Text style={styles.subInfoText}>
-                            {sex}, {age}세
+                            {user.sex}, {user.age}세
                         </Text>
                     </View>
-                </View>
-
-                <View style={{ flexDirection: 'row', paddingLeft: 25, marginTop: 3 }}>
-                    {exceedArea ?
-                        <Text style={styles.subTagText}>
-                            가능 지역 넓음
-                        </Text> : null
-                    }
-                    {isCertified ?
-                        <Text style={styles.subTagText}>
-                            자격증 보유
-                        </Text> : null
-                    }
                 </View>
             </View>
 
@@ -53,9 +34,7 @@ export default function Header({ profile }) {
                 underlayColor='none'
                 onPress={() => navigation.dispatch(
                     StackActions.push('helperProfilePage', {
-                        purpose: profile.purpose,
                         profileId: profile.id ,
-                        name: name
                     })
                 )}>
                 <View style={styles.confirmProfileBtn}>
@@ -125,11 +104,11 @@ const styles = StyleSheet.create({
     },
 });
 
-const header = (equalPay, exceedArea, isCertified) => StyleSheet.create({
+const header = () => StyleSheet.create({
     header: {
         flexDirection: 'row',
         alignItems: 'flex-start',
         paddingTop: Platform.OS === 'ios' ? 25 : 15,
-        flex: exceedArea || isCertified ? 1 : 0.8,
+        flex: 1
     },
 })

@@ -11,7 +11,7 @@ export default function Notice({ profile }) {
         <View style={styles.profileHelperAppeal}>
             <Icon props={['material', 'campaign', 20, 'silver']} />
             <Text style={styles.profileHelperAppealText}>
-               {profile.notice}
+               {profile.profile.notice}
             </Text>
         </View>
     )
