@@ -32,7 +32,9 @@ export const MockTokenService = {
     useValue: {
         generateNewUsersToken: jest.fn(),
         generateAccessToken: jest.fn(),
-        generateRefreshToken: jest.fn()
+        generateRefreshToken: jest.fn(),
+        extractTokenFromHeader: jest.fn(),
+        decode: jest.fn()
     }
 };
 
