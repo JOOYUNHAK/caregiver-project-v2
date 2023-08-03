@@ -2,13 +2,14 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Test } from "@nestjs/testing";
 import { RedisClientType } from "redis";
 import { SessionService } from "src/auth/application/service/session.service";
-import { redisProviders } from "src/common/shared/database/redis/redis.providers";
+import { ConnectRedis, getRedis } from "test/unit/common/database/datebase-setup.fixture";
 
 describe('토큰 서비스(TokenService) Test', () => {
     let sessionService: SessionService;
     let redis: RedisClientType;
-    
+
     beforeAll(async () => {
+        await ConnectRedis();
 
         const module = await Test.createTestingModule({
             imports: [
@@ -16,7 +17,10 @@ describe('토큰 서비스(TokenService) Test', () => {
             ],
             providers: [
                 SessionService,
-                ...redisProviders,
+                {
+                    provide: 'REDIS_CLIENT',
+                    useValue: getRedis()
+                },
                 {
                     provide: ConfigService,
                     useValue: {
@@ -27,10 +31,10 @@ describe('토큰 서비스(TokenService) Test', () => {
         }).compile();
 
         sessionService = module.get(SessionService);
-        redis = module.get('REDIS_CLIENT');
+        redis = module.get('REDIS_CLIENT')
     });
 
-    afterAll( async () => { await redis.disconnect(); });
+    afterAll(async () => { await redis.disconnect(); });
 
     describe('addUserToList()', () => {
         it('주어진 아이디와 토큰이 세션리스트에 저장되어야 한다', async () => {
@@ -38,19 +42,19 @@ describe('토큰 서비스(TokenService) Test', () => {
 
             const result = await sessionService.getUserFromList(1);
             expect(result).toBe('testAccessToken');
-            
+
             await sessionService.deleteUserFromList(1);
         })
     });
 
     describe('getUserFromList()', () => {
-        it('찾는 유저가 없으면 Null값이 반환', async() => {
+        it('찾는 유저가 없으면 Null값이 반환', async () => {
             const result = await sessionService.getUserFromList(11);
 
             expect(result).toBe(null);
         });
 
-        it('현재 세션리스트에 사용자가 있으면 해당 토큰 반환', async() => {
+        it('현재 세션리스트에 사용자가 있으면 해당 토큰 반환', async () => {
             await sessionService.addUserToList(40, 'testAccessToken');
 
             const result = await sessionService.getUserFromList(40);
