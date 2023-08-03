@@ -1,13 +1,13 @@
 import { ArgumentsHost, Catch, ExceptionFilter, UnauthorizedException } from "@nestjs/common";
 import { SessionService } from "../service/session.service";
-import { JwtService } from "@nestjs/jwt";
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
+import { TokenService } from "../service/token.service";
 
 @Catch(UnauthorizedException)
 export class TokenExpiredExceptionFilter implements ExceptionFilter {
   constructor(
     private readonly sessionService: SessionService,
-    private readonly jwtService: JwtService
+    private readonly tokenService: TokenService
   ) { }
 
   async catch(exception: UnauthorizedException, host: ArgumentsHost) {
@@ -26,22 +26,8 @@ export class TokenExpiredExceptionFilter implements ExceptionFilter {
 
   /* 세션리스트에서 해당 토큰 삭제 */
   private async deleteTokenFromSessionList(request: any) {
-    const accessToken = this.extractTokenFromHeader(request);
-    const { userId } = this.decodeToken(accessToken);
-    await this.sessionService.deleteUserFromList(userId);
-  };
-
-  /* 헤더에서 토큰 추출 */
-  private extractTokenFromHeader(request: any): string {
-    const { authorization } = request.headers;
-    return authorization.split(" ")[1];
-  };
-
-  /* 토큰을 검증하지 않고 단순 decode */
-  private decodeToken(accessToken: string): any {
-    return this.jwtService.decode(accessToken, {
-      complete: false,
-      json: true
-    })
+    const accessToken = this.tokenService.extractTokenFromHeader(request); // request로부터 토큰 추출
+    const { userId } = this.tokenService.decode(accessToken); // 토큰의 payload에서 userId 추출
+    await this.sessionService.deleteUserFromList(userId); // 해당 사용자 세션리스트에서 삭제
   };
 }
