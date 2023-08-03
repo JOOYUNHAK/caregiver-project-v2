@@ -1,5 +1,5 @@
 import { createReducer } from "@reduxjs/toolkit";
-import { backToPreviousFilter, completeHeart, listLoading, refreshProfileList, removeNotFoundProfile, resetFilter, resetHeartList, resetMainFilters, saveAgeFilter, saveAreaFilter, saveCareGiverProfile, saveExceptLicenseFilter, saveHeartListProfile, saveLastListNo, saveLicenseFilter, saveMainFilter, savePayFilter, savePreviousFilter, saveSexFilter, saveStartDateFilter, saveStrengthFilter, saveUserProfile, saveWarningFilter, setNoData, toggleHeart } from "../../action/profile/profileAction";
+import { backToPreviousFilter, completeHeart, listLoading, refreshProfileList, removeNotFoundProfile, resetFilter, resetHeartList, resetMainFilters, saveAgeFilter, saveAreaFilter, saveCareGiverProfile, saveExceptLicenseFilter, saveHeartListProfile, saveLastListNo, saveLastProfileId, saveLicenseFilter, saveMainFilter, savePayFilter, savePreviousFilter, saveSexFilter, saveStartDateFilter, saveStrengthFilter, saveUserProfile, saveWarningFilter, setNoData, toggleHeart } from "../../action/profile/profileAction";
 
 const initialState = {
     careGiver: [],
@@ -7,7 +7,7 @@ const initialState = {
     protector: [],
     userProfile: {},
     heartProfileList: [],
-    lastListNo: 0,
+    lastListNo: undefined,
 
     listLoading: true,
     completeHeart: false,
@@ -44,10 +44,7 @@ const initialState = {
 const profileReducer = createReducer(initialState, (builder) => {
     builder
         .addCase(saveCareGiverProfile, (state, action) => {
-            const profileList = action.payload;
-            profileList.map((profile) => {
-                state.careGiver.push(profile);
-            })
+            state.careGiver = state.careGiver.concat(action.payload);
         })
         .addCase(saveUserProfile, (state, action) => {
             Object.assign(state.userProfile, action.payload)
@@ -55,15 +52,13 @@ const profileReducer = createReducer(initialState, (builder) => {
         .addCase(saveHeartListProfile, (state, action) => {
             Object.assign(state.heartProfileList, action.payload);
         })
-        .addCase(saveLastListNo, (state, action) => {
+        .addCase(saveLastProfileId, (state, action) => {
+            console.log(action.payload)
             state.lastListNo = action.payload
         })
         .addCase(refreshProfileList, (state, action) => {
-            state.lastListNo = 0;
-            if (action.payload === 'careGiver')
-                state.careGiver = [];
-            else
-                state.assistant = [];
+            state.lastListNo = undefined;
+            state.careGiver = [];
         })
         .addCase(removeNotFoundProfile, (state, action) => {
             state.careGiver = state.careGiver.filter(profile =>

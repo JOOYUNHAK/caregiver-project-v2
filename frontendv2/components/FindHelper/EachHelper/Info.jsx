@@ -6,12 +6,9 @@ import {
     Text,
     Platform,
 } from 'react-native';
-import { changeStartDate, getCareer, possibleAreaRange } from "../../../functions/Profile/profileFunctions";
 
 export default function Info({ profile }) {
-    const career = getCareer(profile.career);
-    const exceedArea = possibleAreaRange(profile.possibleArea);
-    const startDate = changeStartDate(profile.startDate);
+    const { profile: caregiverProfile } = profile;
 
     return (
         <View style={styles.profileHelperContainer}>
@@ -22,7 +19,7 @@ export default function Info({ profile }) {
                     </Text>
                     <View style={styles.verticalLine} />
                     <Text style={styles.userValue}>
-                        {career}
+                        {caregiverProfile.career}
                     </Text>
                 </View>
 
@@ -32,7 +29,7 @@ export default function Info({ profile }) {
                     </Text>
                     <View style={styles.verticalLine} />
                     <Text style={styles.userValue}>
-                        {profile.pay}만원
+                        {caregiverProfile.pay}만원
                     </Text>
                 </View>
             </View>
@@ -44,10 +41,7 @@ export default function Info({ profile }) {
                     </Text>
                     <View style={styles.verticalLine} />
                     <Text style={styles.userValue}>
-                        { exceedArea ?
-                            `상세 프로필 참고` :
-                            (profile.possibleArea)
-                        }
+                        {caregiverProfile.possibleAreaList}
                     </Text>
                 </View>
 
@@ -57,19 +51,10 @@ export default function Info({ profile }) {
                     </Text>
                     <View style={styles.verticalLine} />
                     <Text style={styles.userValue}>
-                        {startDate}
+                        {caregiverProfile.possibleDate}
                     </Text>
                 </View>
             </View>
-
-
-
-            {/*  <View style={styles.profileHelperGrade}>
-                    <Icon props={['material-community', 'star', 16, 'gold']} />
-                    <Text style = {styles.profileHelperGradeText}>
-                        {profile.grade}
-                    </Text>
-                </View> */}
         </View>
     );
 }

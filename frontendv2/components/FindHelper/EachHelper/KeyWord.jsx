@@ -8,11 +8,10 @@ import {
 } from 'react-native';
 
 export default function KeyWord({ profile }) {
-    let keywords = profile.keywords.split(',');
-    
+    const { tagList } = profile.profile;
     return (
         <View style={styles.keyWords}>
-            {keywords.map((keywords, index) => {
+            {tagList.map((keywords, index) => {
                 return (
                     <View key={index} style={styles.keyWordStyle}>
                         <Text style={styles.keyWordTextStyle}>
