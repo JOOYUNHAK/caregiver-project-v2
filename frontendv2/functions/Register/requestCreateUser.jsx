@@ -36,7 +36,15 @@ function convertCaregiverThirdRegister(thirdRegisterData) {
 
     return { 
         helpExperience,
-        strengthList: Object.values(strengthList),
+        strengthList: toApiStrengthList(Object.values(strengthList)),
         tagList: Object.values(tagList)
     };
 };
+
+function toApiStrengthList(list) {
+    const arr = [];
+    for( const strength of list ) {
+        if( strength ) arr.push(strength);
+    };
+    return arr;
+}
