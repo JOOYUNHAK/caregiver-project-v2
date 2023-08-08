@@ -38,6 +38,7 @@ import { RefreshAuthenticationGuard } from './application/guard/refresh-authenti
   ],
   exports: [
     SessionService,
+    TokenService,
     AuthService,
     PhoneVerificationRepository
   ]
