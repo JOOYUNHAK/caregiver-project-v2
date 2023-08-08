@@ -4,6 +4,7 @@ import { CaregiverProfileBuilder } from "src/profile/domain/builder/profile.buil
 import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
 import { License } from "src/profile/domain/entity/caregiver/license.entity";
 import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto";
+import { ProfileDetailDto } from "src/profile/interface/dto/profile-detail.dto";
 import { ProfileListDto } from "src/profile/interface/dto/profile-list.dto";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 
@@ -44,12 +45,49 @@ export class CaregiverProfileMapper {
                 career: this.toDtoCareer(caregiverProfile.getCareer()),
                 pay: caregiverProfile.getPay(),
                 possibleDate: this.toDtoPossibleDate(caregiverProfile.getPossibleDate()),
-                possibleAreaList: this.toDtoAreaList(caregiverProfile.getPossibleAreaList()),
+                possibleAreaList: this.toDtoAreaList(caregiverProfile.getPossibleAreaList(), 'list'),
                 tagList: caregiverProfile.getTagList(),
                 notice: caregiverProfile.getNotice()
             }
         }
     };
+
+    /* 프로필 상세보기에 필요한 데이터에 맞춰 변환 */
+    toDetailDto(user: User, caregiverProfile: CaregiverProfile): ProfileDetailDto {
+        return {
+            user: {
+                name: user.getName(),
+                sex: user.getProfile().getSex(),
+                age: this.toDtoAge(user.getProfile().getBirth())
+            },
+            profile: {
+                _id: caregiverProfile.getId(),
+                userId: caregiverProfile.getUserId(),
+                career: this.toDtoCareer(caregiverProfile.getCareer()),
+                pay: caregiverProfile.getPay(),
+                possibleDate: this.toDtoPossibleDate(caregiverProfile.getPossibleDate()),
+                possibleAreaList: this.toDtoAreaList(caregiverProfile.getPossibleAreaList(), 'detail'),
+                notice: caregiverProfile.getNotice(),
+                licenseList: this.toDtoLicenseList(caregiverProfile.getLicenseList()),
+                additionalChargeCase: caregiverProfile.getAdditionalChargeCase(),
+                nextHosptial: caregiverProfile.getNextHosptial(),
+                helpExperience: caregiverProfile.getHelpExperience(),
+                strengthList: caregiverProfile.getStrengthList(),
+                warningList: caregiverProfile.getWarningList()
+            }
+        }
+    };
+
+    private toLicenseList(licenseList: string[]): License[] {
+        /* 자격증을 증명전까지 false */
+        return licenseList.map(license => new License(license, false))
+    };
+
+    /* 클라이언트 데이터 노출에 맞게 인증이 완료된 자격증만 노출 */
+    private toDtoLicenseList(licenseList: License []): string [] {
+        return licenseList.filter(license => license.getIsCertified())
+                        .map(certificatedLicense => certificatedLicense.getName());
+    }
 
     /* 클라이언트 데이터 노출에 맞게 나이 변환 */
     private toDtoAge(birth: number): number {
@@ -86,12 +124,8 @@ export class CaregiverProfileMapper {
     };
 
     /* 클라이언트 데이터 노출에 맞게 가능 지역 변환 */
-    private toDtoAreaList(areaList: string[]): string[] | string {
-        return areaList.length >= 4 ? '상세보기참고' : areaList.join(',');
+    private toDtoAreaList(areaList: string[], page: string): string[] | string {
+        /* 메인 페이지에서는 화면이 잘리므로 지역이 많으면 줄여서 노출 */
+        return ( areaList.length >= 4 && page === 'list' ) ? '상세보기참고' : areaList.join(',');
     }
-
-    private toLicenseList(licenseList: string[]): License[] {
-        /* 자격증을 증명전까지 false */
-        return licenseList.map(license => new License(license, false))
-    };
 }
