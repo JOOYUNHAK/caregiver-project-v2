@@ -11,6 +11,8 @@ import { AggregationCursor } from "mongodb";
 import { TestUser } from "test/unit/user/user.fixtures";
 import { Observable } from 'rxjs';
 import { User } from "src/user-auth-common/domain/entity/user.entity";
+import { NotFoundException } from "@nestjs/common";
+import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
 
 describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
     let caregiverProfileRepository: CaregiverProfileRepository,
@@ -59,6 +61,34 @@ describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
 
             expect(userCommonService.findUserById).toHaveBeenCalledTimes(2);
             expect(caregiverProfileMapper.toListDto).toHaveBeenCalledTimes(2);
+        })
+    });
+
+    describe('getProfile()', () => {
+        const userStub = TestUser.default() as unknown as User;
+        
+        beforeAll(() => jest.spyOn(userCommonService, 'findUserById').mockResolvedValue(userStub));
+
+        it('비공개 프로필이면 NotFound 에러를 던져야 한다', async () => {
+
+            const privateProfile = TestCaregiverProfile.default().isPrivate(true).build();
+
+            jest.spyOn(caregiverProfileRepository, 'findById').mockResolvedValueOnce(privateProfile);
+
+            const result = async () => await caregiverProfileService.getProfile('1', 1);
+
+            await expect(result).rejects.toThrowError(new NotFoundException(ErrorMessage.NotFoundProfile))
+        });
+
+        it('비공개 프로필이 아니라면 받은 사용자, 프로필 데이터를 가지고 Mapper를 호출해야 한다', async () => {
+            const publicProfile = TestCaregiverProfile.default().isPrivate(false).build();
+
+            jest.spyOn(caregiverProfileRepository, 'findById').mockResolvedValueOnce(publicProfile);
+            
+            const mapperSpy = jest.spyOn(caregiverProfileMapper, 'toDetailDto').mockReturnValueOnce(null);
+            await caregiverProfileService.getProfile('1', 1);
+
+            expect(mapperSpy).toHaveBeenCalledWith(userStub, publicProfile);
         })
     })
 })
