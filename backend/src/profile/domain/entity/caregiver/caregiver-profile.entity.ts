@@ -53,6 +53,7 @@ export class CaregiverProfile {
     getUserId(): number { return this.userId; };
     getCareer(): number { return this.career; };
     getPay(): number { return this.pay; };
+    getNextHosptial(): string { return this.nextHosptial; };
     getPossibleDate(): number { return this.possibleDate; };
     getHelpExperience(): CaregiverHelpExperience { return this.helpExperience; };
     getPossibleAreaList(): string[] { return this.possibleAreaList; };
@@ -61,5 +62,6 @@ export class CaregiverProfile {
     getStrengthList(): string[] { return this.strengthList; };
     getIsPrivate(): boolean { return this.isPrivate; };
     getNotice(): string { return this.notice; };
+    getAdditionalChargeCase(): string { return this.additionalChargeCase; };
     getWarningList(): Warning[] { return this.warningList; };
 }
