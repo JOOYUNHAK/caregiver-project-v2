@@ -1,12 +1,14 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto";
 import { CaregiverProfileMapper } from "../mapper/caregiver-profile.mapper";
 import { CaregiverProfileRepository } from "src/profile/infra/repository/caregiver-profile.repository";
 import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
-import { concatMap, firstValueFrom, from, mergeMap, toArray } from "rxjs";
+import { concatMap, firstValueFrom, from, toArray } from "rxjs";
 import { UserAuthCommonService } from "src/user-auth-common/application/user-auth-common.service";
 import { plainToInstance } from "class-transformer";
 import { ProfileListDto } from "src/profile/interface/dto/profile-list.dto";
+import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
+import { ProfileDetailDto } from "src/profile/interface/dto/profile-detail.dto";
 
 @Injectable()
 export class CaregiverProfileService {
@@ -21,6 +23,20 @@ export class CaregiverProfileService {
         const caregiverProfile = this.caregiverProfileMapper.mapFrom(userId, caregiverRegisterDto);
         await this.caregiverProfileRepository.save(caregiverProfile);
     } 
+
+    /* 프로필 상세보기 */
+    async getProfile(profileId: string, userId: number): Promise<ProfileDetailDto> {
+        const [user, profile] = await Promise.all([
+            this.userCommonService.findUserById(userId),
+            this.caregiverProfileRepository.findById(profileId)
+        ]);
+
+        /* 프로필이 비공개면 Error */
+        if( profile.getIsPrivate() )
+            throw new NotFoundException(ErrorMessage.NotFoundProfile);
+        
+        return this.caregiverProfileMapper.toDetailDto(user, profile);
+    }
 
     /* 사용자 아이디로 프로필 조회 */
     async getProfileByUserId(userId: number): Promise<CaregiverProfile> {
