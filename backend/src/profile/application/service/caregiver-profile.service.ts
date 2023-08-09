@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable } from "@nestjs/common";
 import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto";
 import { CaregiverProfileMapper } from "../mapper/caregiver-profile.mapper";
 import { CaregiverProfileRepository } from "src/profile/infra/repository/caregiver-profile.repository";
@@ -7,15 +7,18 @@ import { concatMap, firstValueFrom, from, toArray } from "rxjs";
 import { UserAuthCommonService } from "src/user-auth-common/application/user-auth-common.service";
 import { plainToInstance } from "class-transformer";
 import { ProfileListDto } from "src/profile/interface/dto/profile-list.dto";
-import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
 import { ProfileDetailDto } from "src/profile/interface/dto/profile-detail.dto";
+import { ROLE } from "src/user-auth-common/domain/enum/user.enum";
+import { User } from "src/user-auth-common/domain/entity/user.entity";
+import { ProfileViewRankService } from "src/rank/application/service/profile-view-rank.service";
 
 @Injectable()
 export class CaregiverProfileService {
     constructor(
         private readonly caregiverProfileMapper: CaregiverProfileMapper,
         private readonly caregiverProfileRepository: CaregiverProfileRepository,
-        private readonly userCommonService: UserAuthCommonService
+        private readonly userCommonService: UserAuthCommonService,
+        private readonly profileViewRankService: ProfileViewRankService
     ) {}
     
     /* 회원가입시 새로운 프로필 추가 */
@@ -25,16 +28,14 @@ export class CaregiverProfileService {
     } 
 
     /* 프로필 상세보기 */
-    async getProfile(profileId: string, userId: number): Promise<ProfileDetailDto> {
-        const [user, profile] = await Promise.all([
-            this.userCommonService.findUserById(userId),
-            this.caregiverProfileRepository.findById(profileId)
-        ]);
+    async getProfile(profileId: string, viewUser: User): Promise<ProfileDetailDto> {
+        const profile = await this.caregiverProfileRepository.findById(profileId);
+        profile.checkPrivacy();
+        const user = await this.userCommonService.findUserById(profile.getUserId());
 
-        /* 프로필이 비공개면 Error */
-        if( profile.getIsPrivate() )
-            throw new NotFoundException(ErrorMessage.NotFoundProfile);
-        
+        if( viewUser.getRole() === ROLE.PROTECTOR )
+            await this.profileViewRankService.increment(profileId, viewUser);
+
         return this.caregiverProfileMapper.toDetailDto(user, profile);
     }
 
