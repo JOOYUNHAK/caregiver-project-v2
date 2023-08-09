@@ -13,12 +13,16 @@ import { Observable } from 'rxjs';
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { NotFoundException } from "@nestjs/common";
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
+import { MockProfileViewRankService } from "test/unit/__mock__/rank/rank-service.mock";
+import { ProfileViewRankService } from "src/rank/application/service/profile-view-rank.service";
+import { ROLE } from "src/user-auth-common/domain/enum/user.enum";
 
 describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
     let caregiverProfileRepository: CaregiverProfileRepository,
         caregiverProfileMapper: CaregiverProfileMapper,
         userCommonService: UserAuthCommonService,
-        caregiverProfileService: CaregiverProfileService;
+        caregiverProfileService: CaregiverProfileService,
+        profileViewRankService: ProfileViewRankService
     
     beforeAll(async() => {
         const module = await Test.createTestingModule({
@@ -26,7 +30,8 @@ describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
                 CaregiverProfileService,
                 MockCaregiverProfileRepository,
                 MockCaregiverProfileMapper,
-                MockUserAuthCommonService
+                MockUserAuthCommonService,
+                MockProfileViewRankService
             ]
         }).compile();
 
@@ -34,6 +39,7 @@ describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
         caregiverProfileRepository = module.get(CaregiverProfileRepository);
         userCommonService = module.get(UserAuthCommonService);
         caregiverProfileService = module.get(CaregiverProfileService);
+        profileViewRankService = module.get(ProfileViewRankService);
     });
 
     describe('getProfileList()', () => {
@@ -75,20 +81,41 @@ describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
 
             jest.spyOn(caregiverProfileRepository, 'findById').mockResolvedValueOnce(privateProfile);
 
-            const result = async () => await caregiverProfileService.getProfile('1', 1);
+            const result = async () => await caregiverProfileService.getProfile('1', {} as User);
 
             await expect(result).rejects.toThrowError(new NotFoundException(ErrorMessage.NotFoundProfile))
         });
 
-        it('비공개 프로필이 아니라면 받은 사용자, 프로필 데이터를 가지고 Mapper를 호출해야 한다', async () => {
-            const publicProfile = TestCaregiverProfile.default().isPrivate(false).build();
-
-            jest.spyOn(caregiverProfileRepository, 'findById').mockResolvedValueOnce(publicProfile);
+        describe('비공개 프로필이 아닐 경우', () => {
             
-            const mapperSpy = jest.spyOn(caregiverProfileMapper, 'toDetailDto').mockReturnValueOnce(null);
-            await caregiverProfileService.getProfile('1', 1);
+            beforeEach(() => jest.clearAllMocks() );
 
-            expect(mapperSpy).toHaveBeenCalledWith(userStub, publicProfile);
+            it('조회한 사용자가 간병인이라면 클라이언트에게 반환할 Mapper만 호출', async () => {
+                const publicProfile = TestCaregiverProfile.default().isPrivate(false).build();
+                jest.spyOn(caregiverProfileRepository, 'findById').mockResolvedValue(publicProfile);
+
+                const rankSpy = jest.spyOn(profileViewRankService, 'increment').mockResolvedValueOnce(null);
+                const mapperSpy = jest.spyOn(caregiverProfileMapper, 'toDetailDto').mockReturnValueOnce(null);
+                await caregiverProfileService.getProfile('1', userStub);
+                
+                expect(rankSpy).not.toHaveBeenCalled();
+                expect(mapperSpy).toHaveBeenCalledWith(userStub, publicProfile);
+            });
+
+            it('조회한 사용자가 보호자라면 순위 집계를 위한 service를 호출하고 Mapper를 호출', async () => {
+                const publicProfile = TestCaregiverProfile.default().isPrivate(false).build();
+                const protectorUser = TestUser.default().withRole(ROLE.PROTECTOR) as unknown as User;
+                const profileId = '1';
+
+                jest.spyOn(caregiverProfileRepository, 'findById').mockResolvedValue(publicProfile);
+
+                const rankSpy = jest.spyOn(profileViewRankService, 'increment').mockResolvedValueOnce(null);
+                const mapperSpy = jest.spyOn(caregiverProfileMapper, 'toDetailDto').mockReturnValueOnce(null);
+                await caregiverProfileService.getProfile(profileId, protectorUser);
+                
+                expect(rankSpy).toHaveBeenCalledWith(profileId, protectorUser);
+                expect(mapperSpy).toHaveBeenCalledWith(userStub, publicProfile);
+            })
         })
     })
 })
