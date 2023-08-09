@@ -4,6 +4,8 @@ import { PossibleDate } from "../../enum/possible-date.enum";
 import { CaregiverHelpExperience } from "src/user/interface/dto/register-page";
 import { License } from "./license.entity";
 import { ExposeOptions, Transform, TransformFnParams } from 'class-transformer';
+import { NotFoundException } from '@nestjs/common';
+import { ErrorMessage } from 'src/common/shared/enum/error-message.enum';
 
 /* _id 필드 plainToInstance 시 새로 할당하지 않기 위해 그대로 노출 */
 const ExposeId = (options?: ExposeOptions) =>
@@ -64,4 +66,10 @@ export class CaregiverProfile {
     getNotice(): string { return this.notice; };
     getAdditionalChargeCase(): string { return this.additionalChargeCase; };
     getWarningList(): Warning[] { return this.warningList; };
+
+    /* 프로필이 비공개인지 확인 */
+    checkPrivacy(): void {
+        if( this.isPrivate )
+            throw new NotFoundException(ErrorMessage.NotFoundProfile);
+    }
 }
