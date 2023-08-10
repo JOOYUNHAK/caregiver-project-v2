@@ -16,6 +16,7 @@ import { NotificationModule } from './notification/notification.module';
 import { BatchModule } from './batch/batch.module';
 import { GlobalScopedJwtGuard } from './auth/application/guard/jwt/jwt-auth.guard';
 import { ProfileModule } from './profile/profile.module';
+import { RankModule } from './rank/rank.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { ProfileModule } from './profile/profile.module';
     NotificationModule,
     UserAuthCommonModule,
     UserModule,
-    ProfileModule
+    ProfileModule,
+    RankModule
   ],
   providers: [
     GlobalScopedValidationPipe,

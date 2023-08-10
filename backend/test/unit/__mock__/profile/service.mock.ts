@@ -25,5 +25,6 @@ export const MockCaregiverProfileMapper = {
     useValue: {
         mapFrom: jest.fn(),
         toListDto: jest.fn(),
+        toDetailDto: jest.fn()
     }
 }
