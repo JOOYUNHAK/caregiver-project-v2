@@ -1,6 +1,7 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { Db, MongoClient } from "mongodb";
 import { RedisClientType, createClient } from "redis";
+import { ProfileViewRecord } from "src/rank/domain/entity/profile-view-record.entity";
 import { Token } from "src/user-auth-common/domain/entity/auth-token.entity";
 import { Email } from "src/user-auth-common/domain/entity/user-email.entity";
 import { Phone } from "src/user-auth-common/domain/entity/user-phone.entity";
@@ -40,7 +41,7 @@ export const TestTypeOrmOptions: TypeOrmModuleOptions = {
     port: 3306,
     password: '1234',
     database: 'test_caregiver_project',
-    entities: [User, Phone, Email, UserProfile, Token],
+    entities: [User, Phone, Email, UserProfile, Token, ProfileViewRecord],
     synchronize: true,
     logging: true
 }
