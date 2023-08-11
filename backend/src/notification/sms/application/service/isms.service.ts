@@ -1,6 +1,6 @@
-import { AuthenticationCodeMessage } from "src/auth/domain/authentication-code-message";
+import { Message } from "../../domain/message";
 
 export interface ISMSService {
     /* 문자 발송 */
-    send(smsMessage: AuthenticationCodeMessage): Promise<void>
+    send(smsMessage: Message): Promise<void>
 };

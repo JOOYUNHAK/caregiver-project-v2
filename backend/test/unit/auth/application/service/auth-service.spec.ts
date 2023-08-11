@@ -7,8 +7,7 @@ import { SessionService } from 'src/auth/application/service/session.service';
 import { TokenService } from 'src/auth/application/service/token.service';
 import { VerificationUsageService } from 'src/auth/application/service/verification-usage.service';
 import { ErrorMessage } from 'src/common/shared/enum/error-message.enum';
-import { NaverSmsService } from 'src/notification/sms/infra/service/naver-sms.service';
-import { SmsService } from 'src/notification/sms/infra/service/sms.service';
+import { SmsService } from 'src/notification/sms/application/service/sms.service';
 import { UserAuthCommonService } from 'src/user-auth-common/application/user-auth-common.service';
 import { Token } from 'src/user-auth-common/domain/entity/auth-token.entity';
 import { User } from 'src/user-auth-common/domain/entity/user.entity';
@@ -46,7 +45,6 @@ describe('인증 서비스(AuthService) Test', () => {
                 MockSmsService,
                 MockTokenService,
                 MockSessionService,
-                NaverSmsService,
                 MockVerificationUsageService,
                 MockPhoneVerificationRepository,
                 MockAuthenticationCodeService,
