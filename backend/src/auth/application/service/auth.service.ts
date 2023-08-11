@@ -1,7 +1,7 @@
 import { ConflictException, Injectable } from "@nestjs/common";
 import { AuthenticationCodeMessage } from "src/auth/domain/authentication-code-message";
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
-import { SmsService } from "src/notification/sms/infra/service/sms.service";
+import { SmsService } from "src/notification/sms/application/service/sms.service";
 import { VerificationUsageService } from "./verification-usage.service";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { ClientDto } from "src/user-auth-common/interface/client.dto";

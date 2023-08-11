@@ -3,9 +3,10 @@ import { Injectable, InternalServerErrorException } from "@nestjs/common";
 import * as Crypto from 'crypto';
 import axios, { AxiosRequestHeaders } from "axios";
 import { Message } from "../../domain/message";
+import { ISMSService } from "../../application/service/isms.service";
 
 @Injectable()
-export class NaverSmsService {
+export class NaverSmsService implements ISMSService {
     private accessKey: string;
     private secretKey: string;
     private serviceId: string;
