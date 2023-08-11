@@ -79,3 +79,8 @@ export class NaverSmsService {
         return hmac.digest('base64');
     }
 }
+
+export const naverSmsProvider = {
+    provide: 'NAVER_SMS_SERVICE',
+    useClass: NaverSmsService
+}
