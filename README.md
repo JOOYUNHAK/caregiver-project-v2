@@ -42,7 +42,8 @@
 # redis 4.3.1 #
 ```
 ## Table Structure
-![image](https://github.com/JOOYUNHAK/caregiver-project-v2/assets/99117410/b252c9f0-094c-49a3-a559-21efe9c5e661)
+<img width="1299" alt="image" src="https://github.com/JOOYUNHAK/caregiver-project-v2/assets/99117410/84fbbf07-410d-4efb-aa5d-0a888bcd7a5a">
+
 
 ## Implement
 
