@@ -3,7 +3,7 @@ import { Warning } from "./warning.entity";
 import { PossibleDate } from "../../enum/possible-date.enum";
 import { CaregiverHelpExperience } from "src/user/interface/dto/register-page";
 import { License } from "./license.entity";
-import { ExposeOptions, Transform, TransformFnParams } from 'class-transformer';
+import { ExposeOptions, Transform, TransformFnParams, Type } from 'class-transformer';
 import { NotFoundException } from '@nestjs/common';
 import { ErrorMessage } from 'src/common/shared/enum/error-message.enum';
 
@@ -26,6 +26,7 @@ export class CaregiverProfile {
     private helpExperience: CaregiverHelpExperience; //간병 경험
     private additionalChargeCase: string; //추가 요금 상황
     private possibleAreaList: string[]; // 지역
+    @Type(() => License)
     private licenseList: License[]; // 자격증
     private strengthList: string[]; // 강점
     private tagList: string[]; // 키워드
