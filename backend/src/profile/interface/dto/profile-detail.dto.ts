@@ -9,7 +9,7 @@ export interface ProfileDetailDto {
         age: number;
     },
     profile: {
-        _id: string;
+        id: string;
         userId: number;
         career: string;
         pay: number;
