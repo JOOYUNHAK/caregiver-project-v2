@@ -90,7 +90,7 @@ describe('Caregiver Profile Mapper Component Test', () => {
             expect(result.user).toHaveProperty('age');
             expect(result.user).toHaveProperty('sex');
 
-            expect(result.profile).toHaveProperty('_id');
+            expect(result.profile).toHaveProperty('id');
             expect(result.profile).toHaveProperty('userId');
             expect(result.profile).toHaveProperty('career');
             expect(result.profile).toHaveProperty('pay');
@@ -119,6 +119,15 @@ describe('Caregiver Profile Mapper Component Test', () => {
             expect(result.profile.possibleAreaList).toBe(expectedArea);
         });
 
+        it('자격증이 없는 사용자는 빈 배열로 반환되어야 한다', () => {
+            const emptyLicenseList = [];
+            const profileStub = TestCaregiverProfile.default().licenseList(emptyLicenseList).build();
+
+            const result = profileMapper.toDetailDto(userStub, profileStub);
+            
+            expect(result.profile.licenseList).toEqual(emptyLicenseList);
+        })
+
         it('인증이 완료된 자격증의 이름은 포함되고, 완료되지 않은 자격증은 포함되지 않는지 확인', () => {
             const [unCertificatedLicense, certificatedLicense] = ['자격증1', '자격증2'];
             const licenseList = [new License(unCertificatedLicense, false), new License(certificatedLicense, true)];
@@ -142,7 +151,7 @@ describe('Caregiver Profile Mapper Component Test', () => {
             expect(result.user).toHaveProperty('sex');
             expect(result.user).toHaveProperty('age');
 
-            expect(result.profile).toHaveProperty('_id');
+            expect(result.profile).toHaveProperty('id');
             expect(result.profile).toHaveProperty('userId');
             expect(result.profile).toHaveProperty('career');
             expect(result.profile).toHaveProperty('pay');
