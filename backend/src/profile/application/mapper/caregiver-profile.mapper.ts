@@ -40,7 +40,7 @@ export class CaregiverProfileMapper {
                 age: this.toDtoAge(user.getProfile().getBirth())
             },
             profile: {
-                _id: caregiverProfile.getId(),
+                id: caregiverProfile.getId(),
                 userId: caregiverProfile.getUserId(),
                 career: this.toDtoCareer(caregiverProfile.getCareer()),
                 pay: caregiverProfile.getPay(),
@@ -54,6 +54,7 @@ export class CaregiverProfileMapper {
 
     /* 프로필 상세보기에 필요한 데이터에 맞춰 변환 */
     toDetailDto(user: User, caregiverProfile: CaregiverProfile): ProfileDetailDto {
+
         return {
             user: {
                 name: user.getName(),
@@ -61,7 +62,7 @@ export class CaregiverProfileMapper {
                 age: this.toDtoAge(user.getProfile().getBirth())
             },
             profile: {
-                _id: caregiverProfile.getId(),
+                id: caregiverProfile.getId(),
                 userId: caregiverProfile.getUserId(),
                 career: this.toDtoCareer(caregiverProfile.getCareer()),
                 pay: caregiverProfile.getPay(),
@@ -84,7 +85,7 @@ export class CaregiverProfileMapper {
     };
 
     /* 클라이언트 데이터 노출에 맞게 인증이 완료된 자격증만 노출 */
-    private toDtoLicenseList(licenseList: License []): string [] {
+    private toDtoLicenseList(licenseList: License []): string [] {        
         return licenseList.filter(license => license.getIsCertified())
                         .map(certificatedLicense => certificatedLicense.getName());
     }
