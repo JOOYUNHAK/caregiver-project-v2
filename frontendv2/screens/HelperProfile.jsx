@@ -27,7 +27,6 @@ export default function HelperProfile({ navigation, route }) {
     const [loading, setLoading] = useState(true); //데이터 받아오기 전까지
     const [visible, setVisible] = useState(false); //프로필 찾을 수 없을 때 dialog
     const [errMessage, setErrMessage] = useState(''); //프로필 찾을 수 없을 때 message
-    const purpose = route.params.purpose;
     const profileId = route.params.profileId;
     const name = route.params.name;
     
@@ -37,11 +36,9 @@ export default function HelperProfile({ navigation, route }) {
 
     useEffect(() => {
         async function getUserProfile() {
-            const result = await requestUserProfile(
-                purpose === '간병인' ? 'careGiver' : 'assistant',
-                profileId);
+            const result = await requestUserProfile(navigation, profileId);
             //프로필을 찾을 수 없으면 dialog 띄우기
-            if(result !== 'true') {
+            if(!result) {
                 setVisible(true);
                 setErrMessage(result);
             }
@@ -67,7 +64,7 @@ export default function HelperProfile({ navigation, route }) {
 
     const onScrollHandler = (e) => {
         if( e.nativeEvent.contentOffset.y > 50 ) {
-            const newTitle = purpose + ' ' + name + '님';
+            const newTitle = '간병인' + ' ' + name + '님';
             navigation.setOptions({ title: newTitle})
         }else 
             navigation.setOptions({ title: '' })

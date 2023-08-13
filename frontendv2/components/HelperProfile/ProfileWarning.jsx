@@ -7,12 +7,9 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-nat
 import { useSelector } from "react-redux";
 
 export default function ProfileWarning() {
-    const { warning } = useSelector((state) => ({
-        warning: state.profile.userProfile.user.warning
+    const { warningList } = useSelector((state) => ({
+        warningList: state.profile.userProfile.profile.warningList
     }))
-
-    //todo 신고가 있을 시 신고 내역을 반환해주는 함수 구현
-    //if( !! warning)
 
     return (
         <View style={styles.warning}>

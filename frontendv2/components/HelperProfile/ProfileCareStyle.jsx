@@ -16,11 +16,13 @@ export default function ProfileCareStyle() {
     const [toilet, setToilet] = useState(true);
     const [suction, setSuction] = useState(true);
     const [washing, setWashing] = useState(true);
-    const [bedsore, setBedsore] = useState(true);
+    const [movement, setMovement] = useState(true);
 
     const { userProfile } = useSelector(state => ({
         userProfile: state.profile.userProfile
     }));
+
+    const { helpExperience } = userProfile.profile;
 
     return (
         <>
@@ -56,7 +58,7 @@ export default function ProfileCareStyle() {
                                 fontSize: 14,
                                 color: '#808080',
                             }}>
-                                {userProfile.toilet}
+                                {helpExperience.toilet}
                             </Text>
                         </View> : null
                     }
@@ -85,7 +87,7 @@ export default function ProfileCareStyle() {
                                 fontSize: 14,
                                 color: '#808080',
                             }}>
-                                {userProfile.suction}
+                                {helpExperience.suction}
                             </Text>
                         </View> : null
                     }
@@ -115,14 +117,14 @@ export default function ProfileCareStyle() {
                             color: '#808080',
                             paddingLeft: 4
                         }}>
-                            {userProfile.washing}
+                            {helpExperience.washing}
                         </Text>
                     </View> : null
                     }
 
                     <TouchableHighlight
                         underlayColor='none'
-                        onPress={() => setBedsore(!bedsore)}
+                        onPress={() => setMovement(!movement)}
                         style={styles.questionTouch}
                     >
                         <View style={styles.question}>
@@ -134,19 +136,19 @@ export default function ProfileCareStyle() {
                                 Q. 욕창 관리는 어떻게 하시나요?
                             </Text>
                             <View style={{ position: 'absolute', right: 10 }}>
-                                <Icon props={['material', bedsore ? 'expand-less' : 'expand-more', 25, 'black']} />
+                                <Icon props={['material', movement ? 'expand-less' : 'expand-more', 25, 'black']} />
                             </View>
                         </View>
                     </TouchableHighlight>
 
-                    {bedsore ?
+                    {movement ?
                     <View style={styles.answer}>
                         <Text style={{
                             fontSize: 14,
                             color: '#808080',
                             paddingLeft: 4
                         }}>
-                            {userProfile.bedsore}
+                            {helpExperience.movement}
                         </Text>
                     </View> : null 
                     }

@@ -7,8 +7,8 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-nat
 import { useSelector } from "react-redux"
 
 export default function ProfileExtraFee() {
-    const { extraFee } = useSelector(state => ({
-        extraFee: state.profile.userProfile.extraFee
+    const { additionalChargeCase } = useSelector(state => ({
+        additionalChargeCase: state.profile.userProfile.profile.additionalChargeCase
     }));
 
     return (
@@ -19,7 +19,7 @@ export default function ProfileExtraFee() {
                 </Text>
             </View>
                 <Text style = {styles.nextHospitalText}>
-                    {extraFee}
+                    {additionalChargeCase}
                 </Text>
         </View>
     )
