@@ -34,7 +34,8 @@ export default function Header({ profile }) {
                 underlayColor='none'
                 onPress={() => navigation.dispatch(
                     StackActions.push('helperProfilePage', {
-                        profileId: profile.id ,
+                        name: user.name,
+                        profileId: profile.profile.id ,
                     })
                 )}>
                 <View style={styles.confirmProfileBtn}>

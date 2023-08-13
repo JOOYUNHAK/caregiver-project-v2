@@ -43,7 +43,6 @@ export default async function requestProfileList(purpose) {
         });        
         /* 첫 프로필 리스트의 조회 결과를 받아왔으면 Loading 해제 */
         if( !lastListNo ) store.dispatch(listLoading(false));
-
         const profileList = res.data;
         /* 더 이상 프로필 데이터가 없을 때 */
         if( !profileList.length ) {
@@ -53,7 +52,7 @@ export default async function requestProfileList(purpose) {
 
         /* 아직 프로필 데이터가 조회될 때 다음을 위해 저장 */
         store.dispatch(saveCareGiverProfile(profileList));
-        store.dispatch(saveLastProfileId(profileList[profileList.length - 1].profile._id));
+        store.dispatch(saveLastProfileId(profileList[profileList.length - 1].profile.id));
         store.dispatch(setNoData(false));
     }
     catch (err) {
