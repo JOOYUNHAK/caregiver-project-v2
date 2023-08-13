@@ -5,17 +5,14 @@ import { StyleSheet } from "react-native";
 import { View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useSelector } from "react-redux";
-import { getAge } from "../../functions/Profile/profileFunctions";
 import Icon from "../../components/Icon";
 import Heart from "./ProfileHeader/Heart";
-
 
 export default function ProfileHeader() {
     const {  userProfile } = useSelector(state => ({
         userProfile: state.profile.userProfile
     }));
 
-    const age = getAge(userProfile.user.birth);
     return (
         <View style={styles.profileHeader}>
             <View style={styles.innerProfileHeader}>
@@ -24,7 +21,7 @@ export default function ProfileHeader() {
                         {userProfile.user.sex},
                     </Text>
                     <Text style={{ fontWeight: '500', fontSize: 15, marginLeft: 3 }}>
-                        {age}세
+                        {userProfile.user.age}세
                     </Text>
                 </View>
 
@@ -33,7 +30,7 @@ export default function ProfileHeader() {
                         fontSize: 20,
                         fontWeight: '600'
                     }}>
-                        믿음의 {userProfile.user.purpose} {userProfile.user.name}님
+                        믿음의 간병인 {userProfile.user.name}님
                     </Text>
                     <Heart />
                 </View>
@@ -69,7 +66,7 @@ export default function ProfileHeader() {
                 <View style={styles.profileHelperAppeal}>
                     <Icon props={['material', 'campaign', 21, 'silver']} />
                     <Text style={styles.profileHelperAppealText}>
-                        {userProfile.notice}
+                        {userProfile.profile.notice}
                     </Text>
                 </View>
             </View>

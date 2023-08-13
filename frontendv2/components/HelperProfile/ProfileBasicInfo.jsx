@@ -11,8 +11,8 @@ export default function ProfileBasicInfo() {
         userProfile: state.profile.userProfile
     }));
     
-    const career = getCareer(userProfile.career);
-    const startDate = changeStartDate(userProfile.startDate);
+    const career = userProfile.profile.career;
+    const startDate = userProfile.profile.possibleDate;
 
     return (
         <View style={{
@@ -63,7 +63,7 @@ export default function ProfileBasicInfo() {
                         </Text>
                         <View style={styles.verticalLine} />
                         <Text style={styles.userValue}>
-                            {userProfile.pay}만원
+                            {userProfile.profile.pay}만원
                         </Text>
                     </View>
                 </View>
@@ -81,7 +81,7 @@ export default function ProfileBasicInfo() {
                         </Text>
                         <View style={styles.verticalLine} />
                         <Text style={[styles.userValue, { flexWrap: 'wrap', paddingRight: 10 }]}>
-                            {userProfile.possibleArea}
+                            {userProfile.possibleAreaList}
                         </Text>
                     </View>
 

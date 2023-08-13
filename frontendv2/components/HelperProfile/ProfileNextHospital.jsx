@@ -7,8 +7,8 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-nat
 import { useSelector } from "react-redux"
 
 export default function ProfileNextHospital() {
-    const { nextHospital } = useSelector(state => ({
-        nextHospital: state.profile.userProfile.nextHospital
+    const { nextHosptial } = useSelector(state => ({
+        nextHosptial: state.profile.userProfile.profile.nextHosptial
     }));
 
     return (
@@ -19,7 +19,7 @@ export default function ProfileNextHospital() {
                 </Text>
             </View>
                 <Text style = {styles.nextHospitalText}>
-                    {nextHospital}
+                    {nextHosptial}
                 </Text>
         </View>
     )

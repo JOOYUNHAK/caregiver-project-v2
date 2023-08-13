@@ -6,15 +6,9 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import { useSelector } from "react-redux";
 
 export default function ProfileStrength() {
-    const { strength } = useSelector(state => ({
-        strength: state.profile.userProfile.strength
+    const { strengthList } = useSelector(state => ({
+        strengthList: state.profile.userProfile.profile.strengthList
     }));
-
-    let strengthList = [];
-    if (!!strength['first'])
-        strengthList.push(strength['first']);
-    if (!!strength['second'])
-        strengthList.push(strength['second']);
 
     return (
         <View style={styles.strength}>

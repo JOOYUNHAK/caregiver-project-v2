@@ -16,51 +16,51 @@ export default function Heart() {
     const navigation = useNavigation();
     const [visible, setVisible] = useState(false);
     const [errMessage, setErrMessage] = useState('');
-    let { loginId, userHeartCount, userIsHearted, userProfileId } = useSelector(state => ({
-        loginId: state.user.id,
-        userHeartCount: state.profile.userProfile.heart.heartCount,
-        userIsHearted: state.profile.userProfile.heart.isHearted,
-        userProfileId: state.profile.userProfile.id
-    }),
-        shallowEqual
-    );
+    // let { loginId, userHeartCount, userIsHearted, userProfileId } = useSelector(state => ({
+    //     loginId: state.user.id,
+    //     userHeartCount: state.profile.userProfile.heart.heartCount,
+    //     userIsHearted: state.profile.userProfile.heart.isHearted,
+    //     userProfileId: state.profile.userProfile.id
+    // }),
+    //     shallowEqual
+    // );
 
 
-    const registerHeart = async () => {
-        let result;
-        if (!!loginId) {
-            result = await RegisterHeart(userProfileId, navigation);
-        }
-        else {
-            //로그인이 되어있지 않으면 refreshToken 확인 후 다시 재 호출
-            if (await requestRefreshToken(navigation)) {
-                result = await RegisterHeart(userProfileId, navigation);
-            }
-        }
-        if (result?.message) {
-            setErrMessage(result.message)
-            setVisible(true);
-        }
-    }
+    // const registerHeart = async () => {
+    //     let result;
+    //     if (!!loginId) {
+    //         result = await RegisterHeart(userProfileId, navigation);
+    //     }
+    //     else {
+    //         //로그인이 되어있지 않으면 refreshToken 확인 후 다시 재 호출
+    //         if (await requestRefreshToken(navigation)) {
+    //             result = await RegisterHeart(userProfileId, navigation);
+    //         }
+    //     }
+    //     if (result?.message) {
+    //         setErrMessage(result.message)
+    //         setVisible(true);
+    //     }
+    // }
 
     return (
         <>
             <TouchableHighlight
                 style={styles.heartTouch}
                 underlayColor='none'
-                onPress={() => registerHeart()}
+                onPress={() => console.log('heart click')}
             >
                 <View>
-                    {/*<Icon props={['material', 'favorite-border', 22, 'black']} /> */}
-                    <Icon props={[
+                    <Icon props={['material', 'favorite-border', 22, 'black']} />
+                    {/* <Icon props={[
                         'material',
                         !!userIsHearted ? 'favorite' : 'favorite-border',
                         22,
                         !!userIsHearted ? 'red' : 'black'
                     ]}
-                    />
+                    /> */}
                     <Text style={styles.heartCount}>
-                        {userHeartCount}
+                        0
                     </Text>
                 </View>
             </TouchableHighlight>

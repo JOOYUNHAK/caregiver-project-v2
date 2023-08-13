@@ -5,17 +5,11 @@ import { StyleSheet } from "react-native";
 import { View } from "react-native";
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from "react-native-responsive-screen";
 import { useSelector } from "react-redux"
-import { stringToArray } from "../../functions/Profile/profileFunctions";
 
 export default function ProfileCertificate() {
-    const { license } = useSelector(state => ({
-        license: state.profile.userProfile.license
+    const { licenseList } = useSelector(state => ({
+        licenseList: state.profile.userProfile.profile.licenseList
     }));
-    
-    let certificateList;
-    if(!! license.length) {
-        certificateList = stringToArray(license);
-    }
 
     return (
         <View style={styles.certificate}>
@@ -24,12 +18,12 @@ export default function ProfileCertificate() {
                     자격증
                 </Text>
             </View>
-            {certificateList ? 
+            {licenseList.length ? 
                 <View style = {styles.certificateList}>
-                    {(certificateList).map((certificate) => {
+                    {(licenseList).map((license) => {
                         return(
-                            <Text key={certificate} style = {styles.eachPart}>
-                                {certificate}
+                            <Text key={license} style = {styles.eachPart}>
+                                {license}
                             </Text>
                         )
                     })}
