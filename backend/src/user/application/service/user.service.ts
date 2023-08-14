@@ -11,6 +11,7 @@ import { ProtectorRegisterDto } from "src/profile/interface/dto/protector-regist
 import { PatientProfileService } from "../../../profile/application/service/patient-profile.service";
 import { MyProfileDto } from "src/user/interface/dto/my-profile.dto";
 import { AuthService } from "src/auth/application/service/auth.service";
+import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
 
 @Injectable()
 export class UserService {
@@ -34,12 +35,11 @@ export class UserService {
     }
 
     async getMyProfile(user: User): Promise<MyProfileDto> {
+        let caregiverProfile: CaregiverProfile;
         /* 간병인이면 프로필 조회해서  */
-        if( user.getRole() === ROLE.CAREGIVER ) {
-            const caregiverProfile = await this.caregiverProfileService.getProfileByUserId(user.getId());
-            return await this.userMapper.toMyProfileDto(user, caregiverProfile);
-        }
-        return await this.userMapper.toMyProfileDto(user);
+        if( user.getRole() === ROLE.CAREGIVER ) 
+            caregiverProfile = await this.caregiverProfileService.getProfileByUserId(user.getId());
+        return await this.userMapper.toMyProfileDto(user, caregiverProfile);
     }
 
     /* 가입 목적별 프로필 추가 */
