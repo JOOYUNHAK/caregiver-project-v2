@@ -115,7 +115,7 @@ describe('UserService Test', () => {
             await userService.getMyProfile(protector as unknown as User);
 
             expect(repositorySpy).toBeCalledTimes(0);
-            expect(mapperSpy).toBeCalledWith(protector)
+            expect(mapperSpy).toBeCalledWith(protector, undefined)
         })
     })
 })
