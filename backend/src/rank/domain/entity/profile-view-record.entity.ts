@@ -10,7 +10,7 @@ export class ProfileViewRecord {
     @Column({ 
         name: 'profile_id', 
         type: 'binary', 
-        length: 16, 
+        length: 12, 
         transformer: new UUIDTransformer() 
     })
     private profileId: string;
