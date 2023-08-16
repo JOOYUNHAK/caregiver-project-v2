@@ -12,7 +12,7 @@ export class ProfileViewRankRepository implements IRankRepository {
         private readonly redis: RedisClientType,
         private readonly configService: ConfigService
     ) {
-        this.rankKey = configService.get('profile_view_rank_key');
+        this.rankKey = configService.get('db.redis.key.profile_view_rank_key');
     };
 
     async increment(profileId: string): Promise<void> {
