@@ -1,9 +1,9 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { TypeOrmModule, getRepositoryToken } from "@nestjs/typeorm";
+import { ObjectId } from "mongodb";
 import { ProfileViewRecord } from "src/rank/domain/entity/profile-view-record.entity";
 import { IActionRecordRepository } from "src/rank/domain/iaction-record.repository"
 import { profileViewRecordRepoMethods } from "src/rank/infra/profile-view-record.repository";
-import { UUIDUtil } from "src/util/uuid.util";
 import { TestTypeOrmOptions } from "test/unit/common/database/datebase-setup.fixture";
 
 describe('프로필 조회 기록 저장소(ProfileViewRecordRepository', () => {
@@ -28,7 +28,7 @@ describe('프로필 조회 기록 저장소(ProfileViewRecordRepository', () => 
     });
 
     describe('findRecordByActionAndUser', () => {
-        const [profileId, userId] = [UUIDUtil.generateOrderedUuid(), 1];
+        const [profileId, userId] = [new ObjectId().toHexString(), 1];
 
         beforeAll(async() => {
             const profileViewRecord = new ProfileViewRecord(profileId, userId);
