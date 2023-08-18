@@ -39,11 +39,9 @@ describe('MongoDB의 Query를 생성해주는 추상클래스 Test', () => {
 
             expect(resultQuery).toEqual(expectedQuery);
         });
-    });
 
-    describe('equalsOrNull()', () => {
         it('값이 undefined면 쿼리 생성을 하지 않고 null 반환 확인', () => {
-            const resultQuery = queryFactory.equalsOrNull('age', undefined);
+            const resultQuery = queryFactory.equals('age', undefined);
 
             expect(resultQuery).toBe(null);
         });
