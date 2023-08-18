@@ -18,18 +18,10 @@ export abstract class MongoQueryFactory {
      * @param field 일치 필드
      * @param value 찾고자 하는 값
      */
-    equals(field: string, value: string | boolean | number | null):
-        MongoQuery<string | boolean | number | ObjectId | null> 
+    equals(field: string, value: string | boolean | number | null | undefined):
+        MongoQuery<string | boolean | number | ObjectId | null>  | null
     {
-        return {
-            [field]: ( field === '_id' && typeof(value) === 'string' ) ? new ObjectId(value) : value
-        }
-    }
-
-    equalsOrNull(field: string, value: string | boolean | number | undefined):
-        MongoQuery<string | boolean | number | ObjectId> | null 
-    {
-        if( !value ) return null;
+        if( value === undefined ) return null;
 
         return {
             [field]: ( field === '_id' && typeof(value) === 'string' ) ? new ObjectId(value) : value
