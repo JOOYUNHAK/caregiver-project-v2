@@ -94,9 +94,9 @@ export abstract class MongoQueryFactory {
     }
 }
 
-type MongoOperator<T> = {
+export type MongoOperator<T> = {
     [operator: string]: T | T[]
 };
-type MongoQuery<T> = {
+export type MongoQuery<T> = {
     [field: string]: MongoOperator<T> | T 
 };
