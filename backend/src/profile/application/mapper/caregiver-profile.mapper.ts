@@ -3,9 +3,13 @@ import { ObjectId } from "mongodb";
 import { CaregiverProfileBuilder } from "src/profile/domain/builder/profile.builder";
 import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
 import { License } from "src/profile/domain/entity/caregiver/license.entity";
+import { CaregiverProfileListData } from "src/profile/domain/profile-list-data";
+import { ProfileListQueryOptions } from "src/profile/domain/profile-list-query-options";
+import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
+import { ProfileSort } from "src/profile/domain/profile-sort";
 import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto";
+import { GetProfileListDto } from "src/profile/interface/dto/get-profile-list.dto";
 import { ProfileDetailDto } from "src/profile/interface/dto/profile-detail.dto";
-import { ProfileListDto } from "src/profile/interface/dto/profile-list.dto";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 
 @Injectable()
@@ -31,8 +35,17 @@ export class CaregiverProfileMapper {
             .build()
     };
 
+    /* 리스트의 쿼리 옵션으로 변환 */
+    toListQueryOptions(getProfileListDto: GetProfileListDto): ProfileListQueryOptions {
+        return new ProfileListQueryOptions( 
+            new ProfileListCursor(getProfileListDto.nextCursor),
+            new ProfileSort(getProfileListDto.sort),
+            getProfileListDto.filter
+        );
+    };
+
     /* 사용자 데이터와 프로필 데이터로 클라이언트 노출용 데이터 변환 */
-    toListDto(user: User, caregiverProfile: CaregiverProfile): ProfileListDto {
+    toListDto(user: User, caregiverProfile: CaregiverProfile): CaregiverProfileListData {
         return {
             user: {
                 name: user.getName(),
