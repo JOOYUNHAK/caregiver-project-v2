@@ -11,14 +11,22 @@ import { ProfileFilter } from "src/profile/domain/profile-filter";
 import { GetProfileListDto } from "src/profile/interface/dto/get-profile-list.dto";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
 import { ProfileSort } from "src/profile/domain/profile-sort";
+import { SEX } from "src/user-auth-common/domain/enum/user.enum";
+import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.entity";
 
 describe('Caregiver Profile Mapper Component Test', () => {
     const profileMapper = new CaregiverProfileMapper();
-    const userId = 1;
 
     describe('mapFrom()', () => {
+        const [userId, name, birth, sex, expectedAge] = [1, '테스트', 19980303, SEX.MALE, 25];
+        const user = TestUser
+                    .default()
+                    .withId(userId)
+                    .withName(name)
+                    .withUserProfile(new UserProfile(birth, sex)) as unknown as User;
+
         it('간병인 회원가입 양식으로부터 프로필로 변환', () => {
-            const mappingResult = profileMapper.mapFrom(userId, CaregiverRegisterDto.of(
+            const mappingResult = profileMapper.mapFrom(user, CaregiverRegisterDto.of(
                 {} as CommonRegisterForm,
                 createSecondRegisterForm(),
                 createThirdRegisterForm(),
@@ -28,6 +36,8 @@ describe('Caregiver Profile Mapper Component Test', () => {
             expect(mappingResult).toBeInstanceOf(CaregiverProfile);
             expect(mappingResult.getId()).not.toBeNull();
             expect(mappingResult.getUserId()).toBe(userId);
+            expect(mappingResult.getAge()).toBe(expectedAge);
+            expect(mappingResult.getSex()).toBe(sex);
 
             mappingResult.getLicenseList()
                 .map(license => {
