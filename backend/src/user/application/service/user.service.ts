@@ -29,7 +29,7 @@ export class UserService {
 
         const savedUser = await this.userRepository.save(user); // DB에 저장하고 ID를 발급받음
 
-        await this.addProfile(savedUser.getId(), registerDto); // 각자의 역할 프로필 저장
+        await this.addProfile(savedUser, registerDto); // 각자의 역할 프로필 저장
 
         return await this.authService.createAuthentication(savedUser); // 새로운 토큰들을 발급받아 저장
     }
@@ -43,10 +43,10 @@ export class UserService {
     }
 
     /* 가입 목적별 프로필 추가 */
-    private async addProfile(userId: number, registerDto: CaregiverRegisterDto | ProtectorRegisterDto) {
+    private async addProfile(user: User, registerDto: CaregiverRegisterDto | ProtectorRegisterDto) {
         registerDto.firstRegister.purpose == ROLE.CAREGIVER ?
-            await this.caregiverProfileService.addProfile(userId, registerDto as CaregiverRegisterDto) : 
-                await this.patientProfileService.addProfile(userId, registerDto as ProtectorRegisterDto);
+            await this.caregiverProfileService.addProfile(user, registerDto as CaregiverRegisterDto) : 
+                await this.patientProfileService.addProfile(user.getId(), registerDto as ProtectorRegisterDto);
     };
 
 }
