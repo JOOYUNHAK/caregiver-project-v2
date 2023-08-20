@@ -14,10 +14,13 @@ import { User } from "src/user-auth-common/domain/entity/user.entity";
 
 @Injectable()
 export class CaregiverProfileMapper {
-    mapFrom(userId: number, caregiverRegisterDto: CaregiverRegisterDto): CaregiverProfile {
+    mapFrom(user: User, caregiverRegisterDto: CaregiverRegisterDto): CaregiverProfile {
         const { secondRegister, thirdRegister, lastRegister } = caregiverRegisterDto;
         return new CaregiverProfileBuilder( new ObjectId() )
-            .userId(userId)
+            .userId(user.getId())
+            .name(user.getName())
+            .sex(user.getProfile().getSex())
+            .age(this.toDtoAge( user.getProfile().getBirth() ))
             .weight(secondRegister.weight)
             .career(secondRegister.career)
             .pay(secondRegister.pay)

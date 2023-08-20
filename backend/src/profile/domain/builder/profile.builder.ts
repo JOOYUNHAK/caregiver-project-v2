@@ -21,6 +21,19 @@ export class CaregiverProfileBuilder {
         return this;
     };
 
+    name(name: string): this {
+        this.caregiverProfile.setName(name);
+        return this;
+    }
+    sex(sex: SEX): this { 
+        this.caregiverProfile.setSex(sex);
+        return this;
+    };
+
+    age(age: number): this { 
+        this.caregiverProfile.setAge(age);
+        return this;
+    }
     weight(weight: number): this {
         this.caregiverProfile.setWeight(weight);
         return this;
