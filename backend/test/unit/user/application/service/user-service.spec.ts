@@ -63,7 +63,7 @@ describe('UserService Test', () => {
             const result = await userService.register(registerDto);
 
             expect(userRepository.save).toBeCalledWith(caregiverUser); // 먼저 계정 DB 호출
-            expect(caregiverProfileService.addProfile).toBeCalledWith(savedUser.getId(), registerDto); // 간병인 프로필 저장 호출
+            expect(caregiverProfileService.addProfile).toBeCalledWith(savedUser, registerDto); // 간병인 프로필 저장 호출
             expect(result).toEqual(clientDto); // return 결과
         });
 
