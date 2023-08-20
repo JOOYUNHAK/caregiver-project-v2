@@ -6,6 +6,7 @@ import { License } from "./license.entity";
 import { ExposeOptions, Transform, TransformFnParams, Type } from 'class-transformer';
 import { NotFoundException } from '@nestjs/common';
 import { ErrorMessage } from 'src/common/shared/enum/error-message.enum';
+import { SEX } from 'src/user-auth-common/domain/enum/user.enum';
 
 /* _id 필드 plainToInstance 시 새로 할당하지 않기 위해 그대로 노출 */
 const ExposeId = (options?: ExposeOptions) =>
@@ -17,6 +18,9 @@ export class CaregiverProfile {
     @ExposeId()
     readonly _id: ObjectId;
     private userId: number; // mysql 사용자 계정 ID
+    private name: string; // 이름
+    private sex: SEX; // 성별
+    private age: number; // 나이
     private weight: number; // 몸무게
     private career: number; // 경력
     private pay: number; // 일당
@@ -37,6 +41,9 @@ export class CaregiverProfile {
 
     /* Setter Method */
     setUserId(userId: number) { this.userId = userId; };
+    setName(name: string) { this.name = name; };
+    setSex(sex: SEX) { this.sex = sex; };
+    setAge(age: number) { this.age = age; };
     setWeight(weight: number) { this.weight = weight; };
     setCareer(career: number) { this.career = career; };
     setPay(pay: number) { this.pay = pay; };
@@ -54,6 +61,9 @@ export class CaregiverProfile {
 
     getId(): string { return this._id.toHexString(); };
     getUserId(): number { return this.userId; };
+    getName(): string { return this.name; };
+    getSex(): SEX { return this.sex; };
+    getAge(): number { return this.age; };
     getCareer(): number { return this.career; };
     getPay(): number { return this.pay; };
     getNextHosptial(): string { return this.nextHosptial; };
