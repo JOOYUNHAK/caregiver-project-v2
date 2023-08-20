@@ -76,7 +76,41 @@ describe('MongoDB의 Query를 생성해주는 추상클래스 Test', () => {
             const expectedQuery = { [`\$${operator}`]: value };
 
             const resultQuery = queryFactory.operator(operator, value);
-            expect(resultQuery).toEqual(resultQuery);
+            expect(resultQuery).toEqual(expectedQuery);
+        });
+
+        it.each([
+            undefined,
+            NaN
+        ])('%s이 값으로 왔을 때 Null 값을 반환하는지 확인', (value) => {
+            const resultQuery = queryFactory.operator('ne', value);
+
+            expect(resultQuery).toBe(null);
+        })
+    });
+
+    describe('withOperators()', () => {
+        it('연산자로 null값이 반환된 값들은 제외하고 생성', () => {
+            const ltThan = { '$lt': 30 };
+            const resultQuery = queryFactory.withOperators('age', null, ltThan);
+            const expectedQuery = { 'age': ltThan };
+            
+            expect(resultQuery).toEqual(expectedQuery);
+        });
+
+        it('모든 연산자들이 null값으로 반환되었다면 null로 반환하는지 확인', () => {
+            const resultQuery = queryFactory.withOperators('age', null, null, null);
+
+            expect(resultQuery).toBe(null);
+        });
+
+        it('정상적인 연산 조건들이 들어왔을 때 정상 작동하는지 확인', () => {
+            const ltThan = { '$lt': 30 };
+            const gtThan = { '$gt': 40 };
+            const expectedQuery = { 'age': { ...ltThan, ...gtThan }};
+            const resultQuery = queryFactory.withOperators('age', ltThan, gtThan);
+            
+            expect(resultQuery).toEqual(expectedQuery);
         })
     })
 })
