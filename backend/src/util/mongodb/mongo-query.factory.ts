@@ -73,8 +73,31 @@ export abstract class MongoQueryFactory {
      * @param value 값
      * @example ('ne', 70) => {$ne: 70}
      */
-    operator<T>(operator: string, value: T | T []): MongoOperator<T> {
+    operator<T>(operator: string, value: T | T []): MongoOperator<T> | null {
+        if( value === undefined || Number.isNaN(value) ) return null;
+
         return { [`\$${operator}`]: value };
+    }
+
+    /**
+     * 하나의 필드에 여러개의 연산자를 적용하기 위한 메서드
+     * @param field 여러개의 연산자를 적용하고자 하는 필드
+     * @param operators operator()를 사용하여 나온 연산자
+     */
+    withOperators<T>(field: string, ...operators: MongoOperator<T>[]): MongoQuery<MongoOperator<T>> | null{
+        operators = operators.filter((operator) => operator);
+
+        if( !operators.length ) return null;
+
+        const completedOperator = operators.reduce(
+            (combinedOperator, operator) => ({
+            ...combinedOperator,
+            ...operator
+        }), {});
+        
+        return { 
+            [field]: completedOperator
+        }
     }
 
     /**
