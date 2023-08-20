@@ -1,12 +1,12 @@
 import { Transform } from "class-transformer";
-import { IsArray, IsBoolean, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsBoolean, IsEnum, IsNumber, IsNumberString, IsOptional, IsString } from "class-validator";
 import { SEX } from "src/user-auth-common/domain/enum/user.enum";
 import { PossibleDate } from "./enum/possible-date.enum";
 
 export class ProfileFilter {    
     @IsOptional()
-    @Transform(({ value }) => parseInt(value) )
     @IsNumber()
+    @Transform(({ value }) => parseInt(value) )
     readonly pay?: number;
 
     @IsOptional()
@@ -18,8 +18,8 @@ export class ProfileFilter {
     readonly sex?: SEX;
 
     @IsOptional()
-    @Transform(({ value }) => parseInt(value) )
     @IsNumber()
+    @Transform(({ value }) => parseInt(value) )
     readonly age?: number;
 
     @IsOptional()
