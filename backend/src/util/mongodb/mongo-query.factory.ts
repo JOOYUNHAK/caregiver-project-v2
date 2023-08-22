@@ -17,11 +17,12 @@ export abstract class MongoQueryFactory {
      * string이면서 _id필드를 찾는다면 ObjectId로 변경
      * @param field 일치 필드
      * @param value 찾고자 하는 값
+     * @description null을 파라미터로 올 경우 해당 조건은 제외됩니다.
      */
-    equals(field: string, value: string | boolean | number | null | undefined):
-        MongoQuery<string | boolean | number | ObjectId | null>  | null
+    equals<T>(field: string, value: T | ObjectId):
+        MongoQuery<T | MongoOperator<T> | ObjectId >  | null
     {
-        if( value === undefined ) return null;
+        if( value == undefined || value == null || Number.isNaN(value) ) return null;
 
         return {
             [field]: ( field === '_id' && typeof(value) === 'string' ) ? new ObjectId(value) : value
@@ -46,6 +47,48 @@ export abstract class MongoQueryFactory {
         }
     };
 
+    lteThan(field: string, value: number | string | undefined): 
+        MongoQuery<number | string | ObjectId> | null 
+    {
+        if ( !value ) return null;
+
+        return {
+            [field]: {
+                $lte: field === '_id' ? new ObjectId(value) : value
+            }   
+        }
+    };
+
+    /**
+     * 파라미터로 넘긴 값보다 큰 값을 찾는 Query 생성
+     * 없으면 null 해당 조건 무시
+     * @param field 찾고자 하는 필드
+     * @param value 기준 값
+     */
+    gtThan(field: string, value: number | string | undefined):
+        MongoQuery<number | string | ObjectId> | null
+    {
+        if( !value ) return null;
+        
+        return {
+            [field]: {
+                $gt: field === '_id' ? new ObjectId(value) : value
+            }   
+        }
+    }
+
+    gteThan(field: string, value: number | string | undefined):
+        MongoQuery<number | string | ObjectId> | null
+    {
+        if( !value ) return null;
+        
+        return {
+            [field]: {
+                $gte: field === '_id' ? new ObjectId(value) : value
+            }   
+        }
+    }
+
     /**
      * 결과에 포함시킬 필드 쿼리 생성
      * @param field 결과에 포함시킬 필드
@@ -55,6 +98,26 @@ export abstract class MongoQueryFactory {
             [field]: 1
         }
     }
+
+    /**
+     * 결과에 포함시키지 않을 필드 쿼리 생성
+     * @param field 결과에 포함시킬 필드
+     */
+    exclude(field: string): MongoQuery<number> {
+        return {
+            [field]: 0
+        }
+    };
+
+    /**
+     * 결과로 반환되는 필드의 이름을 변경해주는 메서드
+     * @param 바꾸기 전 필드 이름, 바꾸고 난 후 필드 이름
+     */
+    rename<T>(to: string, value: T | MongoOperator<T>): MongoQuery<T> {
+        return {
+            [to]: value
+        }
+    };
 
     /**
      * 저장 값 중 빈 배열이 
@@ -73,31 +136,39 @@ export abstract class MongoQueryFactory {
      * @param value 값
      * @example ('ne', 70) => {$ne: 70}
      */
-    operator<T>(operator: string, value: T | T []): MongoOperator<T> | null {
+    operator<T>(operator: Operator, value: T | T []): MongoOperator<T> | null {
         if( value === undefined || Number.isNaN(value) ) return null;
 
         return { [`\$${operator}`]: value };
     }
 
     /**
-     * 하나의 필드에 여러개의 연산자를 적용하기 위한 메서드
-     * @param field 여러개의 연산자를 적용하고자 하는 필드
-     * @param operators operator()를 사용하여 나온 연산자
+     * 조합한 연산자들과 함께 $or 쿼리 생성
+     * @param operators 조합할 연산자들
      */
-    withOperators<T>(field: string, ...operators: MongoOperator<T>[]): MongoQuery<MongoOperator<T>> | null{
-        operators = operators.filter((operator) => operator);
+    or(operators: any []) {
+        operators = operators.filter( opeartor => opeartor );
 
+        if( !operators.length ) return null; 
+
+        return {
+            $or: operators 
+        }
+    }
+    /**
+     * 여러개의 연산자를 조합하기 위해
+     * @param operators 조합하고자 하는 연산자들
+     */
+    combineOperators(...operators: any [] ) {
+        operators = operators.filter((operator) => operator);
+        
         if( !operators.length ) return null;
 
-        const completedOperator = operators.reduce(
+        return operators.reduce(
             (combinedOperator, operator) => ({
             ...combinedOperator,
             ...operator
         }), {});
-        
-        return { 
-            [field]: completedOperator
-        }
     }
 
     /**
@@ -123,3 +194,12 @@ export type MongoOperator<T> = {
 export type MongoQuery<T> = {
     [field: string]: MongoOperator<T> | T 
 };
+export type Operator =
+    'lt' |
+    'lte' |
+    'gt' |
+    'gte' |
+    'in' | 
+    'ne' |
+    'or' |
+    'toString'
