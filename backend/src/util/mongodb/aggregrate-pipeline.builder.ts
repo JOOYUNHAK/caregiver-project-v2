@@ -1,3 +1,5 @@
+import { MongoQuery } from "./mongo-query.factory";
+
 export class AggregratePipelineBuilder {
     private pipeline: any[];
 
@@ -15,9 +17,7 @@ export class AggregratePipelineBuilder {
         const matchQuery = this.toCombinedQuery(
             operationQueries.filter( query => query != null )
         )
-        
-        const matchStage = { $match: { ...matchQuery } };
-        this.addStage(matchStage);         
+        this.addQueryToStage('match', matchQuery);         
         return this;
     };
 
@@ -27,9 +27,7 @@ export class AggregratePipelineBuilder {
      */
     sort(...sortQueries: any[]): this {
         const sortQuery = this.toCombinedQuery(sortQueries);
-        
-        const sortStage = { $sort: { ...sortQuery } };
-        this.addStage(sortStage);
+        this.addQueryToStage('sort', sortQuery);
         return this;
     };
 
@@ -39,22 +37,22 @@ export class AggregratePipelineBuilder {
      */
     project(...selectQueries: any[]): this {
         const selectQuery = this.toCombinedQuery(selectQueries);
-        
-        const projectStage = { $project: { ...selectQuery } };
-        this.addStage(projectStage);
+        this.addQueryToStage('project', selectQuery)
         return this;
     };
 
     build(): any[] { return this.pipeline; };
 
-    /* pipeline에 인자로 받은 스테이지 추가 */
-    private addStage(stage: Object) { this.pipeline.push(stage); };
-
     /* 하나의 조건으로 만들어주는 메서드 */
-    private toCombinedQuery(queryArr: any[]) {
+    private toCombinedQuery<T>(queryArr: any []): MongoQuery<T>[] {
         return queryArr.reduce((combinedQuery, query) => ({
             ...combinedQuery,
             ...query
         }), {});
+    };
+
+    private addQueryToStage<T>(stage: string, query: MongoQuery<T>[]) {
+        const eachStage = { [`\$${stage}`]: { ...query } };
+        this.pipeline.push(eachStage);
     }
 }

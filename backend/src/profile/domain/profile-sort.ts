@@ -3,8 +3,10 @@ import { Sort } from './enum/sort.enum'
 export class ProfileSort {
     private by?: Sort;
 
-    hasOptions(): boolean { return this.by ? true : false; }; // 다른 정렬기준이 있는지
+    hasOption(): boolean { return this.by ? true : false; }; // 다른 정렬기준이 있는지
 
+    getOption(): Sort { return this.by; };
+    
     otherField(): string { return this.by === Sort.LowPay ? 'pay' : 'possibleDate'; }; // 다른 정렬 기준 필드
      
     otherFieldBy(): "DESC" | "ASC" { return "ASC"; }; // 다른 정렬 기준
