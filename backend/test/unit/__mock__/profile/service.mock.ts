@@ -24,6 +24,7 @@ export const MockCaregiverProfileMapper = {
     provide: CaregiverProfileMapper,
     useValue: {
         mapFrom: jest.fn(),
+        toListQueryOptions: jest.fn(),
         toListDto: jest.fn(),
         toDetailDto: jest.fn()
     }
