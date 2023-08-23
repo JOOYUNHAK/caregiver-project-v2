@@ -10,6 +10,7 @@ import { MongodbModule } from "src/common/shared/database/mongodb/mongodb.module
 import { UserAuthCommonModule } from "src/user-auth-common/user-auth-common.module";
 import { ProfileController } from "./interface/controller/profile.controller";
 import { RankModule } from "src/rank/rank.module";
+import { ProfileQueryFactory } from "./infra/repository/profile-query.factory";
 
 @Module({
     imports: [
@@ -28,7 +29,8 @@ import { RankModule } from "src/rank/rank.module";
         PatientProfileMapper,
         PatientProfileService,
         PatientProfileRepository,
-        PatientProfileBuilder
+        PatientProfileBuilder,
+        ProfileQueryFactory
     ],
     exports: [
         CaregiverProfileBuilder,
