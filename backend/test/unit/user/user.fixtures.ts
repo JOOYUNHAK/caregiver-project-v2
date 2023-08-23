@@ -39,6 +39,11 @@ export class TestUser {
         return this;
     };
 
+    withName(name: string): this {
+        this.name = name;
+        return this;
+    }
+
     withSex(sex: SEX): this {
         this.sex = sex;
         return this;

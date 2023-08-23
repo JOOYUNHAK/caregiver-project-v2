@@ -4,6 +4,7 @@ import { CaregiverProfileService } from "src/profile/application/service/caregiv
 import { ProfileListDto } from "../dto/profile-list.dto";
 import { AuthenticatedUser } from "src/auth/application/decorator/user.decorator";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
+import { GetProfileListDto } from "../dto/get-profile-list.dto";
 
 @Controller('profile')
 export class ProfileController {
@@ -14,8 +15,8 @@ export class ProfileController {
 
     @Public()
     @Get('list')
-    async getProfileList(@Query('lastProfileId') lastProfileId?: string): Promise<ProfileListDto []> {
-        return await this.caregiverProfileService.getProfileList(lastProfileId);
+    async getProfileList(@Query() getProfilListDto: GetProfileListDto): Promise<ProfileListDto> {
+        return await this.caregiverProfileService.getProfileList(getProfilListDto);
     }
 
     @Get('detail/:id')
