@@ -44,7 +44,7 @@ describe('프로필 리스트 커서 객체 Test', () => {
                 const profileList = [ {profile: { id: 1, pay: 50 }} ] as unknown as CaregiverProfileListData[];
 
                 const queryOptions = new ProfileListQueryOptions(undefined, new ProfileSort(Sort.LowPay), undefined);
-                const expectedCursor = `${profileList[0].profile.pay}_${profileList[0].profile.id}`
+                const expectedCursor = `${profileList[0].pay}_${profileList[0].id}`
                 
                 const result = ProfileListCursor.createNextCursor(profileList, queryOptions);
                 expect(result.toClientNext()).toBe(expectedCursor)
