@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { CaregiverProfileBuilder } from "src/profile/domain/builder/profile.builder";
 import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
 import { License } from "src/profile/domain/entity/caregiver/license.entity";
-import { CaregiverProfileListData } from "src/profile/domain/profile-list-data";
+import { CaregiverProfileListData, ProfileListDataAsClient } from "src/profile/domain/profile-list-data";
 import { ProfileListQueryOptions } from "src/profile/domain/profile-list-query-options";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
 import { ProfileSort } from "src/profile/domain/profile-sort";
@@ -16,11 +16,11 @@ import { User } from "src/user-auth-common/domain/entity/user.entity";
 export class CaregiverProfileMapper {
     mapFrom(user: User, caregiverRegisterDto: CaregiverRegisterDto): CaregiverProfile {
         const { secondRegister, thirdRegister, lastRegister } = caregiverRegisterDto;
-        return new CaregiverProfileBuilder( new ObjectId() )
+        return new CaregiverProfileBuilder(new ObjectId())
             .userId(user.getId())
             .name(user.getName())
             .sex(user.getProfile().getSex())
-            .age(this.toDtoAge( user.getProfile().getBirth() ))
+            .age(this.toDtoAge(user.getProfile().getBirth()))
             .weight(secondRegister.weight)
             .career(secondRegister.career)
             .pay(secondRegister.pay)
@@ -40,7 +40,7 @@ export class CaregiverProfileMapper {
 
     /* 리스트의 쿼리 옵션으로 변환 */
     toListQueryOptions(getProfileListDto: GetProfileListDto): ProfileListQueryOptions {
-        return new ProfileListQueryOptions( 
+        return new ProfileListQueryOptions(
             new ProfileListCursor(getProfileListDto.nextCursor),
             new ProfileSort(getProfileListDto.sort),
             getProfileListDto.filter
@@ -48,50 +48,42 @@ export class CaregiverProfileMapper {
     };
 
     /* 사용자 데이터와 프로필 데이터로 클라이언트 노출용 데이터 변환 */
-    toListDto(user: User, caregiverProfile: CaregiverProfile): CaregiverProfileListData {
+    toListDto(caregiverProfileListData: CaregiverProfileListData): ProfileListDataAsClient {
         return {
-            user: {
-                name: user.getName(),
-                sex: user.getProfile().getSex(),
-                age: this.toDtoAge(user.getProfile().getBirth())
-            },
-            profile: {
-                id: caregiverProfile.getId(),
-                userId: caregiverProfile.getUserId(),
-                career: this.toDtoCareer(caregiverProfile.getCareer()),
-                pay: caregiverProfile.getPay(),
-                possibleDate: this.toDtoPossibleDate(caregiverProfile.getPossibleDate()),
-                possibleAreaList: this.toDtoAreaList(caregiverProfile.getPossibleAreaList(), 'list'),
-                tagList: caregiverProfile.getTagList(),
-                notice: caregiverProfile.getNotice()
-            }
+            id: caregiverProfileListData.id,
+            name: caregiverProfileListData.name,
+            sex: caregiverProfileListData.sex,
+            age: this.toDtoAge(caregiverProfileListData.age),
+            userId: caregiverProfileListData.userId,
+            career: this.toDtoCareer(caregiverProfileListData.career),
+            pay: caregiverProfileListData.pay,
+            possibleDate: this.toDtoPossibleDate(caregiverProfileListData.possibleDate),
+            possibleAreaList: this.toDtoAreaList(caregiverProfileListData.possibleAreaList, 'list'),
+            tagList: caregiverProfileListData.tagList,
+            notice: caregiverProfileListData.notice
         }
     };
 
     /* 프로필 상세보기에 필요한 데이터에 맞춰 변환 */
-    toDetailDto(user: User, caregiverProfile: CaregiverProfile): ProfileDetailDto {
+    toDetailDto(caregiverProfile: CaregiverProfile): ProfileDetailDto {
 
         return {
-            user: {
-                name: user.getName(),
-                sex: user.getProfile().getSex(),
-                age: this.toDtoAge(user.getProfile().getBirth())
-            },
-            profile: {
-                id: caregiverProfile.getId(),
-                userId: caregiverProfile.getUserId(),
-                career: this.toDtoCareer(caregiverProfile.getCareer()),
-                pay: caregiverProfile.getPay(),
-                possibleDate: this.toDtoPossibleDate(caregiverProfile.getPossibleDate()),
-                possibleAreaList: this.toDtoAreaList(caregiverProfile.getPossibleAreaList(), 'detail'),
-                notice: caregiverProfile.getNotice(),
-                licenseList: this.toDtoLicenseList(caregiverProfile.getLicenseList()),
-                additionalChargeCase: caregiverProfile.getAdditionalChargeCase(),
-                nextHosptial: caregiverProfile.getNextHosptial(),
-                helpExperience: caregiverProfile.getHelpExperience(),
-                strengthList: caregiverProfile.getStrengthList(),
-                warningList: caregiverProfile.getWarningList()
-            }
+            id: caregiverProfile.getId(),
+            name: caregiverProfile.getName(),
+            sex: caregiverProfile.getSex(),
+            age: this.toDtoAge(caregiverProfile.getAge()),
+            userId: caregiverProfile.getUserId(),
+            career: this.toDtoCareer(caregiverProfile.getCareer()),
+            pay: caregiverProfile.getPay(),
+            possibleDate: this.toDtoPossibleDate(caregiverProfile.getPossibleDate()),
+            possibleAreaList: this.toDtoAreaList(caregiverProfile.getPossibleAreaList(), 'detail'),
+            notice: caregiverProfile.getNotice(),
+            licenseList: this.toDtoLicenseList(caregiverProfile.getLicenseList()),
+            additionalChargeCase: caregiverProfile.getAdditionalChargeCase(),
+            nextHosptial: caregiverProfile.getNextHosptial(),
+            helpExperience: caregiverProfile.getHelpExperience(),
+            strengthList: caregiverProfile.getStrengthList(),
+            warningList: caregiverProfile.getWarningList()
         }
     };
 
@@ -101,15 +93,15 @@ export class CaregiverProfileMapper {
     };
 
     /* 클라이언트 데이터 노출에 맞게 인증이 완료된 자격증만 노출 */
-    private toDtoLicenseList(licenseList: License []): string [] {        
+    private toDtoLicenseList(licenseList: License[]): string[] {
         return licenseList.filter(license => license.getIsCertified())
-                        .map(certificatedLicense => certificatedLicense.getName());
+            .map(certificatedLicense => certificatedLicense.getName());
     }
 
     /* 클라이언트 데이터 노출에 맞게 나이 변환 */
     private toDtoAge(birth: number): number {
         const [currentYear, userYear] = [
-            new Date().getFullYear(), 
+            new Date().getFullYear(),
             parseInt(birth.toString().substring(0, 4))
         ];
 
@@ -118,7 +110,7 @@ export class CaregiverProfileMapper {
 
     /* 클라이언트 데이터 노출에 맞게 경력 변환 */
     private toDtoCareer(career: number): string {
-        if( career < 12 ) return `${career}개월`;
+        if (career < 12) return `${career}개월`;
 
         const [year, month] = [Math.floor(career / 12), career % 12];
         return month ? `${year}년 ${month}개월` : `${year}년`;
@@ -126,7 +118,7 @@ export class CaregiverProfileMapper {
 
     /* ENUM으로 변경 요망 */
     private toDtoPossibleDate(value: number): string {
-        switch(value) {
+        switch (value) {
             case 1:
                 return '즉시가능';
             case 2:
@@ -135,7 +127,7 @@ export class CaregiverProfileMapper {
                 return '2주이내';
             case 4:
                 return '3주이내';
-            case 5: 
+            case 5:
                 return '한달이내';
         };
     };
@@ -143,6 +135,6 @@ export class CaregiverProfileMapper {
     /* 클라이언트 데이터 노출에 맞게 가능 지역 변환 */
     private toDtoAreaList(areaList: string[], page: string): string[] | string {
         /* 메인 페이지에서는 화면이 잘리므로 지역이 많으면 줄여서 노출 */
-        return ( areaList.length >= 4 && page === 'list' ) ? '상세보기참고' : areaList.join(',');
+        return (areaList.length >= 4 && page === 'list') ? '상세보기참고' : areaList.join(',');
     }
 }

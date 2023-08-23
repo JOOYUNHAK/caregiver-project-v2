@@ -1,4 +1,4 @@
-import { CaregiverProfileListData } from "./profile-list-data";
+import { ProfileListDataAsClient } from "./profile-list-data";
 import { ProfileListQueryOptions } from "./profile-list-query-options";
 
 export class ProfileListCursor {
@@ -20,11 +20,11 @@ export class ProfileListCursor {
     defaultSortNext(): string | undefined { return this.next; };
 
     /* 클라이언트에게 넘겨줄 cursor 값 */
-    toClientNext(): string | null { return this.next; };
+    toClientNext(): string | undefined { return this.next; };
 
     /* 다음 커서 생성 */
     static createNextCursor(
-        profileList: CaregiverProfileListData [],
+        profileList: ProfileListDataAsClient [],
         queryOptions: ProfileListQueryOptions
     ) {
         if( !profileList.length ) return new ProfileListCursor(null);
@@ -37,7 +37,7 @@ export class ProfileListCursor {
         return new ProfileListCursor(nextCursor)
     }
 
-    private static createCombinedCursor(lastProfile: CaregiverProfileListData, otherSortField: string) {
+    private static createCombinedCursor(lastProfile: ProfileListDataAsClient, otherSortField: string) {
         const otherSortFieldLastValue = otherSortField === 'pay' ? 
             lastProfile.pay : lastProfile.possibleDate;
         return `${otherSortFieldLastValue}_${lastProfile.id}`;
