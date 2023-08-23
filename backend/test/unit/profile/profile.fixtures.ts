@@ -6,6 +6,9 @@ export class TestCaregiverProfile {
     static default() {
         return new CaregiverProfileBuilder(new ObjectId())
             .userId(1)
+            .name('test')
+            .age(1995)
+            .career(20)
             .weight(50)
             .career(10)
             .pay(10)
