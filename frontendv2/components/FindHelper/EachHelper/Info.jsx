@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 export default function Info({ profile }) {
-    const { profile: caregiverProfile } = profile;
+    const { career, pay, possibleAreaList, possibleDate } = profile;
 
     return (
         <View style={styles.profileHelperContainer}>
@@ -19,7 +19,7 @@ export default function Info({ profile }) {
                     </Text>
                     <View style={styles.verticalLine} />
                     <Text style={styles.userValue}>
-                        {caregiverProfile.career}
+                        {career}
                     </Text>
                 </View>
 
@@ -29,7 +29,7 @@ export default function Info({ profile }) {
                     </Text>
                     <View style={styles.verticalLine} />
                     <Text style={styles.userValue}>
-                        {caregiverProfile.pay}만원
+                        {pay}만원
                     </Text>
                 </View>
             </View>
@@ -41,7 +41,7 @@ export default function Info({ profile }) {
                     </Text>
                     <View style={styles.verticalLine} />
                     <Text style={styles.userValue}>
-                        {caregiverProfile.possibleAreaList}
+                        {possibleAreaList}
                     </Text>
                 </View>
 
@@ -51,7 +51,7 @@ export default function Info({ profile }) {
                     </Text>
                     <View style={styles.verticalLine} />
                     <Text style={styles.userValue}>
-                        {caregiverProfile.possibleDate}
+                        {possibleDate}
                     </Text>
                 </View>
             </View>

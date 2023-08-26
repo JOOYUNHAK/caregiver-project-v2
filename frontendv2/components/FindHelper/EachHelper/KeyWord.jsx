@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 export default function KeyWord({ profile }) {
-    const { tagList } = profile.profile;
+    const { tagList } = profile;
     return (
         <View style={styles.keyWords}>
             {tagList.map((keywords, index) => {
