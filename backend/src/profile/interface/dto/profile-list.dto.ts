@@ -1,6 +1,6 @@
-import { CaregiverProfileListData } from "src/profile/domain/profile-list-data";
+import { ProfileListDataAsClient } from "src/profile/domain/profile-list-data";
 
 export interface ProfileListDto {
-    caregiverProfileListData: CaregiverProfileListData [];
+    caregiverProfileListData: ProfileListDataAsClient [];
     nextCursor: string;
 };
