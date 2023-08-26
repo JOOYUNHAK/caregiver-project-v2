@@ -46,7 +46,7 @@ export class CaregiverProfileService {
         const listQueryOptions = this.caregiverProfileMapper.toListQueryOptions(getProfileListDto) // listQueryOption 객체로 변환
         const caregiverProfileListData = await this.caregiverProfileRepository.getProfileList(listQueryOptions); // DB에서 프로필 리스트 조회
         const mapToClientFormatList  = caregiverProfileListData.map( profileData => this.caregiverProfileMapper.toListDto(profileData) ) // 프로필들을 프론트엔드 포맷으로 변경
-        const nextCursor = ProfileListCursor.createNextCursor(mapToClientFormatList, listQueryOptions); // 다음 요청시 필요한 커서 생성
-        return { caregiverProfileListData, nextCursor: nextCursor.toClientNext() };
+        const nextCursor = ProfileListCursor.createNextCursor(caregiverProfileListData, listQueryOptions); // 다음 요청시 필요한 커서 생성
+        return { caregiverProfileListData: mapToClientFormatList, nextCursor: nextCursor.toClientNext() };
     }
 }

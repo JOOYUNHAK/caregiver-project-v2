@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import { Sort } from "src/profile/domain/enum/sort.enum";
-import { ProfileListDataAsClient } from "src/profile/domain/profile-list-data";
+import { CaregiverProfileListData, ProfileListDataAsClient } from "src/profile/domain/profile-list-data";
 import { ProfileListQueryOptions } from "src/profile/domain/profile-list-query-options";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor"
 import { ProfileSort } from "src/profile/domain/profile-sort";
@@ -41,7 +41,7 @@ describe('프로필 리스트 커서 객체 Test', () => {
             });
 
             it('마지막 프로필의 id와 정렬 옵션의 마지막 값이 조합되어 생성되어야 한다', () => {
-                const profileList = [ { id: 1, pay: 50 } ] as unknown as ProfileListDataAsClient [];
+                const profileList = [ { id: 1, pay: 50 } ] as unknown as  CaregiverProfileListData [];
 
                 const queryOptions = new ProfileListQueryOptions(undefined, new ProfileSort(Sort.LowPay), undefined);
                 const expectedCursor = `${profileList[0].pay}_${profileList[0].id}`
