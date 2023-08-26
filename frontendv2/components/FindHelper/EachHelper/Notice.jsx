@@ -6,12 +6,12 @@ import { View } from "react-native";
 import Icon from "../../Icon";
 
 export default function Notice({ profile }) {
-
+    const { notice } = profile;
     return (
         <View style={styles.profileHelperAppeal}>
             <Icon props={['material', 'campaign', 20, 'silver']} />
             <Text style={styles.profileHelperAppealText}>
-               {profile.profile.notice}
+               {notice}
             </Text>
         </View>
     )

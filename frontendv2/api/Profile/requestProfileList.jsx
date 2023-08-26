@@ -28,31 +28,33 @@ export default async function requestProfileList(purpose) {
        
         const res = await api.get(`profile/list`, {
             params: {
-                mainFilter: mainFilter,
-                payFilter: payFilter,
-                startDateFilter: startDateFilter,
-                sexFilter: sexFilter,
-                ageFilter: ageFilter,
-                areaFilter: areaFilter,
-                licenseFilter: licenseFilter,
-                warningFilter: warningFilter,
-                strengthFilter: strengthFilter,
-                exceptLicenseFilter: exceptLicenseFilter,
-                lastProfileId: lastListNo
+                nextCursor: lastListNo,
+                sort: mainFilter,
+                filter: {
+                    pay: payFilter,
+                    startDate: startDateFilter,
+                    sex: sexFilter,
+                    age: ageFilter,
+                    area: areaFilter,
+                    license: licenseFilter,
+                    warningExcept: warningFilter,
+                    strengthExcept: strengthFilter,
+                }
             }
-        });        
+        });  
+
         /* 첫 프로필 리스트의 조회 결과를 받아왔으면 Loading 해제 */
         if( !lastListNo ) store.dispatch(listLoading(false));
-        const profileList = res.data;
+        const { caregiverProfileListData, nextCursor } = res.data;
         /* 더 이상 프로필 데이터가 없을 때 */
-        if( !profileList.length ) {
+        if( !caregiverProfileListData.length ) {
             store.dispatch(setNoData(true));
             return;
         };
 
         /* 아직 프로필 데이터가 조회될 때 다음을 위해 저장 */
-        store.dispatch(saveCareGiverProfile(profileList));
-        store.dispatch(saveLastProfileId(profileList[profileList.length - 1].profile.id));
+        store.dispatch(saveCareGiverProfile(caregiverProfileListData));
+        store.dispatch(saveLastProfileId(nextCursor));
         store.dispatch(setNoData(false));
     }
     catch (err) {
@@ -69,11 +71,11 @@ export function getMainFilterValue(mainFilter) {
         case '후기 많은 순':
             return 'review';
         case '찜 많은 순':
-            return 'heart';
+            return 'HighLike';
         case '일당 낮은 순':
-            return 'pay';
+            return 'LowPay';
         case '시작일 빠른 순':
-            return 'startDate';
+            return 'FastStartDate';
     }
 }
 
@@ -82,11 +84,11 @@ export function getPayFilterValue(payFilter) {
         case '일당':
             return undefined;
         case '10만원 이하':
-            return 'under10';
+            return 10;
         case '15만원 이하':
-            return 'under15';
+            return 15;
         case '20만원 이하':
-            return 'under20';
+            return 20;
     };
 };
 
@@ -95,15 +97,15 @@ export function getStartDateFilterValue(startDateFilter) {
         case '시작가능일':
             return undefined;
         case '즉시 가능':
-            return 'immediately';
+            return 1;
         case '1주 이내':
-            return '1week';
+            return 2;
         case '2주 이내':
-            return '2week';
+            return 3;
         case '3주 이내':
-            return '3week';
+            return 4;
         case '한 달 이후':
-            return 'month'
+            return 5;
     };
 };
 
@@ -125,13 +127,9 @@ export function getAgeFilterValue(ageFilter) {
 };
 
 export function getAreaFilterValue(areaFilter) {
-    if (areaFilter.length)
-        return areaFilter.join(',');
-    return undefined;
+    return areaFilter.length ? areaFilter : undefined;
 };
 
 export function getLicenseFilterValue(licenseFilter) {
-    if (licenseFilter.length)
-        return licenseFilter.join(',');
-    return undefined;
+    return licenseFilter.length ? licenseFilter : undefined;
 }

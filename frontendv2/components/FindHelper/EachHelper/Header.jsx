@@ -13,7 +13,7 @@ import { StackActions, useNavigation } from "@react-navigation/native";
 export default function Header({ profile }) {
     const navigation = useNavigation();
 
-    const { user } = profile;
+    const { id, name, sex, age } = profile;
 
     return (
         <View style={header().header}>
@@ -21,10 +21,10 @@ export default function Header({ profile }) {
                 <View style={{ flexDirection: 'row' }}>
                     <View style={styles.name}>
                         <Text style={styles.nameText}>
-                            {user.name}
+                            {name}
                         </Text>
                         <Text style={styles.subInfoText}>
-                            {user.sex}, {user.age}세
+                            {sex}, {age}세
                         </Text>
                     </View>
                 </View>
@@ -34,8 +34,8 @@ export default function Header({ profile }) {
                 underlayColor='none'
                 onPress={() => navigation.dispatch(
                     StackActions.push('helperProfilePage', {
-                        name: user.name,
-                        profileId: profile.profile.id ,
+                        name: name,
+                        profileId: id ,
                     })
                 )}>
                 <View style={styles.confirmProfileBtn}>
