@@ -11,6 +11,7 @@ import { UserAuthCommonModule } from "src/user-auth-common/user-auth-common.modu
 import { ProfileController } from "./interface/controller/profile.controller";
 import { RankModule } from "src/rank/rank.module";
 import { ProfileQueryFactory } from "./infra/repository/profile-query.factory";
+import { ProfileLikeHistoryRepoProvider } from "./domain/repository/iprofile-like-history.repository";
 
 @Module({
     imports: [
@@ -30,7 +31,8 @@ import { ProfileQueryFactory } from "./infra/repository/profile-query.factory";
         PatientProfileService,
         PatientProfileRepository,
         PatientProfileBuilder,
-        ProfileQueryFactory
+        ProfileQueryFactory,
+        ProfileLikeHistoryRepoProvider
     ],
     exports: [
         CaregiverProfileBuilder,

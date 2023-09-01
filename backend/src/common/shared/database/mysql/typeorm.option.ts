@@ -1,5 +1,6 @@
 import { ConfigModule, ConfigService } from "@nestjs/config"
 import { TypeOrmModuleAsyncOptions } from "@nestjs/typeorm"
+import { ProfileLike } from "src/profile/domain/entity/profile-like"
 import { ProfileViewRecord } from "src/rank/domain/entity/profile-view-record.entity"
 import { Token } from "src/user-auth-common/domain/entity/auth-token.entity"
 import { Email } from "src/user-auth-common/domain/entity/user-email.entity"
@@ -17,7 +18,7 @@ export const TypeOrmOptions: TypeOrmModuleAsyncOptions = {
         username: configService.get('db.mysql.username'),
         password: configService.get('db.mysql.password'),
         database: configService.get('db.mysql.database'),
-        entities: [User, Email, Phone, UserProfile, Token, ProfileViewRecord],
+        entities: [User, Email, Phone, UserProfile, Token, ProfileViewRecord, ProfileLike],
         logging: true,
         synchronize: true
     })
