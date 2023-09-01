@@ -35,14 +35,14 @@ describe('프로필 찜 내역 서비스(ProfileLikeHistoryService) Test', () =>
         it('내역이 없을 경우 DB에 내역을 저장하기 위해 호출해야 한다', async() => {
             jest.spyOn(likeHistoryRepository, 'findByProfileAndUserId').mockResolvedValueOnce(null);
             
-            await likeHisotryService.addHistory(likeStub);
+            await likeHisotryService.addHistory(testProfileId, testUserId);
 
             expect(likeHistoryRepository.save).toBeCalledWith(likeStub);
         });
 
         it('해당 사용자가 찜한 내역이 있는 경우 충돌 에러', async() => {
             jest.spyOn(likeHistoryRepository, 'findByProfileAndUserId').mockResolvedValueOnce(likeStub);
-            const result = () => likeHisotryService.addHistory(likeStub);
+            const result = () => likeHisotryService.addHistory(testProfileId, testUserId);
             await expect(result).rejects.toThrowError(new ConflictException(ErrorMessage.DuplicatedLikeProfile));
         })
     })
