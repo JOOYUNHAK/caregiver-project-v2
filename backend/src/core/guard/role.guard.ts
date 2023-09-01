@@ -13,7 +13,7 @@ export class RoleGuard implements CanActivate {
     canActivate(context: ExecutionContext): boolean | never {
         const { user } = context.switchToHttp().getRequest();
         /* 사용자의 역할이 보호자가 아니라면 에러 */
-        if( user.role !== this.reflector.get('roles', context.getHandler()))
+        if( user.getRole() !== this.reflector.get('roles', context.getHandler()))
             throw new ForbiddenException(ErrorMessage.PermissionDeniedForRole);
         return true;
     }
