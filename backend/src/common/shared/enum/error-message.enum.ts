@@ -11,5 +11,6 @@ export const enum ErrorMessage {
     NotExistRefreshKeyInRequest = '요청에 RefreshKey가 존재하지 않습니다.',
     ExpiredToken = 'jwt expired',
     NotFoundProfile = '현재 해당 프로필은 비공개, 탈퇴의 이유로 찾을 수 없습니다.',
-    DuplicatedLikeProfile = '이미 찜한 프로필입니다.'
+    DuplicatedLikeProfile = '이미 찜한 프로필입니다.',
+    PermissionDeniedForRole = '역할의 권한이 맞지 않아 접근이 거부되었습니다.'
 }
