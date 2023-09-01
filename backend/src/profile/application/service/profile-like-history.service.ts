@@ -12,7 +12,8 @@ export class ProfileLikeHistoryService {
         private readonly historyRepository: ProfileLikeHistoryRepository
     ) {}
     /* 찜 내역 추가 */
-    async addHistory(profileLike: ProfileLike) {
+    async addHistory(profileId: string, likeUserId: number) {
+        const profileLike = new ProfileLike(profileId, likeUserId);
         /* 이미 해당 프로필을 찜한 사용자면 오류 */
         if( await this.historyRepository.findByProfileAndUserId(
             profileLike.getProfileId(),
