@@ -12,6 +12,7 @@ import { ProfileController } from "./interface/controller/profile.controller";
 import { RankModule } from "src/rank/rank.module";
 import { ProfileQueryFactory } from "./infra/repository/profile-query.factory";
 import { ProfileLikeHistoryRepoProvider } from "./domain/repository/iprofile-like-history.repository";
+import { ProfileLikeHistoryService } from "./application/service/profile-like-history.service";
 
 @Module({
     imports: [
@@ -32,7 +33,8 @@ import { ProfileLikeHistoryRepoProvider } from "./domain/repository/iprofile-lik
         PatientProfileRepository,
         PatientProfileBuilder,
         ProfileQueryFactory,
-        ProfileLikeHistoryRepoProvider
+        ProfileLikeHistoryRepoProvider,
+        ProfileLikeHistoryService
     ],
     exports: [
         CaregiverProfileBuilder,
