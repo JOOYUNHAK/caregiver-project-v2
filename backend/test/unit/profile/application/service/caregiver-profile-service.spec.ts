@@ -3,41 +3,39 @@ import { CaregiverProfileMapper } from "src/profile/application/mapper/caregiver
 import { CaregiverProfileService } from "src/profile/application/service/caregiver-profile.service";
 import { CaregiverProfileRepository } from "src/profile/infra/repository/caregiver-profile.repository"
 import { MockCaregiverProfileRepository } from "test/unit/__mock__/profile/repository.mock";
-import { MockCaregiverProfileMapper } from "test/unit/__mock__/profile/service.mock";
-import { MockUserAuthCommonService } from "test/unit/__mock__/user-auth-common/service.mock";
+import { MockCaregiverProfileMapper, MockProfileLikeHistoryService } from "test/unit/__mock__/profile/service.mock";
 import { TestCaregiverProfile } from "../../profile.fixtures";
 import { NotFoundException } from "@nestjs/common";
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
-import { MockProfileViewRankService } from "test/unit/__mock__/rank/rank-service.mock";
-import { ProfileViewRankService } from "src/rank/application/service/profile-view-rank.service";
 import { ProfileListQueryOptions } from "src/profile/domain/profile-list-query-options";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
 import { ProfileSort } from "src/profile/domain/profile-sort";
 import { ProfileFilter } from "src/profile/domain/profile-filter";
 import { CaregiverProfileListData, ProfileListDataAsClient } from "src/profile/domain/profile-list-data";
 import { GetProfileListDto } from "src/profile/interface/dto/get-profile-list.dto";
+import { ProfileLikeHistoryService } from "src/profile/application/service/profile-like-history.service";
+import { ProfileLikeMetadata } from "src/profile/domain/profile-like-metadata";
 
 describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
     let caregiverProfileRepository: CaregiverProfileRepository,
         caregiverProfileMapper: CaregiverProfileMapper,
         caregiverProfileService: CaregiverProfileService,
-        profileViewRankService: ProfileViewRankService
-    
+        profileLikeHistoryService: ProfileLikeHistoryService;
+
     beforeAll(async() => {
         const module = await Test.createTestingModule({
             providers: [
                 CaregiverProfileService,
                 MockCaregiverProfileRepository,
                 MockCaregiverProfileMapper,
-                MockUserAuthCommonService,
-                MockProfileViewRankService
+                MockProfileLikeHistoryService
             ]
         }).compile();
 
         caregiverProfileMapper = module.get(CaregiverProfileMapper);
         caregiverProfileRepository = module.get(CaregiverProfileRepository);
         caregiverProfileService = module.get(CaregiverProfileService);
-        profileViewRankService = module.get(ProfileViewRankService);
+        profileLikeHistoryService = module.get(ProfileLikeHistoryService);
     });
 
     describe('getProfileList()', () => {
@@ -70,7 +68,7 @@ describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
 
             jest.spyOn(caregiverProfileRepository, 'findById').mockResolvedValueOnce(privateProfile);
 
-            const result = async () => await caregiverProfileService.getProfile('1');
+            const result = async () => await caregiverProfileService.getProfile('1', 1);
 
             await expect(result).rejects.toThrowError(new NotFoundException(ErrorMessage.NotFoundProfile))
         });
@@ -79,16 +77,17 @@ describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
             
             beforeEach(() => jest.clearAllMocks() );
 
-            it('조회한 사용자가 간병인이라면 클라이언트에게 반환할 Mapper만 호출', async () => {
+            it('프로필 데이터와 해당 프로필의 찜 관련 데이터를 받고 Mapper 호출', async () => {
                 const publicProfile = TestCaregiverProfile.default().isPrivate(false).build();
-                jest.spyOn(caregiverProfileRepository, 'findById').mockResolvedValue(publicProfile);
+                const likeMetadata = new ProfileLikeMetadata(10, null);
 
-                const rankSpy = jest.spyOn(profileViewRankService, 'increment').mockResolvedValueOnce(null);
-                const mapperSpy = jest.spyOn(caregiverProfileMapper, 'toDetailDto').mockReturnValueOnce(null);
-                await caregiverProfileService.getProfile('1');
+                jest.spyOn(caregiverProfileRepository, 'findById').mockResolvedValue(publicProfile);
+                jest.spyOn(profileLikeHistoryService, 'getProfileLikeMetadata').mockResolvedValueOnce(likeMetadata);
+
+                const mapperSpy = jest.spyOn(caregiverProfileMapper, 'toDetailDto')
+                await caregiverProfileService.getProfile('1', 1);
                 
-                expect(rankSpy).not.toHaveBeenCalled();
-                expect(mapperSpy).toHaveBeenCalledWith(publicProfile);
+                expect(mapperSpy).toHaveBeenCalledWith(publicProfile, likeMetadata);
             });
         })
     })
