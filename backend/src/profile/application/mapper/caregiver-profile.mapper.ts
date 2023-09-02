@@ -3,6 +3,7 @@ import { ObjectId } from "mongodb";
 import { CaregiverProfileBuilder } from "src/profile/domain/builder/profile.builder";
 import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
 import { License } from "src/profile/domain/entity/caregiver/license.entity";
+import { ProfileLikeMetadata } from "src/profile/domain/profile-like-metadata";
 import { CaregiverProfileListData, ProfileListDataAsClient } from "src/profile/domain/profile-list-data";
 import { ProfileListQueryOptions } from "src/profile/domain/profile-list-query-options";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
@@ -65,25 +66,36 @@ export class CaregiverProfileMapper {
     };
 
     /* 프로필 상세보기에 필요한 데이터에 맞춰 변환 */
-    toDetailDto(caregiverProfile: CaregiverProfile): ProfileDetailDto {
+    toDetailDto(
+        caregiverProfile: CaregiverProfile, 
+        profileLikeMetadata: ProfileLikeMetadata
+    ): ProfileDetailDto {
 
         return {
-            id: caregiverProfile.getId(),
-            name: caregiverProfile.getName(),
-            sex: caregiverProfile.getSex(),
-            age: caregiverProfile.getAge(),
-            userId: caregiverProfile.getUserId(),
-            career: this.toDtoCareer(caregiverProfile.getCareer()),
-            pay: caregiverProfile.getPay(),
-            possibleDate: this.toDtoPossibleDate(caregiverProfile.getPossibleDate()),
-            possibleAreaList: this.toDtoAreaList(caregiverProfile.getPossibleAreaList(), 'detail'),
-            notice: caregiverProfile.getNotice(),
-            licenseList: this.toDtoLicenseList(caregiverProfile.getLicenseList()),
-            additionalChargeCase: caregiverProfile.getAdditionalChargeCase(),
-            nextHosptial: caregiverProfile.getNextHosptial(),
-            helpExperience: caregiverProfile.getHelpExperience(),
-            strengthList: caregiverProfile.getStrengthList(),
-            warningList: caregiverProfile.getWarningList()
+            user: {
+                id: caregiverProfile.getUserId(),
+                name: caregiverProfile.getName(),
+                sex: caregiverProfile.getSex(),
+                age: caregiverProfile.getAge(),
+            },
+            profile: {
+                id: caregiverProfile.getId(),
+                career: this.toDtoCareer(caregiverProfile.getCareer()),
+                pay: caregiverProfile.getPay(),
+                possibleDate: this.toDtoPossibleDate(caregiverProfile.getPossibleDate()),
+                possibleAreaList: this.toDtoAreaList(caregiverProfile.getPossibleAreaList(), 'detail'),
+                notice: caregiverProfile.getNotice(),
+                licenseList: this.toDtoLicenseList(caregiverProfile.getLicenseList()),
+                additionalChargeCase: caregiverProfile.getAdditionalChargeCase(),
+                nextHosptial: caregiverProfile.getNextHosptial(),
+                helpExperience: caregiverProfile.getHelpExperience(),
+                strengthList: caregiverProfile.getStrengthList(),
+                warningList: caregiverProfile.getWarningList(),
+                likeMetadata: {
+                    count: profileLikeMetadata.getCount(),
+                    isLiked: profileLikeMetadata.getIsLike()
+                }
+            }
         }
     };
 
