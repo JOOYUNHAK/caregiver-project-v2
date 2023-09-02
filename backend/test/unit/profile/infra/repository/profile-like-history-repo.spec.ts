@@ -59,5 +59,34 @@ describe('ProfileLikeHistoryRepository(찜 내역 저장소) Test', () => {
 
             expect(afterFindResult).toBe(null);
         });
+    });
+
+    describe('countById()', () => {
+        let profileId: string;
+        
+        /* 테스트용 데이터 같은 id로 3개 삽입 */
+        beforeAll(async() => {
+            const insertBuffer = []; 
+            profileId = new ObjectId().toHexString();
+            
+            for( let i = 1; i < 4; i++ ) {
+                const testProfileLike = new ProfileLike(profileId, i)
+                insertBuffer.push(historyRepository.save(testProfileLike));    
+            }
+            await Promise.all(insertBuffer);
+        });
+
+        afterAll(async() => historyRepository.clear());
+
+        it('조회하는 프로필의 찜 개수를 정확히 가져오는지 확인', async () => {
+            const result = await historyRepository.countById(profileId);
+            expect(result).toBe(3);
+        });
+
+        it('조회하는 프로필의 찜 개수가 없을 때 0으로 반환되는지 확인', async () => {
+            const otherId = new ObjectId().toHexString();
+            const result = await historyRepository.countById(otherId);
+            expect(result).toBe(0);
+        })
     })
 })
