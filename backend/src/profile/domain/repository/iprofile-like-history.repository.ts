@@ -6,12 +6,14 @@ import { getDataSourceToken, getRepositoryToken } from "@nestjs/typeorm";
 export interface ProfileLikeHistoryRepository extends Repository<ProfileLike> {
     findByProfileAndUserId(profileId: string, likeUserId: number): Promise<ProfileLike>;
     deleteByProfileAndUserId(profileId: string, likeUserId: number): Promise<void>;
+    countById(profileId: string): Promise<number>;
 };
 
 export const customProfileLikeHistoryMethods: Pick<
     ProfileLikeHistoryRepository,
     'findByProfileAndUserId' |
-    'deleteByProfileAndUserId'
+    'deleteByProfileAndUserId' |
+    'countById'
     > = {
         async findByProfileAndUserId(this: Repository<ProfileLike>, profileId: string, likeUserId: number)
         : Promise<ProfileLike> {
@@ -27,7 +29,17 @@ export const customProfileLikeHistoryMethods: Pick<
                     .where('profile_id = :profileId', { profileId: UUIDUtil.toBinaray(profileId) })
                     .andWhere('like_user_id = :userId', { userId: likeUserId })
                     .execute();
-        }    
+        },
+
+        async countById(this: Repository<ProfileLike>, profileId: string): Promise<any> {
+            const result = await this.createQueryBuilder()
+                            .select('COALESCE(COUNT(*), 0) as count')
+                            .where('profile_id = :profileId', { profileId: UUIDUtil.toBinaray(profileId) })
+                            .groupBy('profile_id')
+                            .getRawOne();
+            
+            return parseInt(result?.count) || 0;
+        },
     }
 
 export const ProfileLikeHistoryRepoProvider = {

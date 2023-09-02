@@ -2,6 +2,7 @@ import { ConflictException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
 import { ProfileLike } from "src/profile/domain/entity/profile-like";
+import { ProfileLikeMetadata } from "src/profile/domain/profile-like-metadata";
 import { ProfileLikeHistoryRepository } from "src/profile/domain/repository/iprofile-like-history.repository";
 
 @Injectable()
@@ -26,5 +27,15 @@ export class ProfileLikeHistoryService {
     /* 중복된 찜이 있을 때 삭제 */
     async deleteHistory(profileId: string, likeUserId: number) {
         await this.historyRepository.deleteByProfileAndUserId(profileId, likeUserId);
+    }
+
+    /* 특정 프로필의 찜 정보 */
+    async getProfileLikeMetadata(profileId: string, viewUserId: number): Promise<ProfileLikeMetadata> {
+        /* 갯수와 내가 눌렀던 내역을 조회 */
+        const [likeCount, myLikeHisotry] = await Promise.all([
+            this.historyRepository.countById(profileId),
+            this.historyRepository.findByProfileAndUserId(profileId, viewUserId)
+        ]);
+        return new ProfileLikeMetadata(likeCount, myLikeHisotry);
     }
 }

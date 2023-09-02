@@ -28,8 +28,11 @@ export class ProfileController {
     }
 
     @Get('detail/:id')
-    async getProfileDetail(@Param('id') profileId: string){
-        return await this.caregiverProfileService.getProfile(profileId)
+    async getProfileDetail(
+        @Param('id') profileId: string,
+        @AuthenticatedUser() authenticatedUser: User
+    ){
+        return await this.caregiverProfileService.getProfile(profileId, authenticatedUser.getId())
     }
 
     @Patch(':profileId/view')
