@@ -8,11 +8,13 @@ import { ProfileDetailDto } from "src/profile/interface/dto/profile-detail.dto";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { GetProfileListDto } from "src/profile/interface/dto/get-profile-list.dto";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
+import { ProfileLikeHistoryService } from "./profile-like-history.service";
 
 @Injectable()
 export class CaregiverProfileService {
     constructor(
         private readonly caregiverProfileMapper: CaregiverProfileMapper,
+        private readonly profileLikeHistoryService: ProfileLikeHistoryService,
         private readonly caregiverProfileRepository: CaregiverProfileRepository,
     ) {}
     
@@ -23,10 +25,13 @@ export class CaregiverProfileService {
     } 
 
     /* 프로필 상세보기 */
-    async getProfile(profileId: string): Promise<ProfileDetailDto> {
-        const profile = await this.caregiverProfileRepository.findById(profileId);
+    async getProfile(profileId: string, userId: number): Promise<ProfileDetailDto> {
+        const [profile, profileLikeMetadata] = await Promise.all([
+            this.caregiverProfileRepository.findById(profileId),
+            this.profileLikeHistoryService.getProfileLikeMetadata(profileId, userId)
+        ]);
         profile.checkPrivacy();
-        return this.caregiverProfileMapper.toDetailDto(profile);
+        return this.caregiverProfileMapper.toDetailDto(profile, profileLikeMetadata);
     }
 
     /* 사용자 아이디로 프로필 조회 */
