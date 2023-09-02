@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param,  Post,  Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param,  Post,  Query, UseGuards } from "@nestjs/common";
 import { Public } from "src/auth/application/decorator/public.decorator";
 import { CaregiverProfileService } from "src/profile/application/service/caregiver-profile.service";
 import { ProfileListDto } from "../dto/profile-list.dto";
@@ -37,5 +37,15 @@ export class ProfileController {
         @AuthenticatedUser() user: User
     ) {
         return await this.profileLikeHistoryService.addHistory(profileId, user.getId());
+    };
+
+    @Delete('like')
+    @Roles(ROLE.PROTECTOR)
+    @UseGuards(RoleGuard)
+    async deleteLike(
+        @Body('profileId') profileId: string,
+        @AuthenticatedUser() user: User
+    ) {
+        return await this.profileLikeHistoryService.deleteHistory(profileId, user.getId());
     }
 }
