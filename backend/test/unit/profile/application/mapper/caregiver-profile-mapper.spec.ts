@@ -14,6 +14,7 @@ import { ProfileSort } from "src/profile/domain/profile-sort";
 import { SEX } from "src/user-auth-common/domain/enum/user.enum";
 import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.entity";
 import { CaregiverProfileListData } from "src/profile/domain/profile-list-data";
+import { ProfileLikeMetadata } from "src/profile/domain/profile-like-metadata";
 
 describe('Caregiver Profile Mapper Component Test', () => {
     const profileMapper = new CaregiverProfileMapper();
@@ -125,6 +126,9 @@ describe('Caregiver Profile Mapper Component Test', () => {
     });
 
     describe('toDetailDto()', () => {
+        let likeMetadataStub: ProfileLikeMetadata;
+
+        beforeAll(() => likeMetadataStub = new ProfileLikeMetadata(10, null));
 
         it('가능한 지역을 상세페이지에선 모두 나열해주는지 확인', () => {
             const possibleAreaList = ['인천', '서울', '부산', '대구', '포항'];
@@ -132,18 +136,18 @@ describe('Caregiver Profile Mapper Component Test', () => {
 
             const profileStub = TestCaregiverProfile.default().possibleAreaList(possibleAreaList).build();
 
-            const result = profileMapper.toDetailDto(profileStub);
+            const result = profileMapper.toDetailDto(profileStub, likeMetadataStub);
 
-            expect(result.possibleAreaList).toBe(expectedArea);
+            expect(result.profile.possibleAreaList).toBe(expectedArea);
         });
 
         it('자격증이 없는 사용자는 빈 배열로 반환되어야 한다', () => {
             const emptyLicenseList = [];
             const profileStub = TestCaregiverProfile.default().licenseList(emptyLicenseList).build();
 
-            const result = profileMapper.toDetailDto(profileStub);
+            const result = profileMapper.toDetailDto(profileStub, likeMetadataStub);
             
-            expect(result.licenseList).toEqual(emptyLicenseList);
+            expect(result.profile.licenseList).toEqual(emptyLicenseList);
         })
 
         it('인증이 완료된 자격증의 이름은 포함되고, 완료되지 않은 자격증은 포함되지 않는지 확인', () => {
@@ -153,33 +157,35 @@ describe('Caregiver Profile Mapper Component Test', () => {
 
             const profileStub = TestCaregiverProfile.default().licenseList(licenseList).build();
 
-            const result = profileMapper.toDetailDto(profileStub);
+            const result = profileMapper.toDetailDto(profileStub, likeMetadataStub);
 
-            expect(result.licenseList).toEqual(expectedLicense);
+            expect(result.profile.licenseList).toEqual(expectedLicense);
         })
 
         it('toDetailDto()를 수행했을 때 포함되어야 할 필드가 있는지 확인', () => {
             const profileStub = TestCaregiverProfile.default().build();
 
-            const result = profileMapper.toDetailDto(profileStub);
+            const result = profileMapper.toDetailDto(profileStub, likeMetadataStub);
+            
+            expect(result.user).toHaveProperty('id');
+            expect(result.user).toHaveProperty('name');
+            expect(result.user).toHaveProperty('sex');
+            expect(result.user).toHaveProperty('age');
 
-            expect(result).toHaveProperty('name');
-            expect(result).toHaveProperty('sex');
-            expect(result).toHaveProperty('age');
-
-            expect(result).toHaveProperty('id');
-            expect(result).toHaveProperty('userId');
-            expect(result).toHaveProperty('career');
-            expect(result).toHaveProperty('pay');
-            expect(result).toHaveProperty('possibleDate');
-            expect(result).toHaveProperty('possibleAreaList');
-            expect(result).toHaveProperty('notice');
-            expect(result).toHaveProperty('licenseList');
-            expect(result).toHaveProperty('additionalChargeCase');
-            expect(result).toHaveProperty('nextHosptial');
-            expect(result).toHaveProperty('helpExperience');
-            expect(result).toHaveProperty('strengthList');
-            expect(result).toHaveProperty('warningList');
+            expect(result.profile).toHaveProperty('id');
+            expect(result.profile).toHaveProperty('career');
+            expect(result.profile).toHaveProperty('pay');
+            expect(result.profile).toHaveProperty('possibleDate');
+            expect(result.profile).toHaveProperty('possibleAreaList');
+            expect(result.profile).toHaveProperty('notice');
+            expect(result.profile).toHaveProperty('licenseList');
+            expect(result.profile).toHaveProperty('additionalChargeCase');
+            expect(result.profile).toHaveProperty('nextHosptial');
+            expect(result.profile).toHaveProperty('helpExperience');
+            expect(result.profile).toHaveProperty('strengthList');
+            expect(result.profile).toHaveProperty('warningList');
+            expect(result.profile.likeMetadata).toHaveProperty('count');
+            expect(result.profile.likeMetadata).toHaveProperty('isLiked');
         })
     })
 })
