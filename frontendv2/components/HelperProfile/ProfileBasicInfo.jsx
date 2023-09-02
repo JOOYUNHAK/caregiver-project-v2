@@ -3,16 +3,14 @@ import { StyleSheet } from "react-native";
 import { View } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useSelector } from "react-redux";
-import { changeStartDate, getCareer } from "../../functions/Profile/profileFunctions";
 
 export default function ProfileBasicInfo() {
 
     const { userProfile } = useSelector(state => ({
         userProfile: state.profile.userProfile
     }));
-    
-    const career = userProfile.profile.career;
-    const startDate = userProfile.profile.possibleDate;
+   
+    const { career, possibleDate, pay, possibleAreaList } = userProfile;
 
     return (
         <View style={{
@@ -63,7 +61,7 @@ export default function ProfileBasicInfo() {
                         </Text>
                         <View style={styles.verticalLine} />
                         <Text style={styles.userValue}>
-                            {userProfile.profile.pay}만원
+                            {pay}만원
                         </Text>
                     </View>
                 </View>
@@ -81,7 +79,7 @@ export default function ProfileBasicInfo() {
                         </Text>
                         <View style={styles.verticalLine} />
                         <Text style={[styles.userValue, { flexWrap: 'wrap', paddingRight: 10 }]}>
-                            {userProfile.possibleAreaList}
+                            {possibleAreaList}
                         </Text>
                     </View>
 
@@ -91,7 +89,7 @@ export default function ProfileBasicInfo() {
                         </Text>
                         <View style={styles.verticalLine} />
                         <Text style={styles.userValue}>
-                            {startDate}
+                            {possibleDate}
                         </Text>
                     </View>
                 </View>

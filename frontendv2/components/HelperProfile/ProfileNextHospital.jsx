@@ -8,7 +8,7 @@ import { useSelector } from "react-redux"
 
 export default function ProfileNextHospital() {
     const { nextHosptial } = useSelector(state => ({
-        nextHosptial: state.profile.userProfile.profile.nextHosptial
+        nextHosptial: state.profile.userProfile.nextHosptial
     }));
 
     return (

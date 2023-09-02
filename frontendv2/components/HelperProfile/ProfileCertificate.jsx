@@ -8,7 +8,7 @@ import { useSelector } from "react-redux"
 
 export default function ProfileCertificate() {
     const { licenseList } = useSelector(state => ({
-        licenseList: state.profile.userProfile.profile.licenseList
+        licenseList: state.profile.userProfile.licenseList
     }));
 
     return (

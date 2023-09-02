@@ -18,10 +18,10 @@ export default function ProfileHeader() {
             <View style={styles.innerProfileHeader}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={{ fontWeight: '500', fontSize: 15, marginBottom: 3 }}>
-                        {userProfile.user.sex},
+                        {userProfile.sex},
                     </Text>
                     <Text style={{ fontWeight: '500', fontSize: 15, marginLeft: 3 }}>
-                        {userProfile.user.age}세
+                        {userProfile.age}세
                     </Text>
                 </View>
 
@@ -30,7 +30,7 @@ export default function ProfileHeader() {
                         fontSize: 20,
                         fontWeight: '600'
                     }}>
-                        믿음의 간병인 {userProfile.user.name}님
+                        믿음의 간병인 {userProfile.name}님
                     </Text>
                     <Heart />
                 </View>
@@ -66,7 +66,7 @@ export default function ProfileHeader() {
                 <View style={styles.profileHelperAppeal}>
                     <Icon props={['material', 'campaign', 21, 'silver']} />
                     <Text style={styles.profileHelperAppealText}>
-                        {userProfile.profile.notice}
+                        {userProfile.notice}
                     </Text>
                 </View>
             </View>
