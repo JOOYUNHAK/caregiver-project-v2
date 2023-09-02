@@ -9,8 +9,6 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import { useSelector } from "react-redux";
 import Icon from "../Icon";
 
-
-
 export default function ProfileCareStyle() {
 
     const [toilet, setToilet] = useState(true);
@@ -18,11 +16,9 @@ export default function ProfileCareStyle() {
     const [washing, setWashing] = useState(true);
     const [movement, setMovement] = useState(true);
 
-    const { userProfile } = useSelector(state => ({
-        userProfile: state.profile.userProfile
+    const { helpExperience } = useSelector(state => ({
+        helpExperience: state.profile.userProfile.helpExperience
     }));
-
-    const { helpExperience } = userProfile.profile;
 
     return (
         <>

@@ -12,8 +12,8 @@ import { addRoomList, saveMessage } from "../../../redux/action/chat/chatAction"
 export default function ChatButton() {
     const { loginId, opponentId, name } = useSelector(state => ({
         loginId: state.user.id,
-        opponentId: state.profile.userProfile.user.id,
-        name: state.profile.userProfile.user.name
+        opponentId: state.profile.userProfile.id,
+        name: state.profile.userProfile.name
     }))
     const dispatch = useDispatch();
     const navigation = useNavigation();
@@ -22,6 +22,7 @@ export default function ChatButton() {
 
     //로그인 되어 있는지 아닌지
     const validateId = () => {
+        
         if (!loginId.length) {
             navigation.dispatch(
                 StackActions.push(
