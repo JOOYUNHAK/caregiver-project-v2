@@ -5,9 +5,7 @@ import { CaregiverProfileRepository } from "src/profile/infra/repository/caregiv
 import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-profile.entity";
 import { ProfileListDto } from "src/profile/interface/dto/profile-list.dto";
 import { ProfileDetailDto } from "src/profile/interface/dto/profile-detail.dto";
-import { ROLE } from "src/user-auth-common/domain/enum/user.enum";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
-import { ProfileViewRankService } from "src/rank/application/service/profile-view-rank.service";
 import { GetProfileListDto } from "src/profile/interface/dto/get-profile-list.dto";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
 
@@ -16,7 +14,6 @@ export class CaregiverProfileService {
     constructor(
         private readonly caregiverProfileMapper: CaregiverProfileMapper,
         private readonly caregiverProfileRepository: CaregiverProfileRepository,
-        private readonly profileViewRankService: ProfileViewRankService
     ) {}
     
     /* 회원가입시 새로운 프로필 추가 */
@@ -26,13 +23,9 @@ export class CaregiverProfileService {
     } 
 
     /* 프로필 상세보기 */
-    async getProfile(profileId: string, viewUser: User): Promise<ProfileDetailDto> {
+    async getProfile(profileId: string): Promise<ProfileDetailDto> {
         const profile = await this.caregiverProfileRepository.findById(profileId);
         profile.checkPrivacy();
-
-        if( viewUser.getRole() === ROLE.PROTECTOR )
-            await this.profileViewRankService.increment(profileId, viewUser);
-
         return this.caregiverProfileMapper.toDetailDto(profile);
     }
 
