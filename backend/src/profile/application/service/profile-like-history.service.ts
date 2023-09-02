@@ -21,5 +21,10 @@ export class ProfileLikeHistoryService {
         ))  throw new ConflictException(ErrorMessage.DuplicatedLikeProfile);
         /* 처음 누른 상태면 정상적으로 저장 */
         await this.historyRepository.save(profileLike); 
+    };
+
+    /* 중복된 찜이 있을 때 삭제 */
+    async deleteHistory(profileId: string, likeUserId: number) {
+        await this.historyRepository.deleteByProfileAndUserId(profileId, likeUserId);
     }
 }
