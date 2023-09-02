@@ -11,12 +11,15 @@ import { UserAuthCommonModule } from "src/user-auth-common/user-auth-common.modu
 import { ProfileController } from "./interface/controller/profile.controller";
 import { RankModule } from "src/rank/rank.module";
 import { ProfileQueryFactory } from "./infra/repository/profile-query.factory";
+import { ProfileLikeHistoryRepoProvider } from "./domain/repository/iprofile-like-history.repository";
+import { ProfileLikeHistoryService } from "./application/service/profile-like-history.service";
+import { RoleGuard } from "src/core/guard/role.guard";
 
 @Module({
     imports: [
         UserAuthCommonModule,
         MongodbModule,
-        RankModule
+        RankModule,
     ],
     controllers: [
         ProfileController
@@ -30,7 +33,10 @@ import { ProfileQueryFactory } from "./infra/repository/profile-query.factory";
         PatientProfileService,
         PatientProfileRepository,
         PatientProfileBuilder,
-        ProfileQueryFactory
+        ProfileQueryFactory,
+        ProfileLikeHistoryRepoProvider,
+        ProfileLikeHistoryService,
+        RoleGuard
     ],
     exports: [
         CaregiverProfileBuilder,

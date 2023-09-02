@@ -53,13 +53,14 @@ describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
             const profileList = [{}, {}] as CaregiverProfileListData [];
             jest.spyOn(caregiverProfileRepository, 'getProfileList').mockResolvedValueOnce(profileList)// 조회된 리스트 반환
 
-            jest.spyOn(caregiverProfileMapper, 'toListDto').mockReturnValueOnce({} as ProfileListDataAsClient);
+            jest.spyOn(caregiverProfileMapper, 'toListDto').mockReturnValue({} as ProfileListDataAsClient);
 
             const mockNextCursor = 'next cursor';
             const nextCursor = new ProfileListCursor(mockNextCursor);
             jest.spyOn(ProfileListCursor, 'createNextCursor').mockReturnValueOnce(nextCursor);
             
             const result = await caregiverProfileService.getProfileList({} as GetProfileListDto);
+            console.log(result)
             const expectedResult = { caregiverProfileListData: profileList, nextCursor: mockNextCursor };
             expect(result).toEqual(expectedResult);
         })
