@@ -10,7 +10,7 @@ export default function ProfileBasicInfo() {
         userProfile: state.profile.userProfile
     }));
    
-    const { career, possibleDate, pay, possibleAreaList } = userProfile;
+    const { career, possibleDate, pay, possibleAreaList } = userProfile.profile;
 
     return (
         <View style={{

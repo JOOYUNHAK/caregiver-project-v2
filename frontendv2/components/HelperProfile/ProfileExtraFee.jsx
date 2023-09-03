@@ -8,7 +8,7 @@ import { useSelector } from "react-redux"
 
 export default function ProfileExtraFee() {
     const { additionalChargeCase } = useSelector(state => ({
-        additionalChargeCase: state.profile.userProfile.additionalChargeCase
+        additionalChargeCase: state.profile.userProfile.profile.additionalChargeCase
     }));
 
     return (

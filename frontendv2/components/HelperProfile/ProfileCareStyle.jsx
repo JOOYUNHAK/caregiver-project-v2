@@ -17,7 +17,7 @@ export default function ProfileCareStyle() {
     const [movement, setMovement] = useState(true);
 
     const { helpExperience } = useSelector(state => ({
-        helpExperience: state.profile.userProfile.helpExperience
+        helpExperience: state.profile.userProfile.profile.helpExperience
     }));
 
     return (

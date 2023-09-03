@@ -72,16 +72,15 @@ const profileReducer = createReducer(initialState, (builder) => {
             state.noData = action.payload;
         })
         .addCase(toggleHeart, (state, action) => {
-
-            if (!!state.userProfile.heart.isHearted) {
-                state.userProfile.heart.isHearted = false;
-                state.userProfile.heart.heartCount = parseInt(state.userProfile.heart.heartCount) - 1;
-                //찜 목록은 조회할 시 이미 처음 접속때 받았으면 따로 db에 조회하지 않고 목록 업데이트
+            if (!!state.userProfile.profile.likeMetadata.isLiked) {
+                state.userProfile.profile.likeMetadata.isLiked = false;
+                state.userProfile.profile.likeMetadata.count = parseInt(state.userProfile.profile.likeMetadata.count) - 1;
             }
             else {
-                state.userProfile.heart.isHearted = true;
-                state.userProfile.heart.heartCount = parseInt(state.userProfile.heart.heartCount) + 1;
+                state.userProfile.profile.likeMetadata.isLiked = true;
+                state.userProfile.profile.likeMetadata.count = parseInt(state.userProfile.profile.likeMetadata.count) + 1;
             }
+            /* 찜 목록 업데이트 추후 수정 */
             const findHeartProfile = state.heartProfileList.find(
                 heartProfile =>
                     heartProfile?.id == action.payload

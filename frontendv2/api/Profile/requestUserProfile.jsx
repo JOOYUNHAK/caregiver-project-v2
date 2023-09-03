@@ -11,6 +11,7 @@ export default async function requestUserProfile(navigation, profileId) {
         const res = await api.get(`profile/detail/${profileId}`);
         store.dispatch(saveUserProfile(res.data));
         store.dispatch(saveMostViewed(false));
+        await api.patch(`profile/${profileId}/view`);
         return true;
     }
     catch (err) {

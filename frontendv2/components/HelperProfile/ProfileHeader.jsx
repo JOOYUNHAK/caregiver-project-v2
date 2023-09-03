@@ -12,16 +12,18 @@ export default function ProfileHeader() {
     const {  userProfile } = useSelector(state => ({
         userProfile: state.profile.userProfile
     }));
+    
+    const { user, profile } = userProfile;
 
     return (
         <View style={styles.profileHeader}>
             <View style={styles.innerProfileHeader}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={{ fontWeight: '500', fontSize: 15, marginBottom: 3 }}>
-                        {userProfile.sex},
+                        {user.sex},
                     </Text>
                     <Text style={{ fontWeight: '500', fontSize: 15, marginLeft: 3 }}>
-                        {userProfile.age}세
+                        {user.age}세
                     </Text>
                 </View>
 
@@ -30,7 +32,7 @@ export default function ProfileHeader() {
                         fontSize: 20,
                         fontWeight: '600'
                     }}>
-                        믿음의 간병인 {userProfile.name}님
+                        믿음의 간병인 {user.name}님
                     </Text>
                     <Heart />
                 </View>
@@ -66,7 +68,7 @@ export default function ProfileHeader() {
                 <View style={styles.profileHelperAppeal}>
                     <Icon props={['material', 'campaign', 21, 'silver']} />
                     <Text style={styles.profileHelperAppealText}>
-                        {userProfile.notice}
+                        {profile.notice}
                     </Text>
                 </View>
             </View>
