@@ -6,15 +6,15 @@ import { CaregiverInfoForm, CaregiverLastRegisterDto, CaregiverThirdRegisterDto,
 import { TestUser } from "test/unit/user/user.fixtures";
 import { TestCaregiverProfile } from "../../profile.fixtures";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
-import { Sort } from "src/profile/domain/enum/sort.enum";
 import { ProfileFilter } from "src/profile/domain/profile-filter";
 import { GetProfileListDto } from "src/profile/interface/dto/get-profile-list.dto";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
-import { ProfileSort } from "src/profile/domain/profile-sort";
+import { ProfilePaySort, ProfileSort } from "src/profile/domain/profile-sort";
 import { SEX } from "src/user-auth-common/domain/enum/user.enum";
 import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.entity";
 import { CaregiverProfileListData } from "src/profile/domain/profile-list-data";
 import { ProfileLikeMetadata } from "src/profile/domain/profile-like-metadata";
+import { OrderBy } from "src/common/shared/enum/sort-order.enum";
 
 describe('Caregiver Profile Mapper Component Test', () => {
     const profileMapper = new CaregiverProfileMapper();
@@ -59,7 +59,7 @@ describe('Caregiver Profile Mapper Component Test', () => {
 
     describe('toListQueryOptions()', () => {
         it('Cursor, Sort, Filter에 맞게 인스턴스가 생성되는지 확인', () => {
-            const sort = Sort.LowPay;
+            const sort = new ProfilePaySort(OrderBy.ASC);
             const filter = new ProfileFilter();
             const getProfileListDto = GetProfileListDto.of(filter, sort);
 

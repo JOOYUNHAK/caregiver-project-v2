@@ -1,20 +1,21 @@
 import 'reflect-metadata';
 import { validate } from "class-validator";
-import { Sort } from "src/profile/domain/enum/sort.enum"
 import { plainToInstance } from 'class-transformer';
 import { PossibleDate } from 'src/profile/domain/enum/possible-date.enum';
 import { GetProfileListDto } from 'src/profile/interface/dto/get-profile-list.dto';
 import { ProfileFilter } from 'src/profile/domain/profile-filter';
+import { ProfileSortField } from 'src/profile/domain/enum/sort.enum';
+import { OrderBy } from 'src/common/shared/enum/sort-order.enum';
 
 describe('GetProfileListDto Test', () => {
-    describe('sort 필드 Test', () => {
+    describe('ProfileSort Test', () => {
         it('잘못된 Enum 체크', async () => {
-            const wrongSort = 'sortByWrong' as Sort;
-            const sortTestDto = GetProfileListDto.of(undefined, wrongSort);
+            const wrongSort = { field: ProfileSortField.PAY, orderBy: 'reverse' }
+            const sortTestDto = GetProfileListDto.of(undefined, JSON.stringify(wrongSort) as any);
             const instanceDto = plainToInstance(GetProfileListDto, sortTestDto);
             
             const [result] = await validate(instanceDto);
-            expect(result.value).toBe(wrongSort);
+            expect(result.property).toBe('sort');
         });
     })
 
@@ -39,7 +40,7 @@ describe('GetProfileListDto Test', () => {
     })
 
     it('올바르게 입력된 Dto면 패스되는지 확인', async() => {
-        const sort = Sort.LowPay;
+        const sortOption = { field: ProfileSortField.PAY, orderBy: OrderBy.ASC };
         const filter = {
             pay: 10,
             age: 20,
@@ -47,8 +48,7 @@ describe('GetProfileListDto Test', () => {
             area: ['인천'],
             license: ['자격증1']
         };
-        const filterToInstance = plainToInstance(ProfileFilter, filter);
-        const testDto = GetProfileListDto.of(JSON.stringify(filter) as any, sort);
+        const testDto = GetProfileListDto.of(JSON.stringify(filter) as any, JSON.stringify(sortOption) as any);
         const toInstanceDto = plainToInstance(GetProfileListDto, testDto);
 
         const result = await validate(toInstanceDto);
