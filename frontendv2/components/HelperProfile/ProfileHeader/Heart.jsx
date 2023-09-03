@@ -1,6 +1,6 @@
 /* 특정 간병인 프로필 찜 */
 
-import { StackActions, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import { View } from "react-native";
 import { Text } from "react-native";
@@ -8,7 +8,6 @@ import { StyleSheet } from "react-native";
 import { TouchableHighlight } from "react-native";
 import { shallowEqual, useSelector } from "react-redux";
 import RegisterHeart from "../../../api/Profile/registerHeart";
-import { requestRefreshToken } from "../../../functions/Token";
 import Icon from "../../Icon";
 import Dialog from "react-native-dialog";
 
@@ -16,51 +15,42 @@ export default function Heart() {
     const navigation = useNavigation();
     const [visible, setVisible] = useState(false);
     const [errMessage, setErrMessage] = useState('');
-    // let { loginId, userHeartCount, userIsHearted, userProfileId } = useSelector(state => ({
-    //     loginId: state.user.id,
-    //     userHeartCount: state.profile.userProfile.heart.heartCount,
-    //     userIsHearted: state.profile.userProfile.heart.isHearted,
-    //     userProfileId: state.profile.userProfile.id
-    // }),
-    //     shallowEqual
-    // );
+    let { userHeartCount, userIsHearted, userProfileId } = useSelector(state => ({
+        userHeartCount: state.profile.userProfile.profile.likeMetadata.count,
+        userIsHearted: state.profile.userProfile.profile.likeMetadata.isLiked,
+        userProfileId: state.profile.userProfile.profile.id
+    }),
+        shallowEqual
+    );
 
 
-    // const registerHeart = async () => {
-    //     let result;
-    //     if (!!loginId) {
-    //         result = await RegisterHeart(userProfileId, navigation);
-    //     }
-    //     else {
-    //         //로그인이 되어있지 않으면 refreshToken 확인 후 다시 재 호출
-    //         if (await requestRefreshToken(navigation)) {
-    //             result = await RegisterHeart(userProfileId, navigation);
-    //         }
-    //     }
-    //     if (result?.message) {
-    //         setErrMessage(result.message)
-    //         setVisible(true);
-    //     }
-    // }
+    const registerHeart = async () => {
+
+        const result = await RegisterHeart(userProfileId, navigation);
+        
+        if (result?.message) {
+            setErrMessage(result.message)
+            setVisible(true);
+        }
+    }
 
     return (
         <>
             <TouchableHighlight
                 style={styles.heartTouch}
                 underlayColor='none'
-                onPress={() => console.log('heart click')}
+                onPress={() => registerHeart()}
             >
                 <View>
-                    <Icon props={['material', 'favorite-border', 22, 'black']} />
-                    {/* <Icon props={[
+                    <Icon props={[
                         'material',
                         !!userIsHearted ? 'favorite' : 'favorite-border',
                         22,
                         !!userIsHearted ? 'red' : 'black'
                     ]}
-                    /> */}
+                    />
                     <Text style={styles.heartCount}>
-                        0
+                    {userHeartCount}
                     </Text>
                 </View>
             </TouchableHighlight>

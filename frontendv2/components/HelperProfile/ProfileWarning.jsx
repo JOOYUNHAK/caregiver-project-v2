@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 export default function ProfileWarning() {
     const { warningList } = useSelector((state) => ({
-        warningList: state.profile.userProfile.warningList
+        warningList: state.profile.userProfile.profile.warningList
     }))
 
     return (

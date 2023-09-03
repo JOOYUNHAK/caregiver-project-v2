@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 
 export default function ProfileStrength() {
     const { strengthList } = useSelector(state => ({
-        strengthList: state.profile.userProfile.strengthList
+        strengthList: state.profile.userProfile.profile.strengthList
     }));
 
     return (
