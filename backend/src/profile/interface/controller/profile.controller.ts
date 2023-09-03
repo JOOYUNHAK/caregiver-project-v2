@@ -45,21 +45,19 @@ export class ProfileController {
             return await this.profileViewRankService.increment(profileId, authenticatedUser);
     }
 
-    @Post('like')
+    @Post(':profileId/like')
     @Roles(ROLE.PROTECTOR)
-    @UseGuards(RoleGuard)
     async pushLike(
-        @Body('profileId') profileId: string,
+        @Param('profileId') profileId: string,
         @AuthenticatedUser() user: User
     ) {
         return await this.profileLikeHistoryService.addHistory(profileId, user.getId());
     };
 
-    @Delete('like')
+    @Delete(':profileId/like')
     @Roles(ROLE.PROTECTOR)
-    @UseGuards(RoleGuard)
     async deleteLike(
-        @Body('profileId') profileId: string,
+        @Param('profileId') profileId: string,
         @AuthenticatedUser() user: User
     ) {
         return await this.profileLikeHistoryService.deleteHistory(profileId, user.getId());
