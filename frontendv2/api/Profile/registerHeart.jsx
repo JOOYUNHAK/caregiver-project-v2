@@ -8,9 +8,7 @@ import store from "../../redux/store";
 
 export default async function RegisterHeart(profileId, navigation) {
     try {
-        const res = await api.put('user/heartList', {
-            profileId: profileId
-        })
+        await api.post(`profile/${profileId}/like`);
         // 찜 관련 toggle 
         store.dispatch(toggleHeart(profileId))
         return true;
@@ -35,6 +33,10 @@ export default async function RegisterHeart(profileId, navigation) {
                     await RegisterHeart(profileId, navigation);
                 }
                 break;
+            case 409:
+                await api.delete(`profile/${profileId}/like`);
+                store.dispatch(toggleHeart(profileId))
+            break;
         }
     }
 }
