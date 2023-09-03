@@ -31,8 +31,8 @@ export class ProfileListCursor {
         
         const lastProfile = profileList.at(-1);
         
-        let nextCursor = queryOptions.getSortOptions().hasOption() ? 
-                this.createCombinedCursor(lastProfile, queryOptions.getSortOptions().otherField()) : lastProfile.id;
+        let nextCursor = queryOptions.hasSortOptions() ? 
+                this.createCombinedCursor(lastProfile, queryOptions.getSortOptions().getField()) : lastProfile.id;
         
         return new ProfileListCursor(nextCursor)
     }
