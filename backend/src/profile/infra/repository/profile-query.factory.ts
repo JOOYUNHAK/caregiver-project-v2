@@ -2,12 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { MongoQuery, MongoQueryFactory } from "../../../util/mongodb/mongo-query.factory";
 import { AggregratePipelineBuilder } from "src/util/mongodb/aggregrate-pipeline.builder";
 import { ProfileListQueryOptions } from "src/profile/domain/profile-list-query-options";
-import { ProfileSort } from "src/profile/domain/profile-sort";
+import { ProfileIdSort, ProfileSort } from "src/profile/domain/profile-sort";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
 import { ProfileFilter } from "src/profile/domain/profile-filter";
+import { OrderBy } from "src/common/shared/enum/sort-order.enum";
 
 @Injectable()
 export class ProfileQueryFactory extends MongoQueryFactory {
+    /* 기본은 최신 생성 순 */
+    private readonly defaultSort = new ProfileIdSort(OrderBy.DESC)
 
     /* 프로필 리스트를 조회하는 Query */
     listPipeline(listQueryOptions: ProfileListQueryOptions): any {
@@ -48,10 +51,10 @@ export class ProfileQueryFactory extends MongoQueryFactory {
             // 마지막 프로필 커서의 일당보다 크거나, 
             // 마지막 프로필 커서의 일당과 같으면서 프로필 아이디가 더 오래된 것 
             this.or([
-                this.gtThan(sort.otherField(), nextCursor.combinedOtherSortNext()),
+                this.gtThan(sort.getField(), nextCursor.combinedOtherSortNext()),
                 this.combineOperators(
-                    this.equals(sort.otherField(), nextCursor.combinedOtherSortNext()),
-                    this.ltThan(sort.defaultField(), nextCursor.combinedDefaultSortNext())
+                    this.equals(sort.getField(), nextCursor.combinedOtherSortNext()),
+                    this.ltThan(this.defaultSort.getField(), nextCursor.combinedDefaultSortNext())
                 )
             ]),
             this.equals('isPrivate', false), // 비공개 프로필
@@ -71,8 +74,8 @@ export class ProfileQueryFactory extends MongoQueryFactory {
             this.matchAnyElementInArray('licenseList', license) // 주어진 자격증과 하나라도 일치하는 프로필
         )
         .sort( // 호출되는 시점에 정렬 기준으로 들어온 필드와 이후 최신순으로 정렬 
-                this.orderBy(sort.otherField(), sort.otherFieldBy()),
-                this.orderBy(sort.defaultField(), sort.defaultFieldBy())
+                this.orderBy(sort.getField(), sort.getOrderBy()),
+                this.orderBy(this.defaultSort.getField(), this.defaultSort.getOrderBy())
         )
     };
 
@@ -104,7 +107,7 @@ export class ProfileQueryFactory extends MongoQueryFactory {
                 this.matchAnyElementInArray('licenseList', license)
             )
             .sort(
-                this.orderBy(sort.defaultField(), sort.defaultFieldBy()) // 최신순 정렬
+                this.orderBy(this.defaultSort.getField(), this.defaultSort.getOrderBy()) // 최신순 정렬
             )
     }
 
