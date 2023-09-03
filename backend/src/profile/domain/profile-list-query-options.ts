@@ -9,7 +9,7 @@ export class ProfileListQueryOptions {
  
     getNextCursor(): ProfileListCursor { return this.nextCursor; }; 
     getSortOptions(): ProfileSort | undefined { return this.sort; };
-    hasSortOptions(): boolean { return this.sort.hasOption() }; // 기본 최신순을 제외한 정렬 옵션이 있는지
+    hasSortOptions(): boolean { return this.sort ? true : false }; // 기본 최신순을 제외한 정렬 옵션이 있는지
     getFilters(): ProfileFilter { return this.filters; };
     
     constructor(next?: ProfileListCursor, sort?: ProfileSort, filters?: ProfileFilter) {
