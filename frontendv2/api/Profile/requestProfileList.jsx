@@ -63,6 +63,7 @@ export default async function requestProfileList(purpose) {
 }
 
 export function getMainFilterValue(mainFilter) {
+    
     switch (mainFilter) {
         case '기본순':
             return undefined;
@@ -73,9 +74,9 @@ export function getMainFilterValue(mainFilter) {
         case '찜 많은 순':
             return 'HighLike';
         case '일당 낮은 순':
-            return 'LowPay';
+            return { field: 'pay', orderBy: 'ASC' };
         case '시작일 빠른 순':
-            return 'FastStartDate';
+            return { field: 'possibleDate', orderBy: 'ASC' };
     }
 }
 
