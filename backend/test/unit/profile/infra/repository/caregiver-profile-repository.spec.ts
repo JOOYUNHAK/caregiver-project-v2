@@ -7,10 +7,10 @@ import { TestCaregiverProfile } from "../../profile.fixtures";
 import { ProfileListQueryOptions } from "src/profile/domain/profile-list-query-options";
 import { ProfileQueryFactory } from "src/profile/infra/repository/profile-query.factory";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
-import { ProfileSort } from "src/profile/domain/profile-sort";
+import { ProfilePaySort } from "src/profile/domain/profile-sort";
 import { ProfileFilter } from "src/profile/domain/profile-filter";
 import { Db } from "mongodb";
-import { Sort } from "src/profile/domain/enum/sort.enum";
+import { OrderBy } from "src/common/shared/enum/sort-order.enum";
 
 describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test', () => {
     let testProfile: CaregiverProfile, 
@@ -120,7 +120,7 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
 
             it('반환된 프로필이 1개인지 확인', async() => {
                 const listQueryOptions = new ProfileListQueryOptions(
-                    new ProfileListCursor(), new ProfileSort(), new ProfileFilter()
+                    new ProfileListCursor(), null, new ProfileFilter()
                 );
                 const result = await caregiverProfileRepository.getProfileList(listQueryOptions);
                 expect(result.length).toBe(1);
@@ -154,7 +154,7 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
             describe('쿼리에 정렬 옵션이 없고 다음 커서가 없거나 아이디만 있는 경우', () => {
                 it('없으면 최신순으로 5개의 리스트를 가져온다', async() => {
                     const listQueryOptions = new ProfileListQueryOptions(
-                        new ProfileListCursor(), new ProfileSort(), new ProfileFilter()
+                        new ProfileListCursor(), null, new ProfileFilter()
                     );
 
                     const result = await caregiverProfileRepository.getProfileList(listQueryOptions);
@@ -165,7 +165,7 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
 
                 it('아이디만 있는 경우 해당 아이디를 가진 프로필보다 오래된 프로필들을 반환', async() => {
                     const listQueryOptions = new ProfileListQueryOptions(
-                        new ProfileListCursor(middleProfile.getId()), new ProfileSort(), new ProfileFilter()
+                        new ProfileListCursor(middleProfile.getId()), null, new ProfileFilter()
                     );
 
                     const result = await caregiverProfileRepository.getProfileList(listQueryOptions);
@@ -178,7 +178,7 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
             describe('쿼리 정렬 옵션이 있는 경우', () => {
                 it('다음 커서가 없으면 최신 순으로 처음부터 반환한다', async () => {
                     const listQueryOptions = new ProfileListQueryOptions(
-                        new ProfileListCursor(), new ProfileSort(Sort.LowPay), new ProfileFilter()
+                        new ProfileListCursor(), new ProfilePaySort(OrderBy.ASC), new ProfileFilter()
                     );
 
                     const result = await caregiverProfileRepository.getProfileList(listQueryOptions);
@@ -191,7 +191,7 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
 
                 it('조합된 다음 커서가 있으면 파싱해서 이후 프로필을 반환한다', async () => {
                     const listQueryOptions = new ProfileListQueryOptions(
-                        new ProfileListCursor(`${middleNextProfile.getPay()}_${middleNextProfile.getId()}`), new ProfileSort(Sort.LowPay), new ProfileFilter()
+                        new ProfileListCursor(`${middleNextProfile.getPay()}_${middleNextProfile.getId()}`), new ProfilePaySort(OrderBy.ASC), new ProfileFilter()
                     );
                     
                     const result = await caregiverProfileRepository.getProfileList(listQueryOptions);
@@ -209,7 +209,7 @@ describe('간병인 프로필정보 저장소(CaregiverProfileRepository) Test',
                     await mongo.collection(testCollectionName).insertMany([firstProfile, secondProfile, lastProfile]);
 
                     const listQueryOptions = new ProfileListQueryOptions(
-                        new ProfileListCursor(`${samePay}_${lastProfile.getId()}`), new ProfileSort(Sort.LowPay), new ProfileFilter()
+                        new ProfileListCursor(`${samePay}_${lastProfile.getId()}`), new ProfilePaySort(OrderBy.ASC), new ProfileFilter()
                     );
 
                     const result = await caregiverProfileRepository.getProfileList(listQueryOptions);

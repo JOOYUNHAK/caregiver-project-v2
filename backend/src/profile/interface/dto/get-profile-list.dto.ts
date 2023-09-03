@@ -1,7 +1,8 @@
 import { Transform, Type, plainToInstance } from "class-transformer";
-import { IsEnum, IsOptional, IsString, ValidateNested } from "class-validator";
-import { Sort } from "src/profile/domain/enum/sort.enum";
+import { IsOptional, IsString, ValidateNested } from "class-validator";
 import { ProfileFilter } from "src/profile/domain/profile-filter";
+import { ProfileSort } from "src/profile/domain/profile-sort";
+import { SortOptionTransformer } from "../decorator/sort-option-transformer.decorator";
 
 export class GetProfileListDto {
     @IsOptional()
@@ -9,8 +10,10 @@ export class GetProfileListDto {
     nextCursor?: string;
 
     @IsOptional()
-    @IsEnum(Sort)
-    sort: Sort;
+    @SortOptionTransformer()
+    @ValidateNested()
+    @Type(() => ProfileSort)
+    sort?: ProfileSort;
 
     @IsOptional()
     @ValidateNested()
@@ -18,5 +21,5 @@ export class GetProfileListDto {
     @Type(() => ProfileFilter)
     filter?: ProfileFilter;
 
-    static of(filter?: ProfileFilter, sort?: Sort) { return { sort, filter }; };
+    static of(filter?: ProfileFilter, sort?: ProfileSort) { return { sort, filter }; };
 }

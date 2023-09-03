@@ -7,7 +7,6 @@ import { ProfileLikeMetadata } from "src/profile/domain/profile-like-metadata";
 import { CaregiverProfileListData, ProfileListDataAsClient } from "src/profile/domain/profile-list-data";
 import { ProfileListQueryOptions } from "src/profile/domain/profile-list-query-options";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
-import { ProfileSort } from "src/profile/domain/profile-sort";
 import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto";
 import { GetProfileListDto } from "src/profile/interface/dto/get-profile-list.dto";
 import { ProfileDetailDto } from "src/profile/interface/dto/profile-detail.dto";
@@ -43,7 +42,7 @@ export class CaregiverProfileMapper {
     toListQueryOptions(getProfileListDto: GetProfileListDto): ProfileListQueryOptions {
         return new ProfileListQueryOptions(
             new ProfileListCursor(getProfileListDto.nextCursor),
-            new ProfileSort(getProfileListDto.sort),
+            getProfileListDto.sort,
             getProfileListDto.filter
         );
     };

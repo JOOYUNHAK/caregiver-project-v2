@@ -42,7 +42,7 @@ describe('간병인 프로필 서비스(CaregiverProfileService) Test', () => {
         it('반환된 데이터와 다음 커서를 생성하여 반환하는지 확인', async () => {
 
             const mockListQueryOption = new ProfileListQueryOptions(
-                new ProfileListCursor(), new ProfileSort(), new ProfileFilter()
+                new ProfileListCursor(), null, new ProfileFilter()
             );
             jest.spyOn(caregiverProfileMapper, 'toListQueryOptions').mockReturnValueOnce(mockListQueryOption); // 옵션 객체
             const profileList = [{}, {}] as CaregiverProfileListData [];

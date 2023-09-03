@@ -1,19 +1,39 @@
-import { Sort } from './enum/sort.enum'
+import { OrderBy } from "src/common/shared/enum/sort-order.enum";
+import { ProfileSortField } from "./enum/sort.enum";
+import { IsEnum, IsNotEmpty } from "class-validator";
 
+/* 프로필 정렬 객체 공통 필드, 메서드 */
 export class ProfileSort {
-    private by?: Sort;
+    @IsNotEmpty()
+    @IsEnum(ProfileSortField)
+    private field: ProfileSortField;
 
-    hasOption(): boolean { return this.by ? true : false; }; // 다른 정렬기준이 있는지
+    @IsNotEmpty()
+    @IsEnum(OrderBy)
+    private orderBy: OrderBy;
 
-    getOption(): Sort { return this.by; };
-    
-    otherField(): string { return this.by === Sort.LowPay ? 'pay' : 'possibleDate'; }; // 다른 정렬 기준 필드
-     
-    otherFieldBy(): "DESC" | "ASC" { return "ASC"; }; // 다른 정렬 기준
+    constructor(field: ProfileSortField, orderBy: OrderBy) {
+        this.field = field;
+        this.orderBy = orderBy;
+    };
 
-    defaultField(): string { return '_id' }; // 기본 _id값 기준(생성일)
+    /* DB 필드에 해당하는 이름 */ 
+    public getField(): ProfileSortField { return this.field; };
+    /* 정렬 기준 */
+    public getOrderBy(): OrderBy { return this.orderBy; };
+};
 
-    defaultFieldBy(): "DESC" { return "DESC"; }; // 기본 최신순
+/* 프로필 아이디로 정렬  */
+export class ProfileIdSort extends ProfileSort {
+    constructor(orderBy: OrderBy) { super( ProfileSortField.ID, orderBy) }
+};
 
-    constructor(by?: Sort) { this.by = by; };
-}
+/* 프로필 일당으로 정렬 */
+export class ProfilePaySort extends ProfileSort {
+    constructor(orderBy: OrderBy) { super(ProfileSortField.PAY, orderBy) }
+};
+
+/* 프로필의 시작 가능일로 정렬 */
+export class ProfileStartDateSort extends ProfileSort {
+    constructor(orderBy: OrderBy) { super(ProfileSortField.STARTDATE, orderBy) };
+};

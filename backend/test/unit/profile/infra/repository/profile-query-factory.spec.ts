@@ -1,11 +1,11 @@
 import { plainToInstance } from "class-transformer"
 import { ObjectId } from "mongodb"
+import { OrderBy } from "src/common/shared/enum/sort-order.enum"
 import { PossibleDate } from "src/profile/domain/enum/possible-date.enum"
-import { Sort } from "src/profile/domain/enum/sort.enum"
 import { ProfileFilter } from "src/profile/domain/profile-filter"
 import { ProfileListQueryOptions } from "src/profile/domain/profile-list-query-options"
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor"
-import { ProfileSort } from "src/profile/domain/profile-sort"
+import { ProfilePaySort, ProfileSort } from "src/profile/domain/profile-sort"
 import { ProfileQueryFactory } from "src/profile/infra/repository/profile-query.factory"
 import { SEX } from "src/user-auth-common/domain/enum/user.enum"
 
@@ -20,7 +20,7 @@ describe('ProfileQueryFactory Test', () => {
             );
 
             const listQueryOptions = new ProfileListQueryOptions(
-                new ProfileListCursor(), new ProfileSort(), filter
+                new ProfileListCursor(),null, filter
             );
             const expectedPipeline = [
                 {
@@ -60,7 +60,7 @@ describe('ProfileQueryFactory Test', () => {
 
     describe('정렬 조건이 있는 경우', () => {
         it('Next Cursor가 없는 경우(첫 요청) Pipeline 확인', () => {
-            const sortOption = new ProfileSort(Sort.LowPay);
+            const sortOption = new ProfilePaySort(OrderBy.ASC);
             const filter = plainToInstance(
                 ProfileFilter,
                 { startDate: PossibleDate.WITHIN1MONTH }
@@ -105,9 +105,9 @@ describe('ProfileQueryFactory Test', () => {
             const nextProfileId = new ObjectId().toHexString();
             const nextCursor = `${nextPay}_${nextProfileId}`;
             
-            const sortOption = new ProfileSort(Sort.LowPay);
+            const sortOption = new ProfilePaySort(OrderBy.ASC);
             const listQueryOptions = new ProfileListQueryOptions(
-                new ProfileListCursor(nextCursor), new ProfileSort(Sort.LowPay), new ProfileFilter()
+                new ProfileListCursor(nextCursor), sortOption, new ProfileFilter()
             );
 
             const expectedPipeline = [
