@@ -3,8 +3,76 @@ import { Token } from "src/user-auth-common/domain/entity/auth-token.entity";
 import { Email } from "src/user-auth-common/domain/entity/user-email.entity";
 import { Phone } from "src/user-auth-common/domain/entity/user-phone.entity";
 import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.entity";
+import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { LOGIN_TYPE, ROLE, SEX } from "src/user-auth-common/domain/enum/user.enum";
 import { NewUserAuthentication } from "src/user-auth-common/domain/interface/new-user-authentication.interface";
+
+/* Setting 되어있는 기본 사용자 객체 */
+export class UserFixtures {
+    /* 기본 사용자 */
+    static createDefault(): User {
+        return new User(
+            this.withName(), this.withRole(), this.withLoginType(),
+            this.withPhone(), this.withProfile(), this.withAuthentication()
+        )
+        .withEmail(new Email(null));
+    }
+
+    /* 설정한 역할을 가진 사용자 */
+    static createWithRole(role: ROLE): User {
+        return new User(
+            this.withName(), this.withRole(role), this.withLoginType(),
+            this.withPhone(), this.withProfile(), this.withAuthentication()
+        )
+        .withEmail(new Email(null));
+    };
+
+    /* 설정한 Email을 가지는 사용자 */
+    static createWithEmail(email: string): User {
+        return new User(
+            this.withName(), this.withRole(), this.withLoginType(),
+            this.withPhone(), this.withProfile(), this.withAuthentication()
+        )
+        .withEmail(new Email(email));
+    };
+
+    /* 설정한 전화번호 가지는 사용자 */
+    static createWithPhone(phone: string): User {
+        return new User(
+            this.withName(), this.withRole(), this.withLoginType(),
+            this.withPhone(phone), this.withProfile(), this.withAuthentication()
+        )
+        .withEmail(new Email(null));
+    }
+
+    /* 설정한 RefreshKey 가지는 사용자 */
+    static createWithRefreshKey(refreshKey: string): User {
+        return new User(
+            this.withName(), this.withRole(), this.withLoginType(),
+            this.withPhone(), this.withProfile(), this.withAuthentication(this.withAccessToken(), refreshKey, this.withRefreshToken())
+        )
+        .withEmail(new Email(null));
+    }
+
+    private static withName(name: string = '테스트'): string { return name; };
+    private static withPhone(phone: string = '01011111111'): Phone { return new Phone(phone); };
+    private static withRole(role: ROLE = ROLE.CAREGIVER): ROLE { return role; };
+    private static withLoginType(type: LOGIN_TYPE = LOGIN_TYPE.PHONE): LOGIN_TYPE { return type; };
+    private static withProfile(birth: number = 19980303, sex: SEX = SEX.FEMALE): UserProfile { return new UserProfile(birth, sex); };
+    
+    private static withAccessToken(accessToken: string = 'testAccessToken'): string { return accessToken; };
+    private static withRefreshKey(refreshKey: string = 'aeee4c6ffa88bc50822cab3ce4d783c9'): string { return refreshKey; };
+    private static withRefreshToken(refreshToken: string = 'testRefreshToken'): string { return refreshToken; };
+
+    private static withAuthentication(
+        accessToken = this.withAccessToken(),
+        refreshKey = this.withRefreshKey(),
+        refreshToken = this.withRefreshToken()
+    ): Token { 
+        return new Token(accessToken, refreshKey, refreshToken) 
+    }
+}
+
 
 export class TestUser {
     id: number;
@@ -13,7 +81,7 @@ export class TestUser {
     loginType: LOGIN_TYPE;
     role: ROLE;
     phone: Phone;
-    email: Email;
+    email: Promise<Email[]>;
     profile: UserProfile;
     authentication: Token;
     registeredAt: Time;
@@ -60,7 +128,7 @@ export class TestUser {
     };
 
     withEmail(email: string): this {
-        this.email = new Email(email);
+        this.email = Promise.resolve([new Email(email)]);
         return this;
     };
 
@@ -80,7 +148,7 @@ export class TestUser {
     getAuthentication(): Token { return this.authentication; };
 
     getPhone(): Phone { return this.phone; };
-    getEmail(): Email { return this.email; };
+    async getEmail(): Promise<Email[]> { return this.email; };
     getProfile(): UserProfile { return this.profile; };
 
     /* 회원가입시 새로 발급된 인증 */

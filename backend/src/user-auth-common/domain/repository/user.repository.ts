@@ -21,7 +21,6 @@ export const customUserRepositoryMethods: Pick<
                 .innerJoinAndSelect('user.authentication', 'auth')
                 .innerJoinAndSelect('user.phone', 'phone')
                 .innerJoinAndSelect('user.profile', 'profile')
-                .leftJoinAndSelect('user.email', 'email')
                 .where('user.id = :userId', { userId })
                 .getOne();
         },

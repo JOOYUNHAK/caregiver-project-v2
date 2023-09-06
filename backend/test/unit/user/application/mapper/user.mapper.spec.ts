@@ -1,35 +1,30 @@
 import { ObjectId } from "mongodb";
-import { Token } from "src/user-auth-common/domain/entity/auth-token.entity";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { ROLE, SEX } from "src/user-auth-common/domain/enum/user.enum";
 import { UserMapper } from "src/user/application/mapper/user.mapper"
 import { CaregiverProfileBuilder } from "src/profile/domain/builder/profile.builder";
 import { CommonRegisterForm } from "src/user/interface/dto/register-page";
-import { TestUser } from "../../user.fixtures";
+import { UserFixtures } from "../../user.fixtures";
 
 describe('UserMapper Component Test', () => {
     const userMapper = new UserMapper();
 
     describe('mapFrom()', () => {
         it('공통회원가입 양식을 User 객체로 Mapping', async () => {
-            const testCommonRegisterForm = CommonRegisterForm.of(
-                '01011111111',
-                '테스트',
-                19991101,
-                SEX.FEMALE,
-                ROLE.CAREGIVER
-            );
+            const [phoneNumber, name, birth, sex, role] = ['01011111111', '테스트', 19980101, SEX.FEMALE, ROLE.CAREGIVER];
+            const testCommonRegisterForm = CommonRegisterForm.of(phoneNumber, name, birth, sex, role);
 
             const mapResult = userMapper.mapFrom(testCommonRegisterForm);
 
             expect(mapResult).toBeInstanceOf(User);
-            expect(mapResult).toHaveProperty('name');
-            expect(mapResult).toHaveProperty('role');
-            expect(mapResult).toHaveProperty('loginType');
-            expect(mapResult).toHaveProperty('email');
-            expect(mapResult).toHaveProperty('phone');
-            expect(mapResult).toHaveProperty('profile');
-            expect(mapResult).toHaveProperty('authentication');
+            
+            expect(mapResult.getPhone().getPhoneNumber()).toBe(phoneNumber);
+            expect(mapResult.getEmail()).toBeInstanceOf(Promise);
+            expect(mapResult.getName()).toBe(name);
+            expect(mapResult.getRole()).toBe(role);
+            expect(mapResult.getProfile().getBirth()).toBe(birth);
+            expect(mapResult.getProfile().getSex()).toBe(sex);
+            expect(mapResult.getAuthentication()).toBe(null);
         });
     });
 
@@ -37,9 +32,9 @@ describe('UserMapper Component Test', () => {
         describe('내 정보 조회시 간병인 보호자 공통', () => {
             it('이메일을 등록하지 않은 사용자면 null 설정된다', async() => {
                 const phoneNumber = '01011111111';
-                const testUser = TestUser.default().withPhoneNumber(phoneNumber);
+                const testUser = UserFixtures.createWithPhone(phoneNumber);
 
-                const result = await userMapper.toMyProfileDto(testUser as unknown as User);
+                const result = await userMapper.toMyProfileDto(testUser);
 
                 expect(result.phoneNumber).toBe(phoneNumber);
                 expect(result.email).toBe(null);
@@ -47,27 +42,25 @@ describe('UserMapper Component Test', () => {
 
             it('이메일을 등록한 사용자면 해당 이메일이 설정', async() => {
                 const email = 'test@naver.com';
-                const testUser = TestUser.default().withEmail(email);
-                const result = await userMapper.toMyProfileDto(testUser as unknown as User);
+                const testUser = UserFixtures.createWithEmail(email);
+
+                const result = await userMapper.toMyProfileDto(testUser);
 
                 expect(result.email).toBe(email);
             })
         });
 
         describe('내 정보 조회시 간병인', () => {
-            it('간병인의 결과에는 프로필 비공개여부 필드가 있어야 한다', async() => {
-                const phoneNumber = '01012341234';
-                const testUser = TestUser.default()
-                                        .withRole(ROLE.CAREGIVER)
-                                        .withPhoneNumber(phoneNumber);
+            it('간병인의 결과에는 프로필 비공개여부 필드가 있는지 확인', async() => {
+                const testUser = UserFixtures.createWithRole(ROLE.CAREGIVER);
 
                 const testProfile = new CaregiverProfileBuilder(new ObjectId())
                                         .isPrivate(false)
                                         .build();
 
-                const result = await userMapper.toMyProfileDto(testUser as unknown as User, testProfile);
+                const result = await userMapper.toMyProfileDto(testUser, testProfile);
 
-                expect(result.phoneNumber).toBe(phoneNumber);
+                expect(result.phoneNumber).toBe(testUser.getPhone().getPhoneNumber());
                 expect(result.email).toBe(null);
                 expect(result.role).toBe(ROLE.CAREGIVER);
                 expect(result.isPrivate).toBe(false);
@@ -76,19 +69,17 @@ describe('UserMapper Component Test', () => {
     })
 
     describe('toDto()', () => {
-        it('User 객체에서 사용자에게 넘겨줄 Dto Mapping', async () => {
-            const [accessToken, refreshKey] = ['accessToken', 'refreshKey'];
-            const token = new Token(accessToken, refreshKey, null);
+        it('User 객체에서 사용자에게 넘겨줄 Dto Mapping 확인', async () => {
+            const testUser = UserFixtures.createDefault();
 
-            const testUser = TestUser.default().withToken(token);
-
-            const mapResult = userMapper.toDto(testUser as unknown as User);
+            const mapResult = userMapper.toDto(testUser);
 
             expect(mapResult).toHaveProperty('refreshKey');
             expect(mapResult).toHaveProperty('name');
             expect(mapResult).toHaveProperty('accessToken');
-            expect(mapResult.accessToken).toBe(accessToken);
-            expect(mapResult.refreshKey).toBe(refreshKey);
+
+            expect(mapResult.accessToken).toBe(testUser.getAuthentication().getAccessToken());
+            expect(mapResult.refreshKey).toBe(testUser.getAuthentication().getRefreshKey());
             expect(mapResult.name).toBe(testUser.getName());
         })
     })
