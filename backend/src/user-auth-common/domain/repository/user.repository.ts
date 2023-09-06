@@ -20,7 +20,6 @@ export const customUserRepositoryMethods: Pick<
             return await this.createQueryBuilder('user')
                 .innerJoinAndSelect('user.authentication', 'auth')
                 .innerJoinAndSelect('user.phone', 'phone')
-                .innerJoinAndSelect('user.profile', 'profile')
                 .where('user.id = :userId', { userId })
                 .getOne();
         },
