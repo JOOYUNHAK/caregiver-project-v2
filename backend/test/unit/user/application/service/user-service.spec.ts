@@ -15,8 +15,8 @@ import { MockAuthService } from "test/unit/__mock__/auth/service.mock"
 import { MockUserRepository } from "test/unit/__mock__/user-auth-common/repository.mock"
 import { MockUserMapper } from "test/unit/__mock__/user/service.mock"
 import { Repository } from "typeorm"
-import { TestUser } from "../../user.fixtures"
 import { MockCaregiverProfileService, MockPatientProfileService } from "test/unit/__mock__/profile/service.mock"
+import { UserFixtures } from "../../user.fixtures"
 
 describe('UserService Test', () => { 
     let userService: UserService,
@@ -48,11 +48,10 @@ describe('UserService Test', () => {
 
     describe('register()', () => {
         it('간병인 회원가입 확인', async () => {
-            const caregiverUser = TestUser.default() // Db 저장 전 user
-            jest.spyOn(userMapper, 'mapFrom').mockReturnValueOnce(caregiverUser as unknown as User);
+            const caregiverUser = UserFixtures.createWithRole(ROLE.CAREGIVER) // Db 저장 전 user
+            jest.spyOn(userMapper, 'mapFrom').mockReturnValueOnce(caregiverUser);
 
-            const savedUser = caregiverUser.withId(1); // Db 저장 이후 User
-            jest.spyOn(userRepository, 'save').mockResolvedValueOnce(savedUser as unknown as User);
+            jest.spyOn(userRepository, 'save').mockResolvedValueOnce(caregiverUser);
 
             jest.spyOn(caregiverProfileService, 'addProfile').mockResolvedValueOnce(null);
 
@@ -63,16 +62,15 @@ describe('UserService Test', () => {
             const result = await userService.register(registerDto);
 
             expect(userRepository.save).toBeCalledWith(caregiverUser); // 먼저 계정 DB 호출
-            expect(caregiverProfileService.addProfile).toBeCalledWith(savedUser, registerDto); // 간병인 프로필 저장 호출
+            expect(caregiverProfileService.addProfile).toBeCalledWith(caregiverUser, registerDto); // 간병인 프로필 저장 호출
             expect(result).toEqual(clientDto); // return 결과
         });
 
         it('보호자 회원가입 확인', async () => {
-            const protectorUser = TestUser.default() // Db 저장 전 user
-            jest.spyOn(userMapper, 'mapFrom').mockReturnValueOnce(protectorUser as unknown as User);
+            const protectorUser = UserFixtures.createWithRole(ROLE.PROTECTOR) 
+            jest.spyOn(userMapper, 'mapFrom').mockReturnValueOnce(protectorUser);
 
-            const savedUser = protectorUser.withId(1); // Db 저장 이후 User
-            jest.spyOn(userRepository, 'save').mockResolvedValueOnce(savedUser as unknown as User);
+            jest.spyOn(userRepository, 'save').mockResolvedValueOnce(protectorUser);
 
             jest.spyOn(patientProfileService, 'addProfile').mockResolvedValueOnce(null);
 
@@ -83,7 +81,7 @@ describe('UserService Test', () => {
             const result = await userService.register(registerDto);
 
             expect(userRepository.save).toBeCalledWith(protectorUser); // 먼저 계정 DB 호출
-            expect(patientProfileService.addProfile).toBeCalledWith(savedUser.getId(), registerDto); // 보호자 프로필 저장 호출
+            expect(patientProfileService.addProfile).toBeCalledWith(protectorUser.getId(), registerDto); // 보호자 프로필 저장 호출
             expect(result).toEqual(clientDto); // return 결과
         });
     })
@@ -93,26 +91,26 @@ describe('UserService Test', () => {
         afterEach(() => jest.resetAllMocks() );
         
         it('간병인이 내 프로필 조회시 자격증과 비공개 여부를 위해 repository를 호출하고 mapper에 profile도 같이 넘겨주어야 한다.', async () => {
-            const caregiver = TestUser.default().withRole(ROLE.CAREGIVER);
+            const caregiver = UserFixtures.createWithRole(ROLE.CAREGIVER);
 
             const profile = new CaregiverProfileBuilder(new ObjectId()).isPrivate(true).build();
 
             const repositorySpy = jest.spyOn(caregiverProfileService, 'getProfileByUserId').mockResolvedValueOnce(profile);
             const mapperSpy = jest.spyOn(userMapper, 'toMyProfileDto');
             
-            await userService.getMyProfile(caregiver as unknown as User);
+            await userService.getMyProfile(caregiver);
 
             expect(repositorySpy).toBeCalledTimes(1);
             expect(mapperSpy).toBeCalledWith(caregiver, profile)
         });
 
         it('보호자가 내 프로필 조회시 profile을 조회하지 않고 넘어온 User만 mapper에 넘겨준다', async () => {
-            const protector = TestUser.default().withRole(ROLE.PROTECTOR);
+            const protector = UserFixtures.createWithRole(ROLE.PROTECTOR);
 
             const repositorySpy = jest.spyOn(caregiverProfileService, 'getProfileByUserId')
             const mapperSpy = jest.spyOn(userMapper, 'toMyProfileDto');
             
-            await userService.getMyProfile(protector as unknown as User);
+            await userService.getMyProfile(protector);
 
             expect(repositorySpy).toBeCalledTimes(0);
             expect(mapperSpy).toBeCalledWith(protector, undefined)

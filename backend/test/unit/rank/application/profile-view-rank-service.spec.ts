@@ -6,7 +6,7 @@ import { User } from "src/user-auth-common/domain/entity/user.entity"
 import { UUIDUtil } from "src/util/uuid.util"
 import { MockProfileViewRankRepository } from "test/unit/__mock__/rank/rank-repository.mock"
 import { MockProfileViewRankManager } from "test/unit/__mock__/rank/rank-service.mock"
-import { TestUser } from "test/unit/user/user.fixtures"
+import { UserFixtures } from "test/unit/user/user.fixtures"
 
 describe('프로필 조회 랭킹 서비스(ProfileViewRankService)', () => {
     let profileViewRankRepository: ProfileViewRankRepository;
@@ -26,7 +26,7 @@ describe('프로필 조회 랭킹 서비스(ProfileViewRankService)', () => {
     })
 
     describe('increment()', () => {
-        const [profileId, viewUser] = [UUIDUtil.generateOrderedUuid(), TestUser.default()];
+        const [profileId, viewUser] = [UUIDUtil.generateOrderedUuid(), UserFixtures.createDefault()];
 
         beforeEach(() => jest.clearAllMocks());
         
@@ -36,7 +36,7 @@ describe('프로필 조회 랭킹 서비스(ProfileViewRankService)', () => {
             const rankSpy = jest.spyOn(profileViewRankRepository, 'increment');
             const recordSpy = jest.spyOn(profileViewRankManager, 'recordUserAction');
 
-            await profileViewRankService.increment(profileId, viewUser as unknown as User);
+            await profileViewRankService.increment(profileId, viewUser);
 
             expect(rankSpy).not.toHaveBeenCalled();
             expect(recordSpy).not.toHaveBeenCalled();
@@ -48,7 +48,7 @@ describe('프로필 조회 랭킹 서비스(ProfileViewRankService)', () => {
             const rankSpy = jest.spyOn(profileViewRankRepository, 'increment');
             const recordSpy = jest.spyOn(profileViewRankManager, 'recordUserAction');
             
-            await profileViewRankService.increment(profileId, viewUser as unknown as User);
+            await profileViewRankService.increment(profileId, viewUser);
 
             expect(rankSpy).toHaveBeenCalledWith(profileId);
             expect(recordSpy).toHaveBeenCalledWith(profileId, viewUser.getId());
