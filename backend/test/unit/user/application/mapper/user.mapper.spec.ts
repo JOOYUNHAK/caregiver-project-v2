@@ -22,8 +22,8 @@ describe('UserMapper Component Test', () => {
             expect(mapResult.getEmail()).toBeInstanceOf(Promise);
             expect(mapResult.getName()).toBe(name);
             expect(mapResult.getRole()).toBe(role);
-            expect(mapResult.getProfile().getBirth()).toBe(birth);
-            expect(mapResult.getProfile().getSex()).toBe(sex);
+            expect((await mapResult.getProfile()).getBirth()).toBe(birth);
+            expect((await mapResult.getProfile()).getSex()).toBe(sex);
             expect(mapResult.getAuthentication()).toBe(null);
         });
     });
