@@ -9,6 +9,7 @@ import { TestTypeOrmOptions } from "test/unit/common/database/datebase-setup.fix
 import { Email } from "src/user-auth-common/domain/entity/user-email.entity"
 import { User } from "src/user-auth-common/domain/entity/user.entity"
 import {UserFixtures } from "../../user.fixtures"
+import { SEX } from "src/user-auth-common/domain/enum/user.enum"
 
 describe('사용자 저장소(UserRepository) Test', () => {
     let userRepository: UserRepository;
@@ -39,10 +40,12 @@ describe('사용자 저장소(UserRepository) Test', () => {
             expect(result.getId()).toBe(savedId);
             expect(result.getName()).toBe(testUser.getName());
             expect(result.getRole()).toBe(testUser.getRole());
-            expect(result.getProfile()).toEqual(testUser.getProfile());
             expect(result.getAuthentication().getAccessToken()).toBe(undefined); // AccessToken은 DB에 저장 x
             expect(result.getAuthentication().getRefreshKey()).toBe(testUser.getAuthentication().getRefreshKey());
             expect(result.getAuthentication().getRefreshToken()).toBe(testUser.getAuthentication().getRefreshToken())
+
+            expect(result.getEmail()).toBeInstanceOf(Promise);
+            expect(result.getProfile()).toBeInstanceOf(Promise);
         })
 
         it('Email Lazy Loading 확인', async() => {
@@ -53,7 +56,19 @@ describe('사용자 저장소(UserRepository) Test', () => {
             const result = await userRepository.findById(savedId);
 
             expect(result.getEmail()).toBeInstanceOf(Promise);
-            expect(await result.getEmail()).toBeInstanceOf(Email);
+            expect((await result.getEmail()).getEmail()).toBe(testEmail);
+        });
+
+        it('UserProfile Lazy Loading 확인', async() => {
+            const [birth, sex] = [19980101, SEX.FEMALE];
+            const testWithEmailUser = UserFixtures.createWithProfile(birth, sex);
+            const savedId = (await userRepository.save(testWithEmailUser)).getId();
+
+            const result = await userRepository.findById(savedId);
+
+            expect(result.getProfile()).toBeInstanceOf(Promise);
+            expect((await result.getProfile()).getBirth()).toBe(birth);
+            expect((await result.getProfile()).getSex()).toBe(sex);
         })
     });
 
