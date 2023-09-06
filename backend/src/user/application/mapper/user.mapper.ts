@@ -15,11 +15,10 @@ export class UserMapper extends UserAuthCommonMapper{
             commonRegisterDto.name,
             commonRegisterDto.purpose,
             LOGIN_TYPE.PHONE,
-            this.createPhoneByLoginType(LOGIN_TYPE.PHONE, commonRegisterDto.id),
-            null
         )
         .withEmail(new Email(null))
-        .withProfile(new UserProfile(commonRegisterDto.birth, commonRegisterDto.sex));
+        .withProfile(new UserProfile(commonRegisterDto.birth, commonRegisterDto.sex))
+        .withPhone(this.createPhoneByLoginType(LOGIN_TYPE.PHONE, commonRegisterDto.id));
 
         return user;
     };
@@ -27,7 +26,7 @@ export class UserMapper extends UserAuthCommonMapper{
     /* 내 정보 -> 내 프로필 조회에 쓰이는 Dto */
     async toMyProfileDto(user: User, profile?: CaregiverProfile) {
         return {
-            phoneNumber: user.getPhone().getPhoneNumber(),
+            phoneNumber: (await user.getPhone()).getPhoneNumber(),
             role: user.getRole(),
             email: this.checkEmailVerificationStatus(await user.getEmail()),
             isPrivate: profile ? profile.getIsPrivate() : undefined, // 간병인일 경우에만 프로필 비공개인지
