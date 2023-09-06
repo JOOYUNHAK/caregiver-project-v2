@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { LOGIN_TYPE, ROLE } from "../enum/user.enum";
 import { Phone } from "./user-phone.entity";
 import { UserProfile } from "./user-profile.entity";
@@ -24,8 +24,8 @@ export class User {
     @CreateDateColumn({ name: 'registered_at', type: 'timestamp' })
     private registeredAt: Time;
 
-    @OneToOne(() => Email, (email) => email.userId, { cascade: ['insert', 'update'] })
-    private email: Email;
+    @OneToMany(() => Email, (email) => email.user, { lazy: true, cascade: ['insert', 'update'] })
+    email: Promise<Email[]>;
 
     @OneToOne(() => Phone, (phone) => phone.userId, { cascade: ['insert', 'update'] })
     private phone: Phone;
@@ -36,12 +36,11 @@ export class User {
     @OneToOne(() => Token, (token) => token.userId, { cascade: ['insert', 'update'] })
     private authentication: Token;
 
-    constructor(name: string, role: ROLE, loginType: LOGIN_TYPE, email: Email, phone: Phone, profile: UserProfile, authentication: Token) {
+    constructor(name: string, role: ROLE, loginType: LOGIN_TYPE, phone: Phone, profile: UserProfile, authentication: Token) {
         this.name = name;
         this.role = role;
         this.loginType = loginType;
         this.authentication = authentication;
-        this.email = email;
         this.phone = phone;
         this.profile = profile;
     };
@@ -52,9 +51,13 @@ export class User {
     getAuthentication(): Token { return this.authentication; };
 
     getPhone(): Phone { return this.phone; };
-    getEmail(): Email { return this.email; };
+    async getEmail(): Promise<Email> { return (await this.email)[0]; };
     getProfile(): UserProfile { return this.profile; };
 
+    withEmail(email: Email): User { 
+        this.email = Promise.resolve([email]); 
+        return this;
+    };
     /* 회원가입시 새로 발급된 인증 */
     setAuthentication(newAuthentication: NewUserAuthentication) {
         this.authentication = new Token(
