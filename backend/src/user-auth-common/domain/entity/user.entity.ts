@@ -27,8 +27,8 @@ export class User {
     @OneToMany(() => Email, (email) => email.user, { lazy: true, cascade: ['insert', 'update'] })
     email: Promise<Email[]>;
 
-    @OneToOne(() => Phone, (phone) => phone.userId, { cascade: ['insert', 'update'] })
-    private phone: Phone;
+    @OneToMany(() => Phone, (phone) => phone.user, { lazy: true, cascade: ['insert', 'update'] })
+    phone: Promise<Phone[]>;
 
     @OneToMany(() => UserProfile, (profile) => profile.user, { lazy: true, cascade: ['insert'] })
     profile: Promise<UserProfile[]>;
@@ -36,12 +36,10 @@ export class User {
     @OneToOne(() => Token, (token) => token.userId, { cascade: ['insert', 'update'] })
     private authentication: Token;
 
-    constructor(name: string, role: ROLE, loginType: LOGIN_TYPE, phone: Phone, authentication: Token) {
+    constructor(name: string, role: ROLE, loginType: LOGIN_TYPE) {
         this.name = name;
         this.role = role;
         this.loginType = loginType;
-        this.authentication = authentication;
-        this.phone = phone;
     };
 
     getId(): number { return this.id; };
@@ -49,7 +47,7 @@ export class User {
     getRole(): ROLE { return this.role; };
     getAuthentication(): Token { return this.authentication; };
 
-    getPhone(): Phone { return this.phone; };
+    async getPhone(): Promise<Phone> { return (await this.phone)[0]; };
     async getEmail(): Promise<Email> { return (await this.email)[0]; };
     async getProfile(): Promise<UserProfile> { return (await this.profile)[0]; };
 
@@ -62,6 +60,12 @@ export class User {
         this.profile = Promise.resolve([userProfile]);
         return this;
     }
+
+    withPhone(phone: Phone): User {
+        this.phone = Promise.resolve([phone]);
+        return this;
+    };
+
     /* 회원가입시 새로 발급된 인증 */
     setAuthentication(newAuthentication: NewUserAuthentication) {
         this.authentication = new Token(
