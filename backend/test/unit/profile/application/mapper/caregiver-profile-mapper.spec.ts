@@ -3,15 +3,12 @@ import { CaregiverProfile } from "src/profile/domain/entity/caregiver/caregiver-
 import { License } from "src/profile/domain/entity/caregiver/license.entity";
 import { CaregiverRegisterDto } from "src/profile/interface/dto/caregiver-register.dto";
 import { CaregiverInfoForm, CaregiverLastRegisterDto, CaregiverThirdRegisterDto, CommonRegisterForm } from "src/user/interface/dto/register-page";
-import { TestUser } from "test/unit/user/user.fixtures";
+import { UserFixtures } from "test/unit/user/user.fixtures";
 import { TestCaregiverProfile } from "../../profile.fixtures";
-import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { ProfileFilter } from "src/profile/domain/profile-filter";
 import { GetProfileListDto } from "src/profile/interface/dto/get-profile-list.dto";
 import { ProfileListCursor } from "src/profile/domain/profile-list.cursor";
 import { ProfilePaySort, ProfileSort } from "src/profile/domain/profile-sort";
-import { SEX } from "src/user-auth-common/domain/enum/user.enum";
-import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.entity";
 import { CaregiverProfileListData } from "src/profile/domain/profile-list-data";
 import { ProfileLikeMetadata } from "src/profile/domain/profile-like-metadata";
 import { OrderBy } from "src/common/shared/enum/sort-order.enum";
@@ -20,15 +17,10 @@ describe('Caregiver Profile Mapper Component Test', () => {
     const profileMapper = new CaregiverProfileMapper();
 
     describe('mapFrom()', () => {
-        const [userId, name, birth, sex, expectedAge] = [1, '테스트', 19980303, SEX.MALE, 25];
-        const user = TestUser
-                    .default()
-                    .withId(userId)
-                    .withName(name)
-                    .withUserProfile(new UserProfile(birth, sex)) as unknown as User;
 
-        it('간병인 회원가입 양식으로부터 프로필로 변환', () => {
-            const mappingResult = profileMapper.mapFrom(user, CaregiverRegisterDto.of(
+        it('간병인 회원가입 양식으로부터 프로필로 변환', async () => {
+            const user = UserFixtures.createDefault(); // 나이 25살
+            const mappingResult = await profileMapper.mapFrom(user, CaregiverRegisterDto.of(
                 {} as CommonRegisterForm,
                 createSecondRegisterForm(),
                 createThirdRegisterForm(),
@@ -37,9 +29,9 @@ describe('Caregiver Profile Mapper Component Test', () => {
 
             expect(mappingResult).toBeInstanceOf(CaregiverProfile);
             expect(mappingResult.getId()).not.toBeNull();
-            expect(mappingResult.getUserId()).toBe(userId);
-            expect(mappingResult.getAge()).toBe(expectedAge);
-            expect(mappingResult.getSex()).toBe(sex);
+            expect(mappingResult.getUserId()).toBe(user.getId());
+            expect(mappingResult.getAge()).toBe(25);
+            expect(mappingResult.getSex()).toBe((await user.getProfile()).getSex());
 
             mappingResult.getLicenseList()
                 .map(license => {

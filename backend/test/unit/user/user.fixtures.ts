@@ -13,52 +13,69 @@ export class UserFixtures {
     static createDefault(): User {
         return new User(
             this.withName(), this.withRole(), this.withLoginType(),
-            this.withPhone(), this.withProfile(), this.withAuthentication()
+            this.withPhone(), this.withAuthentication()
         )
-        .withEmail(new Email(null));
+        .withEmail(this.emptyEmail())
+        .withProfile(this.defaulthProfile());
     }
 
     /* 설정한 역할을 가진 사용자 */
     static createWithRole(role: ROLE): User {
         return new User(
             this.withName(), this.withRole(role), this.withLoginType(),
-            this.withPhone(), this.withProfile(), this.withAuthentication()
+            this.withPhone(), this.withAuthentication()
         )
-        .withEmail(new Email(null));
+        .withEmail(this.emptyEmail())
+        .withProfile(this.defaulthProfile());
     };
 
     /* 설정한 Email을 가지는 사용자 */
     static createWithEmail(email: string): User {
         return new User(
             this.withName(), this.withRole(), this.withLoginType(),
-            this.withPhone(), this.withProfile(), this.withAuthentication()
+            this.withPhone(), this.withAuthentication()
         )
-        .withEmail(new Email(email));
+        .withEmail(new Email(email))
+        .withProfile(this.defaulthProfile());
     };
+
+    /* 설정한 프로필을 가지는 사용자 */
+    static createWithProfile(birth: number, sex: SEX): User {
+        return new User(
+            this.withName(), this.withRole(), this.withLoginType(),
+            this.withPhone(), this.withAuthentication()
+        )
+        .withEmail(this.emptyEmail())
+        .withProfile(new UserProfile(birth, sex));
+    }
 
     /* 설정한 전화번호 가지는 사용자 */
     static createWithPhone(phone: string): User {
         return new User(
             this.withName(), this.withRole(), this.withLoginType(),
-            this.withPhone(phone), this.withProfile(), this.withAuthentication()
+            this.withPhone(phone), this.withAuthentication()
         )
-        .withEmail(new Email(null));
+        .withEmail(this.emptyEmail())
+        .withProfile(this.defaulthProfile());
     }
 
     /* 설정한 RefreshKey 가지는 사용자 */
     static createWithRefreshKey(refreshKey: string): User {
         return new User(
             this.withName(), this.withRole(), this.withLoginType(),
-            this.withPhone(), this.withProfile(), this.withAuthentication(this.withAccessToken(), refreshKey, this.withRefreshToken())
+            this.withPhone(), this.withAuthentication(this.withAccessToken(), refreshKey, this.withRefreshToken())
         )
-        .withEmail(new Email(null));
+        .withEmail(this.emptyEmail())
+        .withProfile(this.defaulthProfile());
     }
 
     private static withName(name: string = '테스트'): string { return name; };
     private static withPhone(phone: string = '01011111111'): Phone { return new Phone(phone); };
     private static withRole(role: ROLE = ROLE.CAREGIVER): ROLE { return role; };
     private static withLoginType(type: LOGIN_TYPE = LOGIN_TYPE.PHONE): LOGIN_TYPE { return type; };
-    private static withProfile(birth: number = 19980303, sex: SEX = SEX.FEMALE): UserProfile { return new UserProfile(birth, sex); };
+    
+    private static emptyEmail(): Email { return new Email(null) };
+    private static defaulthProfile(): UserProfile { return new UserProfile(19980101, SEX.MALE); };
     
     private static withAccessToken(accessToken: string = 'testAccessToken'): string { return accessToken; };
     private static withRefreshKey(refreshKey: string = 'aeee4c6ffa88bc50822cab3ce4d783c9'): string { return refreshKey; };

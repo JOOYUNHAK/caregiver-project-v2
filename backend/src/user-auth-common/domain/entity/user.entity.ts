@@ -30,19 +30,18 @@ export class User {
     @OneToOne(() => Phone, (phone) => phone.userId, { cascade: ['insert', 'update'] })
     private phone: Phone;
 
-    @OneToOne(() => UserProfile, (profile) => profile.userId, { cascade: ['insert'] })
-    private profile: UserProfile;
+    @OneToMany(() => UserProfile, (profile) => profile.user, { lazy: true, cascade: ['insert'] })
+    profile: Promise<UserProfile[]>;
 
     @OneToOne(() => Token, (token) => token.userId, { cascade: ['insert', 'update'] })
     private authentication: Token;
 
-    constructor(name: string, role: ROLE, loginType: LOGIN_TYPE, phone: Phone, profile: UserProfile, authentication: Token) {
+    constructor(name: string, role: ROLE, loginType: LOGIN_TYPE, phone: Phone, authentication: Token) {
         this.name = name;
         this.role = role;
         this.loginType = loginType;
         this.authentication = authentication;
         this.phone = phone;
-        this.profile = profile;
     };
 
     getId(): number { return this.id; };
@@ -52,12 +51,17 @@ export class User {
 
     getPhone(): Phone { return this.phone; };
     async getEmail(): Promise<Email> { return (await this.email)[0]; };
-    getProfile(): UserProfile { return this.profile; };
+    async getProfile(): Promise<UserProfile> { return (await this.profile)[0]; };
 
     withEmail(email: Email): User { 
         this.email = Promise.resolve([email]); 
         return this;
     };
+
+    withProfile(userProfile: UserProfile): User {
+        this.profile = Promise.resolve([userProfile]);
+        return this;
+    }
     /* 회원가입시 새로 발급된 인증 */
     setAuthentication(newAuthentication: NewUserAuthentication) {
         this.authentication = new Token(

@@ -16,10 +16,10 @@ export class UserMapper extends UserAuthCommonMapper{
             commonRegisterDto.purpose,
             LOGIN_TYPE.PHONE,
             this.createPhoneByLoginType(LOGIN_TYPE.PHONE, commonRegisterDto.id),
-            new UserProfile(commonRegisterDto.birth, commonRegisterDto.sex),
             null
         )
-        .withEmail(new Email(null));
+        .withEmail(new Email(null))
+        .withProfile(new UserProfile(commonRegisterDto.birth, commonRegisterDto.sex));
 
         return user;
     };
