@@ -20,7 +20,7 @@ export class CaregiverProfileService {
     
     /* 회원가입시 새로운 프로필 추가 */
     async addProfile(user: User, caregiverRegisterDto: CaregiverRegisterDto): Promise<void> {
-        const caregiverProfile = this.caregiverProfileMapper.mapFrom(user, caregiverRegisterDto);
+        const caregiverProfile = await this.caregiverProfileMapper.mapFrom(user, caregiverRegisterDto);
         await this.caregiverProfileRepository.save(caregiverProfile);
     } 
 
