@@ -18,13 +18,13 @@ describe('UserMapper Component Test', () => {
 
             expect(mapResult).toBeInstanceOf(User);
             
-            expect(mapResult.getPhone().getPhoneNumber()).toBe(phoneNumber);
+            expect((await mapResult.getPhone()).getPhoneNumber()).toBe(phoneNumber);
             expect(mapResult.getEmail()).toBeInstanceOf(Promise);
             expect(mapResult.getName()).toBe(name);
             expect(mapResult.getRole()).toBe(role);
             expect((await mapResult.getProfile()).getBirth()).toBe(birth);
             expect((await mapResult.getProfile()).getSex()).toBe(sex);
-            expect(mapResult.getAuthentication()).toBe(null);
+            expect(mapResult.getAuthentication()).toBe(undefined);
         });
     });
 
@@ -60,7 +60,7 @@ describe('UserMapper Component Test', () => {
 
                 const result = await userMapper.toMyProfileDto(testUser, testProfile);
 
-                expect(result.phoneNumber).toBe(testUser.getPhone().getPhoneNumber());
+                expect(result.phoneNumber).toBe((await testUser.getPhone()).getPhoneNumber());
                 expect(result.email).toBe(null);
                 expect(result.role).toBe(ROLE.CAREGIVER);
                 expect(result.isPrivate).toBe(false);
