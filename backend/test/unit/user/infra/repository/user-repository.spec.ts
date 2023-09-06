@@ -8,12 +8,13 @@ import { UUIDUtil } from "src/util/uuid.util"
 import { TestTypeOrmOptions } from "test/unit/common/database/datebase-setup.fixture"
 import { Email } from "src/user-auth-common/domain/entity/user-email.entity"
 import { User } from "src/user-auth-common/domain/entity/user.entity"
-import { TestUser } from "../../user.fixtures"
+import {UserFixtures } from "../../user.fixtures"
 import { SEX } from "src/user-auth-common/domain/enum/user.enum"
 
 describe('사용자 저장소(UserRepository) Test', () => {
     let userRepository: UserRepository;
     let module: TestingModule;
+    
     beforeAll(async() => {
         module = await Test.createTestingModule({
             imports: [
@@ -26,48 +27,87 @@ describe('사용자 저장소(UserRepository) Test', () => {
         userRepository = userRepository.extend(customUserRepositoryMethods);
     })
 
-    afterAll(async() => module.close() );
+    afterAll(async() => await module.close() );
 
+    afterEach(async() => await userRepository.delete({ }));
 
     describe('findById()', () => {
         it('일치하는 사용자 id로 조회했을 때 반환되는지 확인', async() => {
-            const [phoneNumber, refreshKey, refreshToken] = ['01022221111', UUIDUtil.generateOrderedUuid(), 'refresh'];
-            const [birth, sex] = [20020101, SEX.MALE]
-
-            const token = new Token(null, refreshKey, refreshToken);
-            const userProfile = new UserProfile(birth, sex);
-            const testUser = TestUser.default().withPhoneNumber(phoneNumber).withToken(token).withUserProfile(userProfile);
-            
-            const savedId = (await userRepository.save(testUser as unknown as User)).getId();
+            const testUser = UserFixtures.createDefault();            
+            const savedId = (await userRepository.save(testUser)).getId();
             const result = await userRepository.findById(savedId);
-            
-            expect(result.getId()).toBe(savedId);
-            expect(result.getAuthentication().getRefreshKey()).toBe(refreshKey);
-            expect(result.getAuthentication().getRefreshToken()).toBe(refreshToken);
-            expect(result.getPhone().getPhoneNumber()).toBe(phoneNumber);
-            expect(result.getEmail()).toBe(null);
-            expect(result.getProfile().getBirth()).toBe(birth);
-            expect(result.getProfile().getSex()).toBe(sex);
 
-            await userRepository.delete({ id: savedId })
+            expect(result.getId()).toBe(savedId);
+            expect(result.getName()).toBe(testUser.getName());
+            expect(result.getRole()).toBe(testUser.getRole());
+            expect(result.getAuthentication().getAccessToken()).toBe(undefined); // AccessToken은 DB에 저장 x
+            expect(result.getAuthentication().getRefreshKey()).toBe(testUser.getAuthentication().getRefreshKey());
+            expect(result.getAuthentication().getRefreshToken()).toBe(testUser.getAuthentication().getRefreshToken())
+
+            expect(result.getEmail()).toBeInstanceOf(Promise);
+            expect(result.getProfile()).toBeInstanceOf(Promise);
+        })
+
+        it('Email Lazy Loading 확인', async() => {
+            const testEmail = 'test@naver.com';
+            const testWithEmailUser = UserFixtures.createWithEmail(testEmail);
+            const savedId = (await userRepository.save(testWithEmailUser)).getId();
+
+            const result = await userRepository.findById(savedId);
+
+            expect(result.getEmail()).toBeInstanceOf(Promise);
+            expect((await result.getEmail()).getEmail()).toBe(testEmail);
+        });
+
+        it('UserProfile Lazy Loading 확인', async() => {
+            const [birth, sex] = [19980101, SEX.FEMALE];
+            const testUser = UserFixtures.createWithProfile(birth, sex);
+            const savedId = (await userRepository.save(testUser)).getId();
+
+            const result = await userRepository.findById(savedId);
+
+            expect(result.getProfile()).toBeInstanceOf(Promise);
+            expect((await result.getProfile()).getBirth()).toBe(birth);
+            expect((await result.getProfile()).getSex()).toBe(sex);
+        });
+
+        it('Phone Lazy Loading 확인', async() => {
+            const phoneNumber = '01011223344';
+            const testUser = UserFixtures.createWithPhone(phoneNumber);
+            const savedId = (await userRepository.save(testUser)).getId();
+
+            const result = await userRepository.findById(savedId);
+
+            expect(result.getPhone()).toBeInstanceOf(Promise);
+            expect((await result.getPhone()).getPhoneNumber()).toBe(phoneNumber);
         })
     });
 
     describe('findByRefreshKey()', () => {
-        it('일치하는 RefreshKey가 있을 때 Authentication Entity까지 로드되는지 확인', async() => {
-            const [testUuid, testRefreshToken] = [UUIDUtil.generateOrderedUuid(), 'refreshToken'];
+        it('일치하는 RefreshKey로 찾는지 확인', async() => {
+            const testRefreshKey = UUIDUtil.generateOrderedUuid();
+            const testUser = UserFixtures.createWithRefreshKey(testRefreshKey);
             
-            const token = new Token(null, testUuid, testRefreshToken);
-            const testUser = TestUser.default().withToken(token);
+            await userRepository.save(testUser);
 
-            const id = (await userRepository.save(testUser as unknown as User)).getId();
-            const findResult = await userRepository.findByRefreshKey(testUuid);
+            const findResult = await userRepository.findByRefreshKey(testRefreshKey);
 
             expect(findResult.getAuthentication()).not.toBe(null);
-            expect(findResult.getAuthentication().getRefreshKey()).toBe(testUuid);
-            expect(findResult.getAuthentication().getRefreshToken()).toBe(testRefreshToken);
-            
-            await userRepository.delete({ id })
+            expect(findResult.getAuthentication().getRefreshKey()).toBe(testRefreshKey);        
         });
     });
+
+    describe('findByPhoneNumber()', () => {
+        it('맞는 값 찾는지 확인', async() => {
+            const phoneNumber = '01022991101';
+            const testUser = UserFixtures.createWithPhone(phoneNumber);
+
+            const savedId = (await userRepository.save(testUser)).getId();
+
+            const result = await userRepository.findByPhoneNumber(phoneNumber);
+            
+            expect(result.getId()).toBe(savedId);
+        })
+        
+    })
 })

@@ -7,10 +7,9 @@ import { JwtStrategy } from "src/auth/application/guard/jwt/jwt.strategy"
 import { SessionService } from "src/auth/application/service/session.service"
 import { TokenService } from "src/auth/application/service/token.service"
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum"
-import { User } from "src/user-auth-common/domain/entity/user.entity"
 import { MockSessionService, MockTokenService } from "test/unit/__mock__/auth/service.mock"
 import { MockUserAuthCommonService } from "test/unit/__mock__/user-auth-common/service.mock"
-import { TestUser } from "test/unit/user/user.fixtures"
+import { UserFixtures } from "test/unit/user/user.fixtures"
 
 describe('Jwt인증가드(JwtAuthGuard) Test', () => {
     let reflector: Reflector;
@@ -117,7 +116,7 @@ describe('Jwt인증가드(JwtAuthGuard) Test', () => {
 
         describe('handledRequest()', () => {
             it('user가 있는경우 그대로 반환 확인', async () => {
-                const testUser = TestUser.default() as unknown as User;
+                const testUser = UserFixtures.createDefault();
                 const result = jwtGuard.handleRequest(null, testUser, null, null, null);
 
                 expect(result).toEqual(testUser);
@@ -141,7 +140,7 @@ describe('Jwt인증가드(JwtAuthGuard) Test', () => {
         describe('토큰의 유효성 검사를 모두 통과했을 경우', () => {
             
             const testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjoxMDAxNjYzOTAyMn0.z0AfSIZ385LfcGiLQg2qeHUFcf0RfckEA7eE9EaOL24";
-            const user = TestUser.default() as unknown as User;
+            const user = UserFixtures.createDefault();
 
             beforeEach(() => jwtStrategy.validate = jest.fn().mockResolvedValueOnce(user));
 

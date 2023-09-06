@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { LOGIN_TYPE, ROLE } from "../enum/user.enum";
 import { Phone } from "./user-phone.entity";
 import { UserProfile } from "./user-profile.entity";
@@ -24,26 +24,22 @@ export class User {
     @CreateDateColumn({ name: 'registered_at', type: 'timestamp' })
     private registeredAt: Time;
 
-    @OneToOne(() => Email, (email) => email.userId, { cascade: ['insert', 'update'] })
-    private email: Email;
+    @OneToMany(() => Email, (email) => email.user, { lazy: true, cascade: ['insert', 'update'] })
+    email: Promise<Email[]>;
 
-    @OneToOne(() => Phone, (phone) => phone.userId, { cascade: ['insert', 'update'] })
-    private phone: Phone;
+    @OneToMany(() => Phone, (phone) => phone.user, { lazy: true, cascade: ['insert', 'update'] })
+    phone: Promise<Phone[]>;
 
-    @OneToOne(() => UserProfile, (profile) => profile.userId, { cascade: ['insert'] })
-    private profile: UserProfile;
+    @OneToMany(() => UserProfile, (profile) => profile.user, { lazy: true, cascade: ['insert'] })
+    profile: Promise<UserProfile[]>;
 
     @OneToOne(() => Token, (token) => token.userId, { cascade: ['insert', 'update'] })
     private authentication: Token;
 
-    constructor(name: string, role: ROLE, loginType: LOGIN_TYPE, email: Email, phone: Phone, profile: UserProfile, authentication: Token) {
+    constructor(name: string, role: ROLE, loginType: LOGIN_TYPE) {
         this.name = name;
         this.role = role;
         this.loginType = loginType;
-        this.authentication = authentication;
-        this.email = email;
-        this.phone = phone;
-        this.profile = profile;
     };
 
     getId(): number { return this.id; };
@@ -51,9 +47,24 @@ export class User {
     getRole(): ROLE { return this.role; };
     getAuthentication(): Token { return this.authentication; };
 
-    getPhone(): Phone { return this.phone; };
-    getEmail(): Email { return this.email; };
-    getProfile(): UserProfile { return this.profile; };
+    async getPhone(): Promise<Phone> { return (await this.phone)[0]; };
+    async getEmail(): Promise<Email> { return (await this.email)[0]; };
+    async getProfile(): Promise<UserProfile> { return (await this.profile)[0]; };
+
+    withEmail(email: Email): User { 
+        this.email = Promise.resolve([email]); 
+        return this;
+    };
+
+    withProfile(userProfile: UserProfile): User {
+        this.profile = Promise.resolve([userProfile]);
+        return this;
+    }
+
+    withPhone(phone: Phone): User {
+        this.phone = Promise.resolve([phone]);
+        return this;
+    };
 
     /* 회원가입시 새로 발급된 인증 */
     setAuthentication(newAuthentication: NewUserAuthentication) {

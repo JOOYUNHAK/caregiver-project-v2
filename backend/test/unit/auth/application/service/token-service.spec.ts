@@ -7,7 +7,7 @@ import { ROLE } from "src/user-auth-common/domain/enum/user.enum"
 import { NewUserAuthentication } from "src/user-auth-common/domain/interface/new-user-authentication.interface"
 import { RefreshToken } from "src/user-auth-common/domain/refresh-token"
 import { MockJwtService } from "test/unit/__mock__/auth/service.mock"
-import { TestUser } from "test/unit/user/user.fixtures"
+import { UserFixtures } from "test/unit/user/user.fixtures"
 
 describe('토큰 서비스(TokenService) Test', () => {
     let tokenService: TokenService;
@@ -42,7 +42,7 @@ describe('토큰 서비스(TokenService) Test', () => {
         tokenService = module.get(TokenService);
     });
 
-    beforeEach(() => userStub = TestUser.default() as unknown as User)
+    beforeEach(() => userStub = UserFixtures.createDefault() );
 
     describe('generateNewUsersToken()', () => {
         it('반환된 객체는 NewUserAuthentication의 인스턴스여야한다', async () => {

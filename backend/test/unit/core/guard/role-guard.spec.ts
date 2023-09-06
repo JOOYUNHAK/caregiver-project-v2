@@ -3,7 +3,7 @@ import { Reflector } from "@nestjs/core";
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
 import { RoleGuard } from "src/core/guard/role.guard";
 import { ROLE } from "src/user-auth-common/domain/enum/user.enum";
-import { TestUser } from "test/unit/user/user.fixtures";
+import { UserFixtures } from "test/unit/user/user.fixtures";
 
 describe('설정한 역할 이외는 접근 제한하는 가드(RoleGuard) Test', () => {
     
@@ -11,7 +11,7 @@ describe('설정한 역할 이외는 접근 제한하는 가드(RoleGuard) Test'
         const mockContext = {
             switchToHttp: () => ({
                 getRequest: () => ({
-                    user: TestUser.default().withRole(ROLE.CAREGIVER) // 접근한 사용자는 간병인
+                    user: UserFixtures.createWithRole(ROLE.CAREGIVER) // 접근한 사용자는 간병인
                 })
             }),
             getHandler: jest.fn()
@@ -31,7 +31,7 @@ describe('설정한 역할 이외는 접근 제한하는 가드(RoleGuard) Test'
         const mockContext = {
             switchToHttp: () => ({
                 getRequest: () => ({
-                    user: TestUser.default().withRole(ROLE.PROTECTOR) // 접근한 사용자는 보호자
+                    user: UserFixtures.createWithRole(ROLE.PROTECTOR) // 접근한 사용자는 보호자
                 })
             }),
             getHandler: jest.fn()

@@ -9,8 +9,6 @@ import { VerificationUsageService } from 'src/auth/application/service/verificat
 import { ErrorMessage } from 'src/common/shared/enum/error-message.enum';
 import { SmsService } from 'src/notification/sms/application/service/sms.service';
 import { UserAuthCommonService } from 'src/user-auth-common/application/user-auth-common.service';
-import { Token } from 'src/user-auth-common/domain/entity/auth-token.entity';
-import { User } from 'src/user-auth-common/domain/entity/user.entity';
 import { NewUserAuthentication } from 'src/user-auth-common/domain/interface/new-user-authentication.interface';
 import { RefreshToken } from 'src/user-auth-common/domain/refresh-token';
 import { MockPhoneVerificationRepository } from 'test/unit/__mock__/auth/repository.mock';
@@ -18,7 +16,7 @@ import { MockAuthenticationCodeService, MockVerificationUsageService, MockTokenS
 import { MockSmsService } from 'test/unit/__mock__/notification/service.mock';
 import { MockUserRepository } from 'test/unit/__mock__/user-auth-common/repository.mock';
 import { MockUserAuthCommonService } from 'test/unit/__mock__/user-auth-common/service.mock';
-import { TestUser } from 'test/unit/user/user.fixtures';
+import { UserFixtures } from 'test/unit/user/user.fixtures';
 
 describe('인증 서비스(AuthService) Test', () => {
     let authService: AuthService;
@@ -98,21 +96,20 @@ describe('인증 서비스(AuthService) Test', () => {
 
     describe('createAuthentication()', () => {
         it('새로 가입된 사용자에게 새로 발급된 인증이 부여되어야 한다', async () => {
-            const newUser = TestUser.default().withToken(null);
-            expect(newUser.getAuthentication()).toBe(null);
+            const newUser = UserFixtures.createNewUser();
+            expect(newUser.getAuthentication()).toBe(undefined);
 
             const [newAccessToken, newRefreshKey, newRefreshToken] = ['newAccessToken', 'newRefreshKey', 'newRefreshToken'];
             const newAuthentication = new NewUserAuthentication(newAccessToken, new RefreshToken(newRefreshKey, newRefreshToken));
             newUser.setAuthentication(newAuthentication);
 
-            expect(newUser.getAuthentication()).not.toBe(null);
             expect(newUser.getAuthentication().getAccessToken()).toBe(newAccessToken);
             expect(newUser.getAuthentication().getRefreshKey()).toBe(newRefreshKey);
             expect(newUser.getAuthentication().getRefreshToken()).toBe(newRefreshToken);
         });
 
         it('생성된 토큰을 세션리스트에 추가하기 위해 호출하고, 사용자용 Dto 반환', async() => {
-            const testUser = TestUser.default().withToken(null) as unknown as User;
+            const testUser = UserFixtures.createNewUser();
 
             const [newAccessToken, newRefreshKey, newRefreshToken] = ['newAccessToken', 'newRefreshKey', 'newRefreshToken'];
             const newAuthentication = new NewUserAuthentication(newAccessToken, new RefreshToken(newRefreshKey, newRefreshToken));
@@ -132,9 +129,7 @@ describe('인증 서비스(AuthService) Test', () => {
 
     describe('refreshAuthentication()', () => {
         it('새로 갱신된 토큰을 Session목록에 추가 및 사용자용 Dto 반환', async () => {
-            const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
-            const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
-            const user = TestUser.default().withToken(existAuthentication);
+            const user = UserFixtures.createDefault();
 
             const [refreshAccessToken, refreshKey, newRefreshToken] = ['refreshAccessToken', 'newUuid', 'newRefreshToken'];
             const refreshToken = new RefreshToken(refreshKey, newRefreshToken);
@@ -147,15 +142,13 @@ describe('인증 서비스(AuthService) Test', () => {
 
             const sessionSpy = jest.spyOn(sessionService, 'addUserToList')
 
-            const result = await authService.refreshAuthentication(user as unknown as User);
+            const result = await authService.refreshAuthentication(user);
             expect(sessionSpy).toHaveBeenCalledWith(user.getId(), refreshAccessToken);
             expect(result).toEqual(expectedDto);
         });
 
         it('RefreshToken으로 갱신할 경우 RefreshToken의 key와 값도 새로 발급받아져야 한다', async() => {
-            const [existAccessToken, existRefreshKey, existRefreshToken] = ['accessToken', 'uuid', 'existRefreshToken'];
-            const existAuthentication = new Token(existAccessToken, existRefreshKey, existRefreshToken);
-            const user = TestUser.default().withToken(existAuthentication);
+            const user = UserFixtures.createDefault();
 
             const [refreshAccessToken, newUuid, newRefreshToken] = ['refreshAccessToken', 'newUuid', 'newRefreshToken'];
             const refreshToken = new RefreshToken(newUuid, newRefreshToken);
