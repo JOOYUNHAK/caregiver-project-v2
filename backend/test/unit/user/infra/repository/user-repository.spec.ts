@@ -61,14 +61,25 @@ describe('사용자 저장소(UserRepository) Test', () => {
 
         it('UserProfile Lazy Loading 확인', async() => {
             const [birth, sex] = [19980101, SEX.FEMALE];
-            const testWithEmailUser = UserFixtures.createWithProfile(birth, sex);
-            const savedId = (await userRepository.save(testWithEmailUser)).getId();
+            const testUser = UserFixtures.createWithProfile(birth, sex);
+            const savedId = (await userRepository.save(testUser)).getId();
 
             const result = await userRepository.findById(savedId);
 
             expect(result.getProfile()).toBeInstanceOf(Promise);
             expect((await result.getProfile()).getBirth()).toBe(birth);
             expect((await result.getProfile()).getSex()).toBe(sex);
+        });
+
+        it('Phone Lazy Loading 확인', async() => {
+            const phoneNumber = '01011223344';
+            const testUser = UserFixtures.createWithPhone(phoneNumber);
+            const savedId = (await userRepository.save(testUser)).getId();
+
+            const result = await userRepository.findById(savedId);
+
+            expect(result.getPhone()).toBeInstanceOf(Promise);
+            expect((await result.getPhone()).getPhoneNumber()).toBe(phoneNumber);
         })
     });
 
@@ -85,4 +96,18 @@ describe('사용자 저장소(UserRepository) Test', () => {
             expect(findResult.getAuthentication().getRefreshKey()).toBe(testRefreshKey);        
         });
     });
+
+    describe('findByPhoneNumber()', () => {
+        it('맞는 값 찾는지 확인', async() => {
+            const phoneNumber = '01022991101';
+            const testUser = UserFixtures.createWithPhone(phoneNumber);
+
+            const savedId = (await userRepository.save(testUser)).getId();
+
+            const result = await userRepository.findByPhoneNumber(phoneNumber);
+            
+            expect(result.getId()).toBe(savedId);
+        })
+        
+    })
 })
