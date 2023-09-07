@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { LOGIN_TYPE, ROLE } from "../enum/user.enum";
 import { Phone } from "./user-phone.entity";
 import { UserProfile } from "./user-profile.entity";
@@ -24,14 +24,14 @@ export class User {
     @CreateDateColumn({ name: 'registered_at', type: 'timestamp' })
     private registeredAt: Time;
 
-    @OneToMany(() => Email, (email) => email.user, { lazy: true, cascade: ['insert', 'update'] })
-    email: Promise<Email[]>;
+    @OneToOne(() => Email, (email) => email.user, { lazy: true, cascade: ['insert', 'update'] })
+    email: Promise<Email>;
 
-    @OneToMany(() => Phone, (phone) => phone.user, { lazy: true, cascade: ['insert', 'update'] })
-    phone: Promise<Phone[]>;
+    @OneToOne(() => Phone, (phone) => phone.user, { lazy: true, cascade: ['insert', 'update'] })
+    phone: Promise<Phone>;
 
-    @OneToMany(() => UserProfile, (profile) => profile.user, { lazy: true, cascade: ['insert'] })
-    profile: Promise<UserProfile[]>;
+    @OneToOne(() => UserProfile, (profile) => profile.user, { lazy: true, cascade: ['insert'] })
+    profile: Promise<UserProfile>;
 
     @OneToOne(() => Token, (token) => token.userId, { cascade: ['insert', 'update'] })
     private authentication: Token;
@@ -47,22 +47,22 @@ export class User {
     getRole(): ROLE { return this.role; };
     getAuthentication(): Token { return this.authentication; };
 
-    async getPhone(): Promise<Phone> { return (await this.phone)[0]; };
-    async getEmail(): Promise<Email> { return (await this.email)[0]; };
-    async getProfile(): Promise<UserProfile> { return (await this.profile)[0]; };
+    async getPhone(): Promise<Phone> { return await this.phone; };
+    async getEmail(): Promise<Email> { return await this.email; };
+    async getProfile(): Promise<UserProfile> { return await this.profile; };
 
     withEmail(email: Email): User { 
-        this.email = Promise.resolve([email]); 
+        this.email = Promise.resolve(email); 
         return this;
     };
 
     withProfile(userProfile: UserProfile): User {
-        this.profile = Promise.resolve([userProfile]);
+        this.profile = Promise.resolve(userProfile);
         return this;
     }
 
     withPhone(phone: Phone): User {
-        this.phone = Promise.resolve([phone]);
+        this.phone = Promise.resolve(phone);
         return this;
     };
 
