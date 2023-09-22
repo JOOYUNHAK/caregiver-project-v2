@@ -29,6 +29,10 @@ export class CareApplication {
         this.status = ApplicationStatus.REQUESTED;
     }
 
+    getId(): number { return this.id; };
     getApplyUserId(): number { return this.protectorId; };
     getCaregiverId(): number { return this.caregiverId; };
+    getStatus(): ApplicationStatus { return this.status; };
+    
+    watched() { this.status = ApplicationStatus.WATCHED; };
 }
