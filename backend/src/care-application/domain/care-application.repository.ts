@@ -4,15 +4,17 @@ import { getDataSourceToken, getRepositoryToken } from "@nestjs/typeorm";
 
 export interface CareApplicationRepository extends Repository<CareApplication> {
     findByProtectorAndCaregiverId(protectorId: number, caregiverId: number): Promise<CareApplication>;
+    findRecentApplicationFromIds(protectorId: number, caregiverId: number): Promise<CareApplication>;
 }
 
 export const customApplicationRepositoryMethods: Pick<
     CareApplicationRepository,
-    'findByProtectorAndCaregiverId'
+    'findByProtectorAndCaregiverId' |
+    'findRecentApplicationFromIds'
 > = {
     async findByProtectorAndCaregiverId(
-        this: Repository<CareApplication>, 
-        protectorId: number, 
+        this: Repository<CareApplication>,
+        protectorId: number,
         caregiverId: number
     ) {
         return await this.createQueryBuilder()
@@ -20,6 +22,20 @@ export const customApplicationRepositoryMethods: Pick<
             .andWhere('caregiver_id = :caregiverId')
             .setParameter('protectorId', protectorId)
             .setParameter('caregiverId', caregiverId)
+            .getOne();
+    },
+
+    async findRecentApplicationFromIds(
+        this: Repository<CareApplication>,
+        protectorId: number,
+        caregiverId: number
+    ) {
+        return await this.createQueryBuilder()
+            .where('protector_id = :protectorId')
+            .andWhere('caregiver_id = :caregiverId')
+            .setParameter('protectorId', protectorId)
+            .setParameter('caregiverId', caregiverId)
+            .orderBy('id', 'DESC')
             .getOne();
     },
 };
