@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from "@nestjs/typeorm";
+import { EntityClassOrSchema } from "@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type";
 import { Db, MongoClient } from "mongodb";
 import { RedisClientType, createClient } from "redis";
 import { ChatMessage } from "src/chat/domain/entity/chat-message.entity";
@@ -13,7 +14,8 @@ import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.ent
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { DataSource, DataSourceOptions } from "typeorm";
 
-let mongodb: Db, mongoClient: MongoClient; // MongoDB
+/* MongoDB Test Connection Set Up */
+let mongodb: Db, mongoClient: MongoClient;
 
 export async function ConnectMongoDB() {
     const url = 'mongodb://localhost:27017';
@@ -28,6 +30,7 @@ export function getMongodb() { return mongodb; };
 
 export async function DisconnectMongoDB() { await mongoClient.close(); };
 
+/* Redis Test Connection Set Up */
 let redisClient: RedisClientType;
 
 export async function ConnectRedis() {
@@ -39,16 +42,16 @@ export function getRedis() { return redisClient; };
 
 export async function DisconnectRedis() { await redisClient.disconnect(); };
 
-/* 테스트를 위한 Datasource 생성 */
+/* MySQL Test Connection Set Up */
 export class TestTypeOrm {
     
-    public static async withEntities(...entities: any []) {
+    public static async withEntities(...entities: EntityClassOrSchema []): Promise<DataSource> {
         return new DataSource(this.withTestOptions(entities)).initialize();
     }
 
-    public static async disconnect(dataSource: DataSource) { await dataSource.destroy(); };
+    public static async disconnect(dataSource: DataSource):Promise<void> { await dataSource.destroy(); };
 
-    private static withTestOptions(entities: any []): DataSourceOptions {
+    private static withTestOptions(entities: EntityClassOrSchema []): DataSourceOptions {
         return ({
             type: 'mysql',
             username: 'root',
