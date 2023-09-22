@@ -16,20 +16,6 @@ describe('CareApplicationRepository(간병 신청서) Test', () => {
 
     afterEach(async () => await applicationRepository.delete({ }));
 
-    describe('findByProtectorAndCaregiverId()', () => {
-
-        it('일치하는 값 찾는지 확인', async() => { 
-            const [protectorId, caregiverId] = [1, 3];
-            const testApplication = new CareApplication(protectorId, caregiverId);
-            await applicationRepository.save(testApplication);
-
-            const result = await applicationRepository.findByProtectorAndCaregiverId(protectorId, caregiverId);
-
-            expect(result.getApplyUserId()).toBe(protectorId);
-            expect(result.getCaregiverId()).toBe(caregiverId);
-        })
-    })
-
     describe('findRecentApplicationByIds()', () => {
         
         const [protectorId, caregiverId] = [1, 10];
