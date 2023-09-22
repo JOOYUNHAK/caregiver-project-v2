@@ -12,7 +12,7 @@ describe('CareApplicationRepository(간병 신청서) Test', () => {
         applicationRepository = dataSource.getRepository(CareApplication).extend(customApplicationRepositoryMethods);
     });
 
-    afterAll(async() => TestTypeOrm.disconnect(dataSource));
+    afterAll(async() => await TestTypeOrm.disconnect(dataSource));
 
     afterEach(async () => await applicationRepository.delete({ }));
 
@@ -29,4 +29,26 @@ describe('CareApplicationRepository(간병 신청서) Test', () => {
             expect(result.getCaregiverId()).toBe(caregiverId);
         })
     })
+
+    describe('findRecentApplicationByIds()', () => {
+        
+        const [protectorId, caregiverId] = [1, 10];
+        
+        /* 테스트 전 더미 데이터 */
+        beforeAll(async() => {
+            for( let i = 0; i < 3; i++ ) {
+                const application = new CareApplication(protectorId, caregiverId);
+                await applicationRepository.save(application);
+            };
+        });
+
+        it('가장 최근의 신청서를 가져오는지 확인', async () => {
+            const recentApplication = new CareApplication(protectorId, caregiverId);        
+            recentApplication.watched();
+            await applicationRepository.save(recentApplication);
+
+            const result = await applicationRepository.findRecentApplicationFromIds(protectorId, caregiverId);
+            expect(result.getStatus()).toBe(recentApplication.getStatus());
+        });
+    });
 })
