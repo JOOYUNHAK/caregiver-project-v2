@@ -1,6 +1,8 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { ApplicationStatus } from "../../chat/domain/enum/application-status.enum";
 import { Time } from "src/common/shared/type/time.type";
+import { ConflictException } from "@nestjs/common";
+import { ErrorMessage } from "src/common/shared/enum/error-message.enum";
 
 @Entity('care_application')
 @Index(["protectorId", "caregiverId"])
@@ -35,4 +37,13 @@ export class CareApplication {
     getStatus(): ApplicationStatus { return this.status; };
     
     watched() { this.status = ApplicationStatus.WATCHED; };
+    rejected() { this.status = ApplicationStatus.REJECTED; };
+
+    /* 해당 사용자가 신청한 내역 중 진행중인 내역이 있는지 */
+    validate(): void {
+        if( 
+            this.status == ApplicationStatus.REQUESTED ||
+            this.status == ApplicationStatus.WATCHED
+        ) throw new ConflictException(ErrorMessage.AlreadyHavePendingApplication);
+    }
 }
