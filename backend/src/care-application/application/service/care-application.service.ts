@@ -20,9 +20,10 @@ export class CareApplicationService {
         
         /* 신청서 저장 이후 -> 채팅방을 통해 메시지 전송 */
         const newApplication = await this.applicationRepository.save(new CareApplication(protectorId, caregiverId));
-        return await this.careAppliedService.applied(newApplication.getId());
+        return await this.careAppliedService.applied(newApplication);
     }
 
+    /* 이전 신청이 완료되었는지 확인 */
     private async checkPreApplicationBeCompleted(protectorId: number, caregiverId: number) {
         const previousApplication =
             await this.applicationRepository.findRecentApplicationFromIds(protectorId, caregiverId);
