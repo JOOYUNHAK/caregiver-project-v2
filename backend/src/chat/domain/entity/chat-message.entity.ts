@@ -1,7 +1,8 @@
 import { Time } from "src/common/shared/type/time.type";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { MessageType } from "../enum/chat-message-type.enum";
 import { ChatRoom } from "./chat-room.entity";
+import { ApplicationCode } from "./application-code.entity";
 
 @Entity('chat_messages')
 export class ChatMessage {
@@ -30,6 +31,9 @@ export class ChatMessage {
     @JoinColumn({ referencedColumnName: 'id', name: 'room_id'})
     room: ChatRoom;
 
+    @OneToOne(() => ApplicationCode, (code) => code.message, { cascade: ['insert'], nullable: true })
+    applicationCode: ApplicationCode
+
     @CreateDateColumn({ name: 'sended_at', type: 'timestamp' })
     private sendedAt: Time;
 
@@ -42,4 +46,9 @@ export class ChatMessage {
             this.content = content;
             this.isRead = false;
     }
+
+    withApplicationCode(applicationId: number): this { 
+        this.applicationCode = new ApplicationCode(applicationId);
+        return this;
+    };
 };
