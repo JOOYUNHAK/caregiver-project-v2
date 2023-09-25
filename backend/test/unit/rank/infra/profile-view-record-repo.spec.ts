@@ -1,30 +1,22 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { TypeOrmModule, getRepositoryToken } from "@nestjs/typeorm";
 import { ObjectId } from "mongodb";
 import { ProfileViewRecord } from "src/rank/domain/entity/profile-view-record.entity";
 import { IActionRecordRepository } from "src/rank/domain/iaction-record.repository"
 import { profileViewRecordRepoMethods } from "src/rank/infra/profile-view-record.repository";
-import { TestTypeOrmOptions } from "test/unit/common/database/datebase-setup.fixture";
+import { TestTypeOrm } from "test/unit/common/database/datebase-setup.fixture";
+import { DataSource } from "typeorm";
 
 describe('프로필 조회 기록 저장소(ProfileViewRecordRepository', () => {
     let profileViewRecordRepository: IActionRecordRepository<ProfileViewRecord>;
-    let module: TestingModule;
+    let dataSource: DataSource;
 
     beforeAll(async() => {
-        module = await Test.createTestingModule({
-            imports: [
-                TypeOrmModule.forRoot(TestTypeOrmOptions),
-                TypeOrmModule.forFeature([ProfileViewRecord])
-            ]
-        }).compile();
-
-        profileViewRecordRepository = module.get(getRepositoryToken(ProfileViewRecord));
-        profileViewRecordRepository = profileViewRecordRepository.extend(profileViewRecordRepoMethods);
+        dataSource = await TestTypeOrm.withEntities(ProfileViewRecord);
+        profileViewRecordRepository = dataSource.getRepository(ProfileViewRecord).extend(profileViewRecordRepoMethods);
     });
 
     afterAll(async() => {
         await profileViewRecordRepository.clear();
-        await module.close();
+        await TestTypeOrm.disconnect(dataSource);
     });
 
     describe('findRecordByActionAndUser', () => {
