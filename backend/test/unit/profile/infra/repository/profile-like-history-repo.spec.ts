@@ -1,26 +1,19 @@
-import { Test, TestingModule } from "@nestjs/testing"
-import { TypeOrmModule, getRepositoryToken } from "@nestjs/typeorm"
 import { ObjectId } from "mongodb"
 import { ProfileLike } from "src/profile/domain/entity/profile-like"
 import { ProfileLikeHistoryRepository, customProfileLikeHistoryMethods } from "src/profile/domain/repository/iprofile-like-history.repository"
-import { TestTypeOrmOptions } from "test/unit/common/database/datebase-setup.fixture"
+import { TestTypeOrm } from "test/unit/common/database/datebase-setup.fixture"
+import { DataSource } from "typeorm"
 
 describe('ProfileLikeHistoryRepository(찜 내역 저장소) Test', () => {
     let historyRepository: ProfileLikeHistoryRepository;
-    let module: TestingModule;
+    let dataSource: DataSource;
     
     beforeAll(async() => {
-        module = await Test.createTestingModule({
-            imports: [
-                TypeOrmModule.forRoot(TestTypeOrmOptions),
-                TypeOrmModule.forFeature([ProfileLike])
-            ]
-        }).compile();
-        historyRepository = module.get(getRepositoryToken(ProfileLike));
-        historyRepository = historyRepository.extend(customProfileLikeHistoryMethods)
+        dataSource = await TestTypeOrm.withEntities(ProfileLike);
+        historyRepository = dataSource.getRepository(ProfileLike).extend(customProfileLikeHistoryMethods);
     });
 
-    afterAll(async() => await module.close());
+    afterAll(async() => await TestTypeOrm.disconnect(dataSource));
 
     describe('findByProfileAndUserId()', () => {
         let profileId: string, userId: number;
