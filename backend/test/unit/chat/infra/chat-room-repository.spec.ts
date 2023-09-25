@@ -5,6 +5,7 @@ import { ChatRoomRepository, customRoomRepositoryMethods } from "src/chat/domain
 import { TestTypeOrm } from "test/unit/common/database/datebase-setup.fixture";
 import { DataSource } from "typeorm";
 import { ChatFixtures } from "../chat.fixtures";
+import { ApplicationCode } from "src/chat/domain/entity/application-code.entity";
 
 describe('ChatRoomRepository(채팅방 저장소) Test', () => {
     let dataSource: DataSource;
@@ -12,7 +13,7 @@ describe('ChatRoomRepository(채팅방 저장소) Test', () => {
     
     beforeAll(async() => {
         dataSource = await TestTypeOrm.withEntities(
-            ChatRoom, ChatMessage, Participant
+            ChatRoom, ChatMessage, Participant, ApplicationCode
         )
         roomRepository = dataSource.getRepository(ChatRoom).extend(customRoomRepositoryMethods);
     });

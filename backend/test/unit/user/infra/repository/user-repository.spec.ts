@@ -1,33 +1,25 @@
-import { Test, TestingModule } from "@nestjs/testing"
-import { TypeOrmModule, getRepositoryToken } from "@nestjs/typeorm"
 import { Token } from "src/user-auth-common/domain/entity/auth-token.entity"
 import { Phone } from "src/user-auth-common/domain/entity/user-phone.entity"
 import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.entity"
 import { UserRepository, customUserRepositoryMethods } from "src/user-auth-common/domain/repository/user.repository"
 import { UUIDUtil } from "src/util/uuid.util"
-import { TestTypeOrmOptions } from "test/unit/common/database/datebase-setup.fixture"
+import { TestTypeOrm } from "test/unit/common/database/datebase-setup.fixture"
 import { Email } from "src/user-auth-common/domain/entity/user-email.entity"
 import { User } from "src/user-auth-common/domain/entity/user.entity"
 import {UserFixtures } from "../../user.fixtures"
 import { SEX } from "src/user-auth-common/domain/enum/user.enum"
+import { DataSource } from "typeorm"
 
 describe('사용자 저장소(UserRepository) Test', () => {
     let userRepository: UserRepository;
-    let module: TestingModule;
+    let dataSource: DataSource;
     
     beforeAll(async() => {
-        module = await Test.createTestingModule({
-            imports: [
-                TypeOrmModule.forRoot(TestTypeOrmOptions),
-                TypeOrmModule.forFeature([User, Phone, Email, UserProfile, Token])
-            ],
-        }).compile();
-        
-        userRepository = module.get(getRepositoryToken(User));
-        userRepository = userRepository.extend(customUserRepositoryMethods);
+        dataSource = await TestTypeOrm.withEntities(User, Phone, Email, UserProfile, Token);
+        userRepository = dataSource.getRepository(User).extend(customUserRepositoryMethods);
     })
 
-    afterAll(async() => await module.close() );
+    afterAll(async() => await TestTypeOrm.disconnect(dataSource) );
 
     afterEach(async() => await userRepository.delete({ }));
 
