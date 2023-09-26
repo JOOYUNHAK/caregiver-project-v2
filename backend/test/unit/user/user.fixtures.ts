@@ -30,6 +30,18 @@ export class UserFixtures {
             .withPhone(this.defaultPhone());
     }
 
+    /* 설정한 이름을 가진 사용자 */
+    static createWithName(name: string): User {
+        const user = this.withName(name)
+        .withEmail(this.emptyEmail())
+        .withProfile(this.defaulthProfile())
+        .withPhone(this.defaultPhone())
+
+        user.setAuthentication(this.withDefaultAuth());
+        
+        return user;
+    }
+
     /* 설정한 역할을 가진 사용자 */
     static createWithRole(role: ROLE): User {
         const user = this.withRole(role)
@@ -104,6 +116,7 @@ export class UserFixtures {
 
     private static withDefaultInfo(): User { return new User('테스트', ROLE.CAREGIVER, LOGIN_TYPE.PHONE); };
     private static withRole(role: ROLE): User { return new User('테스트', role, LOGIN_TYPE.PHONE); };
+    private static withName(name: string): User { return new User(name, ROLE.CAREGIVER, LOGIN_TYPE.PHONE) };
 
     private static emptyEmail(): Email { return new Email(null) };
     private static defaulthProfile(): UserProfile { return new UserProfile(19980101, SEX.MALE); };
