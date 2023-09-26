@@ -2,6 +2,7 @@ import { CareApplication } from "src/care-application/domain/care-application.en
 import { CareApplicationRepository, customApplicationRepositoryMethods } from "src/care-application/domain/care-application.repository"
 import { TestTypeOrm } from "test/unit/common/database/datebase-setup.fixture";
 import { DataSource } from "typeorm";
+import { ApplicationFixtures } from "../care-application.fixtures";
 
 describe('CareApplicationRepository(간병 신청서) Test', () => {
     let dataSource: DataSource;
@@ -14,7 +15,7 @@ describe('CareApplicationRepository(간병 신청서) Test', () => {
 
     afterAll(async() => await TestTypeOrm.disconnect(dataSource));
 
-    afterEach(async () => await applicationRepository.delete({ }));
+    afterEach(async () => await applicationRepository.clear());
 
     describe('findRecentApplicationByIds()', () => {
         
@@ -37,4 +38,29 @@ describe('CareApplicationRepository(간병 신청서) Test', () => {
             expect(result.getStatus()).toBe(recentApplication.getStatus());
         });
     });
+
+    describe('findStatusByIds()', () => {
+        const testApplicaiontList = [
+            ApplicationFixtures.watchedApplication(),
+            ApplicationFixtures.watchedApplication(),
+            ApplicationFixtures.rejectedApplication()
+        ];
+
+        const applicationIdList = [];
+
+        beforeAll(async() => {
+            for( let i = 0; i < testApplicaiontList.length; i++ ) {
+                const savedApplication = await applicationRepository.save(testApplicaiontList[i]);
+                applicationIdList.push(savedApplication.getId());
+            };
+        });
+
+        it('신청서들의 상태를 맞게 가져오는지 확인', async () => {
+            const result = await applicationRepository.findStatusByIds(applicationIdList);
+
+            result.map( ({ status }, index) => {
+                expect(status).toBe(testApplicaiontList[index].getStatus());
+            });
+        })
+    })
 })
