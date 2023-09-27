@@ -45,7 +45,7 @@
 해당 프로젝트의 Api 명세서는 [이곳에서](https://video-dot-project.gitbook.io/undefined/)확인하실 수 있습니다.
 
 ## Table Structure
-<img width="1299" alt="image" src="https://github.com/JOOYUNHAK/caregiver-project-v2/assets/99117410/84fbbf07-410d-4efb-aa5d-0a888bcd7a5a">
+<img width="1299" alt="image" src="https://github.com/JOOYUNHAK/caregiver-project-v2/assets/99117410/11616a9a-027f-4073-bebd-29056571a6cd">
 
 ## Implement
 
