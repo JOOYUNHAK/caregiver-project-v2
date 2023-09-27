@@ -4,6 +4,7 @@ import { CareApplication } from "src/care-application/domain/care-application.en
 import { CareApplicationRepository } from "src/care-application/domain/care-application.repository";
 import { ICareAppliedService } from "./icare-applied.service";
 import { CARE_APPLIED_SERVICE } from "src/common/shared/constants";
+import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class CareApplicationService {
@@ -15,6 +16,7 @@ export class CareApplicationService {
     ) { }
 
     /* 간병 신청이 도착했을 때 */
+    @Transactional()
     async arrived(protectorId: number, caregiverId: number) {
         await this.checkPreApplicationBeCompleted(protectorId, caregiverId);
         
