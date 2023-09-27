@@ -30,7 +30,7 @@ export class CareAppliedService implements ICareAppliedService {
         
         /* 채팅방이 있는 경우 메시지만 추가 */
         if( chatRoom ) {
-            await this.messageRepository.save(newAppliedMessage);
+            await this.messageRepository.save(newAppliedMessage.in(chatRoom.getId()));
             return this.toClientDto(chatRoom.getId());
         }
         /* 방이 없는 경우 생성해서 메시지 보내기 */
