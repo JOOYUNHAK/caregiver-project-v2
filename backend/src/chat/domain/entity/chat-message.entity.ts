@@ -47,6 +47,11 @@ export class ChatMessage {
             this.isRead = false;
     }
 
+    in(roomId: number): this{
+        this.roomId = roomId;
+        return this;
+    }
+
     withApplicationCode(applicationId: number): this { 
         this.applicationCode = new ApplicationCode(applicationId);
         return this;
