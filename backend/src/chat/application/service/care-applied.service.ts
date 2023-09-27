@@ -10,6 +10,7 @@ import { ApplicationText } from "src/chat/domain/enum/application-text.enum";
 import { MessageType } from "src/chat/domain/enum/chat-message-type.enum";
 import { ChatMessageRepository } from "src/chat/domain/repository/chat-message.repository";
 import { ChatRoomRepository } from "src/chat/domain/repository/chat-room.repository";
+import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class CareAppliedService implements ICareAppliedService {
@@ -19,6 +20,8 @@ export class CareAppliedService implements ICareAppliedService {
         @InjectRepository(ChatMessage)
         private readonly messageRepository: ChatMessageRepository
     ) {}
+
+    @Transactional()
     async applied(application: CareApplication): Promise<CareAppliedDto> {
         // 채팅 방 조회
         const [applyUserId, takeUserId] = [application.getApplyUserId(), application.getCaregiverId()];
