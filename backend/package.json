@@ -51,6 +51,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "typeorm": "^0.3.7",
+    "typeorm-transactional": "^0.4.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
