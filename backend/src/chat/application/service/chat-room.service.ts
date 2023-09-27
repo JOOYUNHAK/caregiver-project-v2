@@ -11,7 +11,6 @@ import { RoomListData } from "src/chat/interface/dto/room-list-data";
 import { User } from "src/user-auth-common/domain/entity/user.entity";
 import { GetNameDto } from "src/user-auth-common/domain/interface/get-name.dto";
 import { UserRepository } from "src/user-auth-common/domain/repository/user.repository";
-import { Transactional } from 'typeorm-transactional';
 
 @Injectable()
 export class ChatRoomService {
@@ -24,7 +23,6 @@ export class ChatRoomService {
         private readonly userRepository: UserRepository 
     ) {}
 
-    @Transactional()
     async getList(userId: number): Promise<GetRoomListDto []> {
 
         /* 사용자가 속한 방 목록 조회 */
