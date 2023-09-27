@@ -9,6 +9,10 @@ import { MockChatMessageRepository, MockChatRoomRepository } from "test/unit/__m
 import { ChatFixtures } from "../chat.fixtures";
 import { CareApplication } from "src/care-application/domain/care-application.entity";
 
+jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({})
+}));
+
 describe('CareAppliedService Test', () => {
     let module: TestingModule;
     let careAppliedService: CareAppliedService;

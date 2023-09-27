@@ -10,6 +10,7 @@ import { ApplicationText } from "src/chat/domain/enum/application-text.enum";
 import { MessageType } from "src/chat/domain/enum/chat-message-type.enum";
 import { ChatMessageRepository } from "src/chat/domain/repository/chat-message.repository";
 import { ChatRoomRepository } from "src/chat/domain/repository/chat-room.repository";
+import { Transactional } from "typeorm-transactional";
 
 @Injectable()
 export class CareAppliedService implements ICareAppliedService {
@@ -19,6 +20,8 @@ export class CareAppliedService implements ICareAppliedService {
         @InjectRepository(ChatMessage)
         private readonly messageRepository: ChatMessageRepository
     ) {}
+
+    @Transactional()
     async applied(application: CareApplication): Promise<CareAppliedDto> {
         // 채팅 방 조회
         const [applyUserId, takeUserId] = [application.getApplyUserId(), application.getCaregiverId()];
@@ -30,7 +33,7 @@ export class CareAppliedService implements ICareAppliedService {
         
         /* 채팅방이 있는 경우 메시지만 추가 */
         if( chatRoom ) {
-            await this.messageRepository.save(newAppliedMessage);
+            await this.messageRepository.save(newAppliedMessage.in(chatRoom.getId()));
             return this.toClientDto(chatRoom.getId());
         }
         /* 방이 없는 경우 생성해서 메시지 보내기 */

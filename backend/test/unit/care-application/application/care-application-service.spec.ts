@@ -11,6 +11,11 @@ import { ApplicationFixtures } from "../care-application.fixtures"
 import { ConflictException } from "@nestjs/common"
 import { ErrorMessage } from "src/common/shared/enum/error-message.enum"
 
+jest.mock('typeorm-transactional', () => ({
+    Transactional: () => () => ({})
+}));
+
+
 describe('CareApplicationService(간병신청서 서비스) Test', () => {
     let careApplicationService: CareApplicationService;
     let careApplicationRepository: CareApplicationRepository;

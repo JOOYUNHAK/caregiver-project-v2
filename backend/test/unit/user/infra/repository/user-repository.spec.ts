@@ -100,6 +100,26 @@ describe('사용자 저장소(UserRepository) Test', () => {
             
             expect(result.getId()).toBe(savedId);
         })
-        
     })
+
+    describe('findNamesByIds()', () => {
+        const testNameList = ['test1', 'test2'];
+        const idList = [];
+
+        beforeAll(async() => {
+            for( let i = 0; i < testNameList.length; i++ ) {
+                const user = UserFixtures.createWithName(testNameList[i]);
+                const savedUser = await userRepository.save(user);
+                idList.push(savedUser.getId());
+            }
+        });
+
+        it('아이디에 해당하는 사용자들의 이름을 가져오는지 확인', async () => {
+            const result = await userRepository.findNamesByIds(idList);
+
+            result.map( ({name}) => {
+                expect(testNameList.indexOf(name)).not.toBe(-1);
+            })
+        });
+    });
 })

@@ -8,6 +8,8 @@ import { Email } from "src/user-auth-common/domain/entity/user-email.entity"
 import { Phone } from "src/user-auth-common/domain/entity/user-phone.entity"
 import { UserProfile } from "src/user-auth-common/domain/entity/user-profile.entity"
 import { User } from "src/user-auth-common/domain/entity/user.entity"
+import { DataSource } from "typeorm"
+import { addTransactionalDataSource } from 'typeorm-transactional';
 
 export const TypeOrmOptions: TypeOrmModuleAsyncOptions = {
     imports: [ConfigModule],
@@ -26,5 +28,11 @@ export const TypeOrmOptions: TypeOrmModuleAsyncOptions = {
         ],
         logging: true,
         synchronize: true
-    })
+    }),
+    async dataSourceFactory(option) {
+        if( !option )
+            throw new Error('Invalid options passed');
+
+        return addTransactionalDataSource(new DataSource(option));
+    }
 };

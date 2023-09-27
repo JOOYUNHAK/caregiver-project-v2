@@ -2,18 +2,21 @@ import { DataSource, Repository } from "typeorm";
 import { User } from "../entity/user.entity";
 import { getDataSourceToken, getRepositoryToken } from "@nestjs/typeorm";
 import { UUIDUtil } from "src/util/uuid.util";
+import { GetNameDto } from "../interface/get-name.dto";
 
 export interface UserRepository extends Repository<User> {
     findById(userId: number): Promise<User>;
     findByRefreshKey(refreshKey: string): Promise<User>;
     findByPhoneNumber(phoneNumber: string): Promise<User>;
+    findNamesByIds(userIdList: number []): Promise<GetNameDto []>;
 };
 
 export const customUserRepositoryMethods: Pick<
     UserRepository,
     'findById' |
     'findByRefreshKey' | 
-    'findByPhoneNumber'
+    'findByPhoneNumber' |
+    'findNamesByIds'
     > = {
         async findById(this: Repository<User>, userId: number)
         :Promise<User> {
@@ -36,6 +39,13 @@ export const customUserRepositoryMethods: Pick<
                 .innerJoinAndSelect('user.authentication', 'token')
                 .where('phone.phone_number = :phoneNumber', { phoneNumber })
                 .getOne();
+        },
+
+        async findNamesByIds(this: Repository<User>, userIdList: number[]) {
+            return await this.createQueryBuilder()
+                .select('name')
+                .where('id IN (:...userIds)', { userIds: userIdList })
+                .getRawMany();
         },
     }
 
