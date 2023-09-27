@@ -9,7 +9,8 @@ export const MockUserRepository = {
         save: jest.fn(),
         findById: jest.fn(),
         findByRefreshKey: jest.fn(),
-        findByPhoneNumber: jest.fn()
+        findByPhoneNumber: jest.fn(),
+        findNamesByIds: jest.fn()
     }
 };
 
