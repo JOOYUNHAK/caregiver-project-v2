@@ -13,18 +13,12 @@ import { RoomListData } from "src/chat/interface/dto/room-list-data";
 import { GetNameDto } from "src/user-auth-common/domain/interface/get-name.dto";
 import { GetApplicationStatusDto } from "src/care-application/interface/dto/get-application-status.dto";
 import { MockUserRepository } from "test/unit/__mock__/user-auth-common/repository.mock";
-import { DataSource } from "typeorm";
-
-jest.mock('typeorm-transactional', () => ({
-    Transactional: () => () => ({})
-}));
 
 describe('ChatRoomService(채팅방 서비스) Test', () => {
     let chatRoomService: ChatRoomService;
     let userRepository: UserRepository;
     let roomRepository: ChatRoomRepository;
     let applicationRepository: CareApplicationRepository;
-    let dataSource: DataSource;
 
     beforeAll(async () => {
 
