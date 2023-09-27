@@ -7,5 +7,6 @@ export const MockCareApplicationRepo = {
     useValue: {
         save: jest.fn(),
         findRecentApplicationFromIds: jest.fn(),
+        findStatusByIds: jest.fn()
     }
 }

@@ -7,6 +7,7 @@ export const MockChatRoomRepository = {
     provide: getRepositoryToken(ChatRoom),
     useValue: {
         save: jest.fn(),
+        findByUserId: jest.fn(),
         findByUserIds: jest.fn()
     }
 };
