@@ -69,7 +69,7 @@ export const customRoomRepositoryMethods: Pick<
 
 export const ChatRoomRepositoryProvider = {
     inject: [getDataSourceToken()],
-    provide: [getRepositoryToken(ChatRoom)],
+    provide: getRepositoryToken(ChatRoom),
     useFactory(dataSource: DataSource) {
         return dataSource
             .getRepository(ChatRoom)

@@ -10,6 +10,7 @@ import { UserAuthCommonModule } from "src/user-auth-common/user-auth-common.modu
 import { ChatController } from "./interface/controller/chat.controller";
 import { ChatRoomService } from "./application/service/chat-room.service";
 import { CareApplicationModule } from "src/care-application/care-application.module";
+import { ChatRoomRepositoryProvider } from "./domain/repository/chat-room.repository";
 
 @Module({
     imports: [
@@ -26,6 +27,7 @@ import { CareApplicationModule } from "src/care-application/care-application.mod
             useClass: CareAppliedService
         },
         ChatRoomService,
+        ChatRoomRepositoryProvider
     ],
     exports: [
         CARE_APPLIED_SERVICE
