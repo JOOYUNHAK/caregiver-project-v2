@@ -6,21 +6,23 @@ export class AllExceptionsFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost): void {
 
     const response = host.switchToHttp().getResponse();
-    let statusCode: number, message: string;
+    let statusCode: number, message: string, data: string;
 
     /* 400번대면 custom 매세지를 이외에는 표시되는 매세지로 */
     if (exception instanceof HttpException) {
       statusCode = exception.getStatus();
       message = exception['response']['message'] instanceof Array ?
-            exception['response']['message'][0] : exception['response']['message']
+            exception['response']['message'][0] : exception['response']['message'];
+      data = exception['response']?.data;
     } else {
       statusCode = 500;
       message = exception['message'];
     }
 
-    response.status(statusCode).send({ statusCode, message })
+    response.status(statusCode).send({ statusCode, message, data })
   }
 }
+
 
 export const GlobalScopedExceptionFilter: any = {
     provide: APP_FILTER,
