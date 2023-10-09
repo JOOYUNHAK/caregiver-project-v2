@@ -62,7 +62,13 @@ describe('ChatRoomRepository(채팅방 저장소) Test', () => {
                     expect(room.unReadMessages).toBe('2'); 
                 }
             });
+        });
 
+        it('조회된 방이 없는 경우 null을 반환하는지 확인', async() => {
+            const notExistUserId = 1000000;
+            const result = await roomRepository.findByUserId(notExistUserId);
+
+            expect(result).toBe(null);
         })
     });
 

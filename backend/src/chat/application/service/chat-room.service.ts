@@ -28,6 +28,8 @@ export class ChatRoomService {
         /* 사용자가 속한 방 목록 조회 */
         const roomList = await this.roomRepository.findByUserId(userId); 
 
+        if( !roomList ) return null;
+
         /* 각 방의 상대방 닉네임, 최신의 신청서 상태를 조회하기 위해 id들 Set */
         const [applicationIdList, partnerIdList] = this.getApplicationAndPartnerIdList(roomList); 
 
