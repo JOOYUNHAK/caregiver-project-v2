@@ -17,6 +17,8 @@ import { BatchModule } from './batch/batch.module';
 import { GlobalScopedJwtGuard } from './auth/application/guard/jwt/jwt-auth.guard';
 import { ProfileModule } from './profile/profile.module';
 import { RankModule } from './rank/rank.module';
+import { ChatModule } from './chat/chat.module';
+import { CareApplicationModule } from './care-application/care-application.module';
 
 @Module({
   imports: [
@@ -34,7 +36,9 @@ import { RankModule } from './rank/rank.module';
     UserAuthCommonModule,
     UserModule,
     ProfileModule,
-    RankModule
+    RankModule,
+    CareApplicationModule,
+    ChatModule
   ],
   providers: [
     GlobalScopedValidationPipe,
