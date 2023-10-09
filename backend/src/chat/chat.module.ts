@@ -30,7 +30,8 @@ import { ChatRoomRepositoryProvider } from "./domain/repository/chat-room.reposi
         ChatRoomRepositoryProvider
     ],
     exports: [
-        CARE_APPLIED_SERVICE
+        CARE_APPLIED_SERVICE,
+        ChatRoomRepositoryProvider
     ]
 })
 export class ChatModule {}
