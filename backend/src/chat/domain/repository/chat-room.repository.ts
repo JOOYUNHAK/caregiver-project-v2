@@ -6,7 +6,7 @@ import { ChatMessage } from "../entity/chat-message.entity";
 import { RoomListData } from "src/chat/interface/dto/room-list-data";
 
 export interface ChatRoomRepository extends Repository<ChatRoom> {
-    findByUserId(userId: number): Promise<RoomListData []>;
+    findByUserId(userId: number): Promise<RoomListData []> | null;
     findByUserIds(memberId1: number, memberId2: number): Promise<ChatRoom>;
 }
 
@@ -19,7 +19,7 @@ export const customRoomRepositoryMethods: Pick<
 
         const fetchRoomIdsQuery = `SELECT room_id FROM chat_room_participant WHERE user_id = ${userId}`;
         
-        return await this.createQueryBuilder('room')
+        const roomList = await this.createQueryBuilder('room')
                 .innerJoin((subQuery) => {
                     return subQuery
                         .select([
@@ -49,6 +49,7 @@ export const customRoomRepositoryMethods: Pick<
                 .orderBy('sendedAt', 'DESC') 
                 .groupBy('roomId, userId, lastSendUserId')
                 .getRawMany();
+        return !roomList.length ? null : roomList;
     },
 
     async findByUserIds(this: Repository<ChatRoom>, memberId1: number, memberId2: number) {
