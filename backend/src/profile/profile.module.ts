@@ -14,9 +14,12 @@ import { ProfileQueryFactory } from "./infra/repository/profile-query.factory";
 import { ProfileLikeHistoryRepoProvider } from "./domain/repository/iprofile-like-history.repository";
 import { ProfileLikeHistoryService } from "./application/service/profile-like-history.service";
 import { RoleGuard } from "src/core/guard/role.guard";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ProfileLike } from "./domain/entity/profile-like";
 
 @Module({
     imports: [
+        TypeOrmModule.forFeature([ProfileLike]),
         UserAuthCommonModule,
         MongodbModule,
         RankModule,
