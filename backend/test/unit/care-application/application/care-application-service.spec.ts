@@ -8,8 +8,10 @@ import { CARE_APPLIED_SERVICE } from "src/common/shared/constants"
 import { MockCareApplicationRepo } from "test/unit/__mock__/care-application/repository.mock"
 import { MockCareAppliedService } from "test/unit/__mock__/care-application/service.mock"
 import { ApplicationFixtures } from "../care-application.fixtures"
-import { ConflictException } from "@nestjs/common"
-import { ErrorMessage } from "src/common/shared/enum/error-message.enum"
+import { ChatRoomRepository } from "src/chat/domain/repository/chat-room.repository"
+import { MockChatRoomRepository } from "test/unit/__mock__/chat/repository.mock"
+import { ChatRoom } from "src/chat/domain/entity/chat-room.entity"
+import { ChatFixtures } from "test/unit/chat/chat.fixtures"
 
 jest.mock('typeorm-transactional', () => ({
     Transactional: () => () => ({})
@@ -20,32 +22,39 @@ describe('CareApplicationService(간병신청서 서비스) Test', () => {
     let careApplicationService: CareApplicationService;
     let careApplicationRepository: CareApplicationRepository;
     let careAppliedService: ICareAppliedService;
-    
+    let chatRommRepository: ChatRoomRepository;
+
     beforeAll(async() => {
         const module = await Test.createTestingModule({
             providers: [
                 CareApplicationService,
                 MockCareApplicationRepo,
-                MockCareAppliedService
+                MockCareAppliedService,
+                MockChatRoomRepository
             ]
         }).compile();
         careApplicationService = module.get(CareApplicationService);
         careApplicationRepository = module.get(getRepositoryToken(CareApplication));
         careAppliedService = module.get(CARE_APPLIED_SERVICE);
+        chatRommRepository = module.get(getRepositoryToken(ChatRoom));
     });
 
     describe('arrived()', () => {
         
         afterEach(() => jest.clearAllMocks());
 
-        it('해당 사용자들간의 이전 신청서가 완료되지 않았다면 오류', async() => {
+        it('해당 사용자들간의 이전 신청서가 완료되지 않았다면 기존 채팅방 아이디 반환', async() => {
+            const [memberId1, memberId2] = [1, 2];
+            
             const notCompletedApplication = ApplicationFixtures.watchedApplication();
             jest.spyOn(careApplicationRepository, 'findRecentApplicationFromIds').mockResolvedValueOnce(notCompletedApplication);
 
-            const result = async () => await careApplicationService.arrived(1, 10);
-            await expect(result).rejects.toThrowError(
-                new ConflictException(ErrorMessage.AlreadyHavePendingApplication)
-            );
+            const existRoom = ChatFixtures.createRoom(memberId1, memberId2);
+            jest.spyOn(chatRommRepository, 'findByUserIds').mockResolvedValueOnce(existRoom);
+
+            const result = await careApplicationService.arrived(memberId1, memberId2);
+
+            expect(result).toHaveProperty('roomId');
         });
 
         it.each([
