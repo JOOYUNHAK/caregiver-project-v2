@@ -13,5 +13,4 @@ export const enum ErrorMessage {
     NotFoundProfile = '현재 해당 프로필은 비공개, 탈퇴의 이유로 찾을 수 없습니다.',
     DuplicatedLikeProfile = '이미 찜한 프로필입니다.',
     PermissionDeniedForRole = '역할의 권한이 맞지 않아 접근이 거부되었습니다.',
-    AlreadyHavePendingApplication = '이미 진행중인 신청 내역이 존재합니다.'
 }
