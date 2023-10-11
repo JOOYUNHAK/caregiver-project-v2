@@ -58,8 +58,9 @@ describe('CareApplicationRepository(간병 신청서) Test', () => {
         it('신청서들의 상태를 맞게 가져오는지 확인', async () => {
             const result = await applicationRepository.findStatusByIds(applicationIdList);
 
-            result.map( ({ status }, index) => {
-                expect(status).toBe(testApplicaiontList[index].getStatus());
+            result.map( ( application, index) => {
+                expect(application.status).toBe(testApplicaiontList[index].getStatus());
+                expect(Number.isInteger(application.id)).toBe(true);
             });
         })
     })

@@ -117,8 +117,9 @@ describe('사용자 저장소(UserRepository) Test', () => {
         it('아이디에 해당하는 사용자들의 이름을 가져오는지 확인', async () => {
             const result = await userRepository.findNamesByIds(idList);
 
-            result.map( ({name}) => {
-                expect(testNameList.indexOf(name)).not.toBe(-1);
+            result.map( (user) => {
+                expect(testNameList.indexOf(user.name)).not.toBe(-1);
+                expect(user).toHaveProperty('id');
             })
         });
     });

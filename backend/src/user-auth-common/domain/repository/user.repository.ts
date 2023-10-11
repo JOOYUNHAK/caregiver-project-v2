@@ -43,7 +43,7 @@ export const customUserRepositoryMethods: Pick<
 
         async findNamesByIds(this: Repository<User>, userIdList: number[]) {
             return await this.createQueryBuilder()
-                .select('name')
+                .select(['id', 'name'])
                 .where('id IN (:...userIds)', { userIds: userIdList })
                 .getRawMany();
         },
