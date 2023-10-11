@@ -54,12 +54,12 @@ describe('ChatRoomRepository(채팅방 저장소) Test', () => {
             await messageRepository.save(textMessage);
 
             const result = await roomRepository.findByUserId(memberId);
-            
+
             /* 방 목록은 최신 메시지순이므로 메시지 추가한 방이 첫번째에 나타나게됨 */
             result.map((room, index) => {
                 if( index == 0 ) {
                     expect(room.lastMessage).toEqual(addMessageText);
-                    expect(room.unReadMessages).toBe('2'); 
+                    expect(room.unReadMessages).toBe(2); 
                 }
             });
         });
