@@ -4,6 +4,7 @@ import { getDataSourceToken, getRepositoryToken } from "@nestjs/typeorm";
 import { Participant } from "../entity/participant.entity";
 import { ChatMessage } from "../entity/chat-message.entity";
 import { RoomListData } from "src/chat/interface/dto/room-list-data";
+import { plainToInstance } from "class-transformer";
 
 export interface ChatRoomRepository extends Repository<ChatRoom> {
     findByUserId(userId: number): Promise<RoomListData []> | null;
@@ -49,7 +50,7 @@ export const customRoomRepositoryMethods: Pick<
                 .orderBy('sendedAt', 'DESC') 
                 .groupBy('roomId, userId, lastSendUserId')
                 .getRawMany();
-        return !roomList.length ? null : roomList;
+        return !roomList.length ? null : plainToInstance(RoomListData, roomList);
     },
 
     async findByUserIds(this: Repository<ChatRoom>, memberId1: number, memberId2: number) {
